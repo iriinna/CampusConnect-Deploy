@@ -5,9 +5,9 @@ Campus Connect aims to revolutionize the way students, professors, and universit
 
 *Key Objectives*
 - Enable students to easily access their *digital library*, academic records, and official documents, and to manage personal reminders and notifications.
-- Allow professors to efficiently communicate with students via *announcements, targeted groups, and event scheduling*, while also managing course materials and student participation.
+- Allow professors to efficiently communicate with students via *announcements and targeted groups*, while also managing course materials and student participation.
 - Provide administrators with robust tools to *manage user roles, content, and platform policies*, ensuring a safe, organized, and reliable system.
-- Offer interactive tools like a *campus map, classroom availability, and event calendar*, helping all users navigate campus life efficiently.
+- Offer interactive tools like a *campus map, and a classroom availability*, helping all users navigate campus life efficiently.
 
 *Target Users*
 - *Students:* Access academic information, resources, and notifications; manage schedules and events; stay updated on campus announcements.
