@@ -5,7 +5,7 @@ Persona of Actor: Sophia Flores (Student)
 
 Overall Objective: Sophia needs quick access to her student status, check her academic progress immediately, and ensure she doesn't miss a critical notification.
 
-Sophia is waiting in line at the campus library, anxious to check her borrowing privileges. She remembers she needs to show her student card. Instead of searching for the plastic card, she quickly opens the CampusConnect mobile app. Since she registered last week with her institutional email, she uses her biometric ID for seamless authentication. She navigates to the profile and taps Digital Student Card, which instantly displays a valid, current QR code and her photo. Later, feeling nervous, she checks the Academic Record section and sees her first midterm grade has been posted. As she closes the grade view, a prominent notification bubble pops up (New Announcement Notification) showing an urgent alert from her faculty about a required prerequisite change. This constant, easy access to information and instant status validation saves her time and avoids the risk of forgetting or losing her login credentials.
+Sophia is waiting in line at the campus library, anxious to check her borrowing privileges. She remembers she needs to show her student card. Instead of searching for the plastic card, she quickly opens the CampusConnect web app. She navigates to the profile and taps Digital Student Card, which instantly displays a valid, current QR code and her photo. Later, feeling nervous, she checks the Academic Record section and sees her first midterm grade has been posted. As she closes the grade view, a prominent notification bubble pops up (New Announcement Notification) showing an urgent alert from her faculty about a required prerequisite change. This constant, easy access to information and instant status validation saves her time and avoids the risk of forgetting or losing her login credentials.
 
 Scenario 2: Crisis Communication and Group Coordination
 Scenario Name: Urgent Meeting Change and Research Group Setup
@@ -28,7 +28,7 @@ Dr. Aurelian begins by reviewing the daily access logs. He finds an account with
 Scenario 4: Automated Services and Campus Resource Allocation
 Scenario Name: Document Automation and Ad-hoc Space Finding
 
-Persona of Actor: David Chen (Staff Member / Student Services)
+Persona of Actor: David Chen (Professor)
 
 Overall Objective: David must reduce manual paperwork by directing students to digital document generation and efficiently find an available campus space for an unexpected meeting.
 
