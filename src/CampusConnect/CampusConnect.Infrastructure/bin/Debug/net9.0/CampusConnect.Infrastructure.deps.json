@@ -1,0 +1,55 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "CampusConnect.Infrastructure/1.0.0": {
+        "dependencies": {
+          "CampusConnect.Application": "1.0.0"
+        },
+        "runtime": {
+          "CampusConnect.Infrastructure.dll": {}
+        }
+      },
+      "CampusConnect.Application/1.0.0": {
+        "dependencies": {
+          "CampusConnect.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CampusConnect.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "CampusConnect.Domain/1.0.0": {
+        "runtime": {
+          "CampusConnect.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CampusConnect.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CampusConnect.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CampusConnect.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
