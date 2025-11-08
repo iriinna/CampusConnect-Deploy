@@ -1,0 +1,211 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Infrastructure\\CampusConnect.Infrastructure.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\CampusConnect.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\CampusConnect.Application.csproj",
+        "projectName": "CampusConnect.Application",
+        "projectPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\CampusConnect.Application.csproj",
+        "packagesPath": "C:\\Users\\anast\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\anast\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\CampusConnect.Domain.csproj": {
+                "projectPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\CampusConnect.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\CampusConnect.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\CampusConnect.Domain.csproj",
+        "projectName": "CampusConnect.Domain",
+        "projectPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\CampusConnect.Domain.csproj",
+        "packagesPath": "C:\\Users\\anast\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\anast\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Infrastructure\\CampusConnect.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Infrastructure\\CampusConnect.Infrastructure.csproj",
+        "projectName": "CampusConnect.Infrastructure",
+        "projectPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Infrastructure\\CampusConnect.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\anast\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\anast\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\CampusConnect.Application.csproj": {
+                "projectPath": "C:\\Users\\anast\\Desktop\\CampusConnect\\proiect-inginerie-software-super_team\\src\\CampusConnect\\CampusConnect.Application\\CampusConnect.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
