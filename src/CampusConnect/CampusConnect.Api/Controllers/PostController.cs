@@ -5,7 +5,7 @@ using CampusConnect.Application.Features.Posts.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 [ApiController]
-[Route("api/posts")]
+[Route("api/controller")]
 public class PostsController : ControllerBase
 {
     private readonly IMediator _mediator;

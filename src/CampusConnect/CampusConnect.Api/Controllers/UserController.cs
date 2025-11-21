@@ -5,7 +5,7 @@ using CampusConnect.Application.Features.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 [ApiController]
-[Route("api/users")]
+[Route("api/controller")]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
