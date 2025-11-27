@@ -1,27 +1,53 @@
 ﻿using CampusConnect.Api.Services;
-using CampusConnect.Application;
+using CampusConnect.Application; // ⬅️ ACUM ESTE NECESAR PENTRU METODA EXTENSIE
 using CampusConnect.Domain.Services;
 using CampusConnect.Infrastructure.Data;
+using CampusConnect.Infrastructure;
+using CampusConnect.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using Microsoft.OpenApi.Models; // <- NOU: Necesar pentru configurarea Swagger
+using Microsoft.OpenApi.Models; 
+using MediatR; // ⬅️ NECESAR PENTU DI MediatR
+using CampusConnect.Domain.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
 const string CorsPolicy = "Frontends";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
         policy.WithOrigins(
-                "http://localhost:5173") // Asigurați-vă că acesta este portul React/Vite
+                "http://localhost:5173") 
             .AllowAnyHeader()
             .AllowAnyMethod()
             );
 });
 
-
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // Set to true in production
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false, // Setează la true și furnizează Issuer-ul în producție
+        ValidateAudience = false, // Setează la true și furnizează Audience-ul în producție
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero // Elimină toleranța de expirare
+    };
+});
 // 1. Configurarea Serviciilor
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -29,30 +55,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// Configurarea implicită a MediatR din proiectul Application (presupunând că ați adăugat-o acolo)
-// builder.Services.AddApplicationServices(); 
+// 1. Înregistrează MediatR (din proiectul Application)
+builder.Services.AddApplicationServices(); 
 
+// 2. Înregistrează Repositoriile (direct, pentru a elimina orice eroare de apel extern)
+// Aceasta rezolvă toate excepțiile de tip IUserRepository și IPostRepository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>(); // register concrete repository directly to avoid missing/incompatible IPostRepository
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 
-// Configurarea SwaggerGen CORECTĂ pentru a preveni Eroarea 500
+// Configurarea SwaggerGen CORECTĂ
 builder.Services.AddSwaggerGen(options =>
 {
-    // Adăugăm detalii minime pentru Swagger UI
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "CampusConnect API",
         Version = "v1"
     });
-
-    // Această linie previne erorile 500 când există clase cu nume identice
-    // în namespace-uri diferite (comun în proiectele Clean Architecture/CQRS).
     options.CustomSchemaIds(type => type.FullName);
-
-    // ATENȚIE: Am eliminat sau comentat logica IncludeXmlComments. 
-    // Dacă doriți documentație XML, trebuie să vă asigurați că fișierul XML este generat
-    // și calea este corectă. Fără această logică, interfața ar trebui să se încarce.
 });
 
 
@@ -63,12 +85,25 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(); // Va fi accesibil la http://localhost:5099/swagger
+    app.UseSwaggerUI(); 
 }
 
 app.UseHttpsRedirection();
 app.UseCors(CorsPolicy);
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+// Local extension to provide AddInfrastructureServices if it's missing in other assemblies.
+// Register real infrastructure services here or keep as no-op to satisfy the call.
+public static class InfrastructureServiceCollectionExtensions
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
+        // TODO: Register repositories, integration services, etc.
+        return services;
+    }
+}
