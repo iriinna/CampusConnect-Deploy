@@ -85,32 +85,40 @@ function ProfileView() {
     };
     
     return (
-        <div className='container'>
-            
-            <h2>{user.firstName} {user.lastName}</h2>
-            <p>Email: {user.email}</p>
-            <p>Date of birth: {user.dateOfBirth || ''}</p>
-            <p>Student ID: {user.studentId || ''}</p>
-
-            <button 
-                onClick={() => window.location.href = '/edit-profile'}
-                disabled={isDeleting}
+        <div>
+            <button className='back'
+                onClick={() => window.location.href = '/dashboard'}
             >
-                Editeaza profilul
+                &#x2190;
             </button>
+            <div className='container'>
+                    
+                <h2>{user.firstName} {user.lastName}</h2>
+                <p>Email: {user.email}</p>
+                <p>Date of birth: {user.dateOfBirth || ''}</p>
+                <p>Student ID: {user.studentId || ''}</p>
 
-            <button 
-                onClick={handleDeleteAccount}
-                style={{
-                    background: '#dc3545',
-                    opacity: isDeleting ? 0.6 : 1,
-                    cursor: isDeleting ? 'not-allowed' : 'pointer'
-                }}
-                disabled={isDeleting}
-            >
-                {isDeleting ? 'Se Sterge...' : 'Sterge contul'}
-            </button>
+                <button 
+                    onClick={() => window.location.href = '/edit-profile'}
+                    disabled={isDeleting}
+                >
+                    Editeaza profilul
+                </button>
+
+                <button 
+                    onClick={handleDeleteAccount}
+                    style={{
+                        background: '#dc3545',
+                        opacity: isDeleting ? 0.6 : 1,
+                        cursor: isDeleting ? 'not-allowed' : 'pointer'
+                    }}
+                    disabled={isDeleting}
+                >
+                    {isDeleting ? 'Se Sterge...' : 'Sterge contul'}
+                </button>
+            </div>
         </div>
+            
     );
 }
 

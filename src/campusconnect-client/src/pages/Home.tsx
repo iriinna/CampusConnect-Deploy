@@ -1,9 +1,9 @@
-
+import '../index.css'
 function Home() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   
   return (
-    <div style={{ padding: '40px', textAlign: 'center' }}>
+    <div className="container">
       <h1>Dashboard - CampusConnect</h1>
       <p>Bun venit, {user.firstName} {user.lastName}!</p>
       <p>Email: {user.email}</p>

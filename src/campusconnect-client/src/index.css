@@ -77,7 +77,28 @@ input {
   box-sizing: border-box;
   font-family: inherit; 
 }
+.back{
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  width:50px;
+  height:40px;
+  border-radius: 20px;
+  cursor: pointer;
+  color: #333; 
+  font-size: 50px;
+  background: none;
+}
 
+.back:hover {
+  box-shadow: none; 
+}
+
+.back:focus,
+.back:focus-visible {
+  outline: none; 
+  border: none; 
+}
 button {
   width: 60%; 
   border-radius: 8px;
@@ -93,7 +114,7 @@ button {
   margin-top: 10px;
 }
 
-button:hover:not(:disabled) {
+button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
