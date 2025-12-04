@@ -9,7 +9,7 @@ function Home() {
       <p>Email: {user.email}</p>
       <button
         onClick={() => {
-          window.location.href = '/ViewProfile';
+          window.location.href = '/profile';
         }}
       >
         View Profile

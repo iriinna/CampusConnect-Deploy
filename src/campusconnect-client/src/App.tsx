@@ -3,6 +3,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmEmail from './pages/ConfirmEmail';
 import Home from './pages/Home';
+import ViewProfile from './pages/User/ViewProfile';
+import EditProfile from './pages/User/EditProfile';
 import './App.css';
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         <Route path="/dashboard" element={<Home />} />
         <Route path="/profile" element={<ViewProfile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
     </BrowserRouter>
   );
