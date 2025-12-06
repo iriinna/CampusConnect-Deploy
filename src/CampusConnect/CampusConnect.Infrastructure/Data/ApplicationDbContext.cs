@@ -12,6 +12,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     {
     }
 
+    public DbSet<Announcement> Announcements { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -49,5 +51,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
         builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
+    
     }
 }

@@ -5,6 +5,8 @@ import ConfirmEmail from './pages/ConfirmEmail';
 import Home from './pages/Home';
 import ViewProfile from './pages/User/ViewProfile';
 import EditProfile from './pages/User/EditProfile';
+import Announcements from './pages/Announcements';
+import CreateAnnouncement from './pages/CreateAnnouncement';
 import './App.css';
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Route path="/dashboard" element={<Home />} />
         <Route path="/profile" element={<ViewProfile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/announcements" element={<Announcements />} />
+        <Route path="/create-announcement" element={<CreateAnnouncement />} />
       </Routes>
     </BrowserRouter>
   );

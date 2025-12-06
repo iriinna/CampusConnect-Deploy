@@ -73,6 +73,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//migratiile in .Infrastructure
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("CampusConnect.Infrastructure") // aici specifici proiectul Infrastructure
+    ));
+
+
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
