@@ -76,7 +76,36 @@ public class AuthService : IAuthService
             };
         }
 
-        // Generare token de confirmare email
+    var normalizedEmail = request.Email.ToLowerInvariant();
+    string role;
+    //Admin pentru adresele @unibuc.ro
+    if (normalizedEmail.EndsWith("@unibuc.ro"))
+    {
+        role = "Admin";
+    }
+    // User pentru adresele @s.unibuc.ro
+    else if (normalizedEmail.EndsWith("@s.unibuc.ro"))
+    {
+        role = "User";
+    }
+    else
+    {
+        role = "User"; 
+    }
+
+    var roleResult = await _userManager.AddToRoleAsync(user, role);
+
+    if (!roleResult.Succeeded)
+    {
+        await _userManager.DeleteAsync(user); 
+        
+        return new AuthResult
+        {
+            Success = false,
+            Message = $"Contul a fost creat, dar atribuirea rolului '{role}' a esuat. S-a anulat crearea contului.",
+            Errors = roleResult.Errors.Select(e => e.Description).ToList()
+        };
+    }
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
         // Encode token pentru URL
@@ -89,7 +118,7 @@ public class AuthService : IAuthService
         return new AuthResult
         {
             Success = true,
-            Message = "Cont creat cu succes! Verifică-ți emailul pentru confirmare."
+            Message = "Cont creat cu succes! Verifică-ti emailul pentru confirmare."
         };
     }
 
