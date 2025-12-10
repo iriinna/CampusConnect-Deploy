@@ -2,7 +2,8 @@ using CampusConnect.Domain.Entities;
 using CampusConnect.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 [ApiController]
 [Route("api/[controller]")]
 public class AnnouncementsController : ControllerBase
@@ -13,13 +14,32 @@ public class AnnouncementsController : ControllerBase
     {
         _context = context;
     }
+    private int? GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+        return null;
+    }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category)
     {
-        var announcements = await _context.Announcements.ToListAsync();
-        return Ok(announcements);
+        var query = _context.Announcements.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            query = query.Where(a => a.Category == category);
+        }
+
+        var list = await query
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync();
+
+        return Ok(list);
     }
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
@@ -61,4 +81,69 @@ public class AnnouncementsController : ControllerBase
 
         return NoContent();
     }
+
+
+    [Authorize]
+    [HttpPost("{id}/bookmark")]
+    public async Task<IActionResult> Bookmark(int id)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var exists = await _context.SavedAnnouncements
+            .AnyAsync(sa => sa.UserId == userId.Value && sa.AnnouncementId == id);
+
+        if (exists)
+        {
+            return BadRequest(new { message = "Announcement already bookmarked." });
+        }
+
+        var saved = new SavedAnnouncement
+        {
+            UserId = userId.Value,
+            AnnouncementId = id
+        };
+
+        _context.SavedAnnouncements.Add(saved);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    
+    [Authorize]
+    [HttpDelete("{id}/bookmark")]
+    public async Task<IActionResult> Unbookmark(int id)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var saved = await _context.SavedAnnouncements
+            .FirstOrDefaultAsync(sa => sa.UserId == userId.Value && sa.AnnouncementId == id);
+
+        if (saved == null) return NotFound();
+
+        _context.SavedAnnouncements.Remove(saved);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    
+    [Authorize]
+    [HttpGet("saved")]
+    public async Task<ActionResult<IEnumerable<Announcement>>> GetSaved()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var announcements = await _context.SavedAnnouncements
+            .Where(sa => sa.UserId == userId.Value)
+            .Select(sa => sa.Announcement)
+            .OrderByDescending(a => a.CreatedAt)
+            .ToListAsync();
+
+        return Ok(announcements);
+    }
+
 }

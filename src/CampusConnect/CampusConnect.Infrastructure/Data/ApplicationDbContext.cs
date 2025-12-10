@@ -13,6 +13,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     }
 
     public DbSet<Announcement> Announcements { get; set; }
+    public DbSet<SavedAnnouncement> SavedAnnouncements { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -51,6 +53,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
         builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
+
+        builder.Entity<SavedAnnouncement>(entity =>
+        {
+    entity.HasIndex(sa => new { sa.UserId, sa.AnnouncementId })
+          .IsUnique();
+
+    entity.HasOne(sa => sa.User)
+          .WithMany()
+          .HasForeignKey(sa => sa.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(sa => sa.Announcement)
+          .WithMany()
+          .HasForeignKey(sa => sa.AnnouncementId)
+          .OnDelete(DeleteBehavior.Cascade);
+        });
+
     
     }
 }
