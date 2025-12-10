@@ -76,11 +76,9 @@ public class AuthService : IAuthService
             };
         }
 
-        // 1. Normalizarea și determinarea rolului
     var normalizedEmail = request.Email.ToLowerInvariant();
     string role;
-    
-    // Admin pentru adresele @unibuc.ro
+    //Admin pentru adresele @unibuc.ro
     if (normalizedEmail.EndsWith("@unibuc.ro"))
     {
         role = "Admin";
@@ -92,28 +90,22 @@ public class AuthService : IAuthService
     }
     else
     {
-        // Caz de rezervă, deși ar trebui să fie prins de IsEmailDomainAllowed
         role = "User"; 
     }
 
-    // 2. Atribuirea rolului
     var roleResult = await _userManager.AddToRoleAsync(user, role);
 
     if (!roleResult.Succeeded)
     {
-        // Dacă atribuirea rolului eșuează (ex: rolul nu există),
-        // este crucial să ștergi userul proaspăt creat pentru a evita 
-        // conturi orfane sau nefuncționale.
         await _userManager.DeleteAsync(user); 
         
         return new AuthResult
         {
             Success = false,
-            Message = $"Contul a fost creat, dar atribuirea rolului '{role}' a eșuat. S-a anulat crearea contului.",
+            Message = $"Contul a fost creat, dar atribuirea rolului '{role}' a esuat. S-a anulat crearea contului.",
             Errors = roleResult.Errors.Select(e => e.Description).ToList()
         };
     }
-        // Generare token de confirmare email
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
         // Encode token pentru URL
@@ -126,7 +118,7 @@ public class AuthService : IAuthService
         return new AuthResult
         {
             Success = true,
-            Message = "Cont creat cu succes! Verifică-ți emailul pentru confirmare."
+            Message = "Cont creat cu succes! Verifică-ti emailul pentru confirmare."
         };
     }
 
