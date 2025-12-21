@@ -8,5 +8,8 @@ public class LoginResponse
     public required string LastName { get; set; }
     public int UserId { get; set; }
     public DateTime ExpiresAt { get; set; }
+<<<<<<< HEAD
     public required string Role { get; set; }
+=======
+>>>>>>> main
 }

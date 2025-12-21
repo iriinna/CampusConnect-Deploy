@@ -1,15 +1,26 @@
+<<<<<<< HEAD
 ﻿using CampusConnect.Domain.Models;
+=======
+using CampusConnect.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+>>>>>>> main
 using Microsoft.EntityFrameworkCore;
 
 namespace CampusConnect.Infrastructure.Data;
 
+<<<<<<< HEAD
 public class ApplicationDbContext : DbContext
+=======
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+>>>>>>> main
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     public DbSet<User> Users { get; set; }
 
@@ -46,6 +57,42 @@ public class ApplicationDbContext : DbContext
     }
 =======
         // Configurare tabele Identity
+=======
+    public DbSet<Announcement> Announcements { get; set; }
+    public DbSet<SavedAnnouncement> SavedAnnouncements { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        // Configurări custom pentru ApplicationUser
+        builder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(e => e.FirstName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.LastName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.StudentId)
+                .HasMaxLength(50);
+
+            entity.Property(e => e.ProfilePictureUrl)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.HasIndex(e => e.Email)
+                .IsUnique();
+        });
+
+        // Redenumim tabelele Identity pentru a fi mai clare
+>>>>>>> main
         builder.Entity<ApplicationUser>().ToTable("Users");
         builder.Entity<IdentityRole<int>>().ToTable("Roles");
         builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
@@ -54,6 +101,7 @@ public class ApplicationDbContext : DbContext
         builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
 
+<<<<<<< HEAD
         // 1. Seed Roluri
         var adminRole = new IdentityRole<int> 
         { 
@@ -156,3 +204,24 @@ public class ApplicationDbContext : DbContext
 }
 >>>>>>> Stashed changes
 }
+=======
+        builder.Entity<SavedAnnouncement>(entity =>
+        {
+    entity.HasIndex(sa => new { sa.UserId, sa.AnnouncementId })
+          .IsUnique();
+
+    entity.HasOne(sa => sa.User)
+          .WithMany()
+          .HasForeignKey(sa => sa.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(sa => sa.Announcement)
+          .WithMany()
+          .HasForeignKey(sa => sa.AnnouncementId)
+          .OnDelete(DeleteBehavior.Cascade);
+        });
+
+    
+    }
+}
+>>>>>>> main
