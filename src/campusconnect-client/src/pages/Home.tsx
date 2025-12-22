@@ -34,6 +34,13 @@ function Home() {
         </button>
 
         <button
+          onClick={() => { window.location.href = '/events'; }}
+          style={{ ...buttonStyle, background: '#17a2b8', color: 'white' }}
+        >
+          View Events
+        </button>
+
+        <button
           onClick={() => {
             localStorage.clear();
             window.location.href = '/login';
