@@ -72,10 +72,6 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-<<<<<<< HEAD
-=======
-                        .IsRequired()
->>>>>>> main
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -84,24 +80,14 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
-=======
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
->>>>>>> main
 
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
-=======
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
->>>>>>> main
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -127,23 +113,13 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePictureUrl")
-<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
-=======
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
->>>>>>> main
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StudentId")
-<<<<<<< HEAD
                         .HasColumnType("nvarchar(max)");
-=======
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
->>>>>>> main
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -154,12 +130,8 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
-=======
                     b.HasIndex("Email")
                         .IsUnique();
-
->>>>>>> main
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -169,7 +141,6 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
-<<<<<<< HEAD
 
                     b.HasData(
                         new
@@ -266,8 +237,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("EventParticipants");
-=======
->>>>>>> main
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
@@ -294,7 +263,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("SavedAnnouncements");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Event", b =>
                 {
                     b.Property<int>("Id")
@@ -331,8 +299,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("Events");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -361,7 +327,6 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles", (string)null);
-<<<<<<< HEAD
 
                     b.HasData(
                         new
@@ -378,8 +343,6 @@ namespace CampusConnect.Infrastructure.Migrations
                             Name = "User",
                             NormalizedName = "USER"
                         });
-=======
->>>>>>> main
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -464,7 +427,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
-<<<<<<< HEAD
 
                     b.HasData(
                         new
@@ -487,8 +449,6 @@ namespace CampusConnect.Infrastructure.Migrations
                             UserId = 13,
                             RoleId = 2
                         });
-=======
->>>>>>> main
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -510,7 +470,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("CampusConnect.Domain.Entities.EventParticipant", b =>
                 {
                     b.HasOne("Event", "Event")
@@ -530,8 +489,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
                 {
                     b.HasOne("CampusConnect.Domain.Entities.Announcement", "Announcement")
@@ -551,7 +508,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("Event", b =>
                 {
                     b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "Organizer")
@@ -562,8 +518,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("Organizer");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -614,7 +568,6 @@ namespace CampusConnect.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
-<<<<<<< HEAD
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.ApplicationUser", b =>
                 {
@@ -625,8 +578,6 @@ namespace CampusConnect.Infrastructure.Migrations
                 {
                     b.Navigation("Participants");
                 });
-=======
->>>>>>> main
 #pragma warning restore 612, 618
         }
     }

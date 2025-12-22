@@ -1,66 +1,24 @@
-<<<<<<< HEAD
-﻿using CampusConnect.Domain.Models;
-=======
 using CampusConnect.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
->>>>>>> main
 using Microsoft.EntityFrameworkCore;
 
 namespace CampusConnect.Infrastructure.Data;
 
-<<<<<<< HEAD
-public class ApplicationDbContext : DbContext
-=======
+
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
->>>>>>> main
+
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
+    public DbSet<ApplicationUser> Users { get; set; }
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    public DbSet<User> Users { get; set; }
-
-    public DbSet<Post> Posts { get; set; } 
-=======
     public DbSet<Announcement> Announcements { get; set; }
     public DbSet<SavedAnnouncement> SavedAnnouncements { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<EventParticipant> EventParticipants { get; set; }
->>>>>>> Stashed changes
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-<<<<<<< Updated upstream
-        modelBuilder.Entity<Post>(entity =>
-        {
-            entity.HasKey(p => p.Id);
-            entity.Property(p => p.Content).IsRequired().HasMaxLength(500);
-
-            entity.HasOne<User>()
-                  .WithMany()
-                  .HasForeignKey(p => p.AuthorId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(u => u.Id);
-            entity.HasIndex(u => u.Email).IsUnique();
-        });
-
-    }
-=======
-        // Configurare tabele Identity
-=======
-    public DbSet<Announcement> Announcements { get; set; }
-    public DbSet<SavedAnnouncement> SavedAnnouncements { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -91,8 +49,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .IsUnique();
         });
 
-        // Redenumim tabelele Identity pentru a fi mai clare
->>>>>>> main
         builder.Entity<ApplicationUser>().ToTable("Users");
         builder.Entity<IdentityRole<int>>().ToTable("Roles");
         builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
@@ -101,7 +57,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
 
-<<<<<<< HEAD
         // 1. Seed Roluri
         var adminRole = new IdentityRole<int> 
         { 
@@ -202,26 +157,4 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     // Ignoră eroarea de model pending pentru a permite actualizarea bazei
     optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 }
->>>>>>> Stashed changes
 }
-=======
-        builder.Entity<SavedAnnouncement>(entity =>
-        {
-    entity.HasIndex(sa => new { sa.UserId, sa.AnnouncementId })
-          .IsUnique();
-
-    entity.HasOne(sa => sa.User)
-          .WithMany()
-          .HasForeignKey(sa => sa.UserId)
-          .OnDelete(DeleteBehavior.Cascade);
-
-        entity.HasOne(sa => sa.Announcement)
-          .WithMany()
-          .HasForeignKey(sa => sa.AnnouncementId)
-          .OnDelete(DeleteBehavior.Cascade);
-        });
-
-    
-    }
-}
->>>>>>> main
