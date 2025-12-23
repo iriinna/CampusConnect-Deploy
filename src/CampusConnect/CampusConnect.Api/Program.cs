@@ -2,6 +2,7 @@ using System.Text;
 using CampusConnect.Application.Interfaces;
 using CampusConnect.Application.Services;
 using CampusConnect.Domain.Entities;
+using CampusConnect.Domain.Services;
 using CampusConnect.Infrastructure.Data;
 using CampusConnect.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -83,9 +84,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 // Services
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

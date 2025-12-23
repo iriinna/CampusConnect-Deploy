@@ -85,9 +85,38 @@ public class AuthService : IAuthService
             };
         }
 
-        // 5. Atribuire Rol (Admin pentru @unibuc.ro, User pentru @s.unibuc.ro)
+        // 5. Atribuire Rol bazat pe email
         var normalizedEmail = request.Email.ToLowerInvariant();
-        string roleName = normalizedEmail.EndsWith("@unibuc.ro") ? "Admin" : "User";
+        string roleName;
+
+        // Logica de atribuire roluri:
+        // - admin1@unibuc.ro și admin2@unibuc.ro -> Admin
+        // - *@s.unibuc.ro -> User (Studenți)
+        // - *@unibuc.ro (alte emailuri) -> Professor
+        if (normalizedEmail == "admin1@unibuc.ro" || normalizedEmail == "admin2@unibuc.ro")
+        {
+            roleName = "Admin";
+        }
+        else if (normalizedEmail.EndsWith("@s.unibuc.ro"))
+        {
+            // Excepții pentru profesori cu adresă de student
+            if (normalizedEmail == "anastasia.ispas@s.unibuc.ro" || normalizedEmail == "irina-maria.istrate@s.unibuc.ro")
+            {
+                roleName = "Professor";
+            }
+            else
+            {
+                roleName = "User";
+            }
+        }
+        else if (normalizedEmail.EndsWith("@unibuc.ro"))
+        {
+            roleName = "Professor";
+        }
+        else
+        {
+            roleName = "User"; // Default pentru alte emailuri
+        }
 
         // Asigură-te că rolul există în bază înainte de a-l atribui
         if (!await _roleManager.RoleExistsAsync(roleName))
@@ -171,7 +200,7 @@ public class AuthService : IAuthService
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserId = user.Id,
+                Id = user.Id,
                 ExpiresAt = DateTime.UtcNow.AddDays(expirationDays),
                 Role = role
             }

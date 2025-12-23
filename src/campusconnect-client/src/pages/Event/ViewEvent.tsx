@@ -30,6 +30,7 @@ function ViewEvent() {
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [isJoined, setIsJoined] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const userString = localStorage.getItem('user');
@@ -54,10 +55,32 @@ function ViewEvent() {
          const joined = data.participants?.some((p: any) => p.userId === myId);
          setIsJoined(!!joined);
       }
+
+      // Check if event is saved
+      await checkIfSaved();
     } catch (err) {
       setError('Nu s-a putut incarca evenimentul.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkIfSaved = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/event/saved`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const savedEvents = await response.json();
+        const saved = savedEvents.some((e: any) => e.id === Number(id));
+        setIsSaved(saved);
+      }
+    } catch (error) {
+      console.error('Error checking saved status:', error);
     }
   };
 
@@ -103,6 +126,35 @@ function ViewEvent() {
     }
   };
 
+  const handleSaveToggle = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Trebuie sa fii autentificat.");
+      return;
+    }
+
+    const endpoint = isSaved ? `${id}/unsave` : `${id}/save`;
+    const method = isSaved ? 'DELETE' : 'POST';
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/event/${endpoint}`, {
+        method: method,
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setIsSaved(!isSaved);
+        alert(isSaved ? 'Eveniment eliminat din salvate!' : 'Eveniment salvat cu succes!');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Eroare la procesarea cererii.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Eroare la procesarea cererii.");
+    }
+  };
+
   if (loading) return <div>Se incarca...</div>;
   if (error || !event) return <div className="error">{error || "Eveniment inexistent"}</div>;
 
@@ -111,6 +163,21 @@ function ViewEvent() {
 
   return (
     <div className="container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <button
+        onClick={() => navigate('/events')}
+        style={{
+          marginBottom: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          fontSize: '16px'
+        }}
+      >
+        ← Înapoi la Evenimente
+      </button>
       
       <div className="event-header">
         <h1>{event.title}</h1>
@@ -130,6 +197,21 @@ function ViewEvent() {
           className={isJoined ? 'btn-secondary' : 'btn-primary'}
         >
           {isJoined ? 'Paraseste Evenimentul' : 'Participa la Eveniment'}
+        </button>
+        
+        <button 
+          onClick={handleSaveToggle} 
+          style={{
+            marginLeft: '10px',
+            padding: '10px 20px',
+            backgroundColor: isSaved ? '#ffc107' : '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          {isSaved ? '⭐ Salvat' : '☆ Salvează Eveniment'}
         </button>
       </div>
 
