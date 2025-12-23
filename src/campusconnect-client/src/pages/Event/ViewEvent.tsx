@@ -111,6 +111,12 @@ function ViewEvent() {
 
   return (
     <div className="container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+      <button
+        onClick={() => navigate("/dashboard")}
+        style={{ position: "fixed", top: "70px", left: "15px", padding: "3px 6px", fontSize: "12px", border: "1px solid #ccc", backgroundColor: "#007BFF", color: "#fff", cursor: "pointer", width: "30px", height: "25px", textAlign: "center", fontWeight: "bold", zIndex: 1000 }}
+      >
+        ←
+      </button>
       
       <div className="event-header">
         <h1>{event.title}</h1>

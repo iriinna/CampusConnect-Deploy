@@ -4,7 +4,7 @@ namespace CampusConnect.Application.DTOs;
 
 public class UpdateUserProfileRequest
 {
-        
+
     [Required(ErrorMessage = "Prenumele este obligatoriu.")]
     public required string FirstName { get; set; }
 

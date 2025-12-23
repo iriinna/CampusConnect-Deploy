@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../../index.css';
 
 const API_BASE_URL = 'http://localhost:5099/api';
@@ -15,7 +15,12 @@ interface EventSummary {
 
 function UpcomingEvents() {
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
+  // Extragem termenul de căutare din URL (?search=...)
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('search') || '';
+
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -23,7 +28,6 @@ function UpcomingEvents() {
   const checkAdmin = () => {
     const userString = localStorage.getItem('user');
     if (!userString) return false;
-    
     try {
       const user = JSON.parse(userString);
       return user.role?.toLowerCase() === 'admin' || user.isAdmin === true;
@@ -34,9 +38,17 @@ function UpcomingEvents() {
 
   const isAdmin = checkAdmin();
 
-  const fetchUpcomingEvents = async () => {
+  // Funcția de fetch primește acum searchTerm ca parametru
+  const fetchEvents = async (search: string) => {
+    setLoading(true);
+    setError(''); // Resetăm eroarea la fiecare căutare nouă
     try {
-      const response = await fetch(`${API_BASE_URL}/event/upcoming`);
+      // Dacă search există, adăugăm parametrul în URL, altfel chemăm endpoint-ul simplu
+      const url = search 
+        ? `${API_BASE_URL}/event/upcoming?search=${encodeURIComponent(search)}`
+        : `${API_BASE_URL}/event/upcoming`;
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Nu s-au putut incarca evenimentele.');
       
       const data = await response.json();
@@ -49,22 +61,37 @@ function UpcomingEvents() {
     }
   };
 
+  // Acest useEffect "ascultă" de schimbările din URL
+  // Când utilizatorul scrie în bara de search și apasă Enter, searchTerm se schimbă și declanșează fetch-ul
   useEffect(() => {
-    fetchUpcomingEvents();
-  }, []);
+    fetchEvents(searchTerm);
+  }, [searchTerm]);
 
   if (loading) return <div className="loading-spinner">Se incarca evenimentele...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="events-page">
-      <h1>Evenimente Viitoare</h1>
-      
+      <button
+        onClick={() => navigate("/dashboard")}
+        style={{ position: "fixed", top: "70px", left: "15px", padding: "3px 6px", fontSize: "12px", border: "1px solid #ccc", backgroundColor: "#007BFF", color: "#fff", cursor: "pointer", width: "30px", height: "25px", textAlign: "center", fontWeight: "bold", zIndex: 1000 }}
+      >
+        ←
+      </button>
+      {/* Titlu dinamic în funcție de prezența căutării */}
+      <h1>
+        {searchTerm ? `Rezultate căutare: "${searchTerm}"` : "Evenimente Viitoare"}
+      </h1>
+
       {events.length === 0 ? (
         <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}>
-          <p className="no-events">Nu exista evenimente programate.</p>
+          <p className="no-events">
+            {searchTerm 
+              ? `Nu am găsit niciun eveniment pentru "${searchTerm}".` 
+              : "Nu exista evenimente programate."}
+          </p>
           
-          {isAdmin && (
+          {isAdmin && !searchTerm && (
             <button 
                 className="create-btn" 
                 onClick={() => navigate('/create-event')}

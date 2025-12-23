@@ -19,6 +19,23 @@ namespace CampusConnect.API.Controllers
             _userService = userService;
         }
         
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUsers([FromQuery] string? search)
+    {
+        var users = await _userService.SearchUsersAsync(search ?? "");
+        
+        var response = users.Select(u => new 
+        {
+            id = u.Id,
+            firstName = u.FirstName,
+            lastName = u.LastName,
+            profilePictureUrl = u.ProfilePictureUrl,
+            studentId = u.StudentId,
+            dateofBirth = u.DateOfBirth
+        });
+
+        return Ok(response);
+    }
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -47,6 +64,7 @@ namespace CampusConnect.API.Controllers
 
             var responseDto = new UserProfileResponse
             {
+                Id=user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 ProfilePictureUrl = user.ProfilePictureUrl,
@@ -57,6 +75,22 @@ namespace CampusConnect.API.Controllers
             return Ok(responseDto);
         }
 
+
+        [HttpGet("public-details/{id}")]
+        public async Task<IActionResult> GetPublicUserDetails(int id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null) return NotFound();
+
+            return Ok(new {
+                id = user.Id,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                studentId = user.StudentId,
+                profilePictureUrl = user.ProfilePictureUrl,
+                dateOfBirth = user.DateOfBirth 
+            });
+        }
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserProfileRequest model)
         {

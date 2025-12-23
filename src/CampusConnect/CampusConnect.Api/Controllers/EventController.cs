@@ -28,12 +28,22 @@ namespace CampusConnect.Api.Controllers
         }
 
         [HttpGet("upcoming")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetUpcomingEvents()
+        public async Task<ActionResult<IEnumerable<Event>>> GetUpcomingEvents([FromQuery] string? search = null)
         {
-            var events = await _context.Events
-                .Where(e => e.Date > DateTime.UtcNow) 
+            var query = _context.Events
+                .Where(e => e.Date > DateTime.UtcNow)
                 .Include(e => e.Participants)
-                .OrderBy(e => e.Date) 
+                .AsQueryable(); 
+                
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(e => e.Title.ToLower().Contains(search) 
+                                    || e.Description.ToLower().Contains(search));
+            }
+
+            var events = await query
+                .OrderBy(e => e.Date)
                 .ToListAsync();
 
             return Ok(events);

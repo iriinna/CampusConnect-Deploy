@@ -25,12 +25,20 @@ public class AnnouncementsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category)
+    public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category, [FromQuery] string? search)
     {
         var query = _context.Announcements.AsQueryable();
+
         if (!string.IsNullOrWhiteSpace(category))
         {
             query = query.Where(a => a.Category == category);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim().ToLower();
+            query = query.Where(a => a.Title.ToLower().Contains(search) 
+                                || a.Content.ToLower().Contains(search));
         }
 
         var list = await query

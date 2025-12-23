@@ -14,6 +14,19 @@ namespace CampusConnect.Application.Services
             _userManager = userManager;
         }
 
+        public async Task<IEnumerable<ApplicationUser>> SearchUsersAsync(string search)
+        {
+            var usersQuery = _userManager.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                usersQuery = usersQuery.Where(u => u.FirstName.ToLower().Contains(search) 
+                                               || u.LastName.ToLower().Contains(search));
+            }
+
+            return await Task.FromResult(usersQuery.ToList());
+        }
         public async Task<ApplicationUser?> GetUserByIdAsync(int userId)
         {
             return await _userManager.FindByIdAsync(userId.ToString());
