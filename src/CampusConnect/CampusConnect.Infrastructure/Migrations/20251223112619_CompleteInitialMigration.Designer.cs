@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251207114853_AddAnnouncementCategory")]
-    partial class AddAnnouncementCategory
+    [Migration("20251223112619_CompleteInitialMigration")]
+    partial class CompleteInitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,6 +150,162 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 10,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "91349f47-285d-492c-9476-19b04bdac18b",
+                            CreatedAt = new DateTime(2025, 12, 23, 11, 26, 18, 588, DateTimeKind.Utc).AddTicks(3459),
+                            Email = "admin1@unibuc.ro",
+                            EmailConfirmed = true,
+                            FirstName = "Andrei",
+                            LastName = "Popescu",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN1@UNIBUC.RO",
+                            NormalizedUserName = "ADMIN1@UNIBUC.RO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHn3SqBRgVWA/kMbDd8lH6YJjBKf4VbGu3f/aVOjFvsU2igbJbwUF7IgtJOFpdiZ9g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "800be171-27fe-4716-9f2e-d42191fb506d",
+                            TwoFactorEnabled = false,
+                            UserName = "admin1@unibuc.ro"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "17797c47-fa9d-48c6-9782-4b7513857fa2",
+                            CreatedAt = new DateTime(2025, 12, 23, 11, 26, 18, 634, DateTimeKind.Utc).AddTicks(2365),
+                            Email = "admin2@unibuc.ro",
+                            EmailConfirmed = true,
+                            FirstName = "Maria",
+                            LastName = "Ionescu",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN2@UNIBUC.RO",
+                            NormalizedUserName = "ADMIN2@UNIBUC.RO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPXf4mvRXnCjjeVpEcnSR03XPmSf9x3KYv6QU/oXEpFuA+dRy4cUYfkfRXzOY7AW7w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "cacefe33-e957-41df-ba81-08b92a9280c0",
+                            TwoFactorEnabled = false,
+                            UserName = "admin2@unibuc.ro"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3619694d-6302-4913-81f4-81fb9347b71d",
+                            CreatedAt = new DateTime(2025, 12, 23, 11, 26, 18, 678, DateTimeKind.Utc).AddTicks(9222),
+                            Email = "student1@s.unibuc.ro",
+                            EmailConfirmed = true,
+                            FirstName = "Ion",
+                            LastName = "Vasilescu",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STUDENT1@S.UNIBUC.RO",
+                            NormalizedUserName = "STUDENT1@S.UNIBUC.RO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEP9BvmZZoIF8PEnymfFdx+xy/TcWI/N2Z1y521gPPDYlepQbdzHjmozTyxq7JGpqNA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dc2f9d9f-9d29-47b8-bff5-3578d6c80af3",
+                            TwoFactorEnabled = false,
+                            UserName = "student1@s.unibuc.ro"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6c7851e7-b403-4c57-b7e7-7c4fe0b8d90f",
+                            CreatedAt = new DateTime(2025, 12, 23, 11, 26, 18, 722, DateTimeKind.Utc).AddTicks(5132),
+                            Email = "student2@s.unibuc.ro",
+                            EmailConfirmed = true,
+                            FirstName = "Elena",
+                            LastName = "Georgescu",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "STUDENT2@S.UNIBUC.RO",
+                            NormalizedUserName = "STUDENT2@S.UNIBUC.RO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDNgCB6E1zvvEyJZHrg65Lv5hhkQMeBoVUbesuQpPOWFOJIRGRpqud88YCY0Ri/uXw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ce608f39-a3c8-4728-a639-7707be901ebd",
+                            TwoFactorEnabled = false,
+                            UserName = "student2@s.unibuc.ro"
+                        });
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.EventParticipant", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId", "EventId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventParticipants");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnnouncementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnouncementId");
+
+                    b.HasIndex("UserId", "AnnouncementId")
+                        .IsUnique();
+
+                    b.ToTable("SavedAnnouncements");
+                });
+
+            modelBuilder.Entity("Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrganizerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizerId");
+
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -180,6 +336,22 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "80d0df97-9a34-4fce-8cc6-c730248b75d6",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConcurrencyStamp = "cd93387d-d9fe-44f6-a2b6-00fb274e2354",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -264,6 +436,28 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 10,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 11,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 12,
+                            RoleId = 2
+                        },
+                        new
+                        {
+                            UserId = 13,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -283,6 +477,54 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.EventParticipant", b =>
+                {
+                    b.HasOne("Event", "Event")
+                        .WithMany("Participants")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("EventsJoined")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
+                {
+                    b.HasOne("CampusConnect.Domain.Entities.Announcement", "Announcement")
+                        .WithMany()
+                        .HasForeignKey("AnnouncementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Announcement");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Event", b =>
+                {
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "Organizer")
+                        .WithMany()
+                        .HasForeignKey("OrganizerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Organizer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -334,6 +576,16 @@ namespace CampusConnect.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("EventsJoined");
+                });
+
+            modelBuilder.Entity("Event", b =>
+                {
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

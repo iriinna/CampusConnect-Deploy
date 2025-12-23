@@ -41,6 +41,20 @@ function Home() {
         </button>
 
         <button
+          onClick={() => { window.location.href = '/groups'; }}
+          style={{ ...buttonStyle, background: '#6f42c1', color: 'white' }}
+        >
+          📚 View Groups
+        </button>
+
+        <button
+          onClick={() => { window.location.href = '/my-tasks'; }}
+          style={{ ...buttonStyle, background: '#fd7e14', color: 'white' }}
+        >
+          ✓ My Tasks (TO-DO)
+        </button>
+
+        <button
           onClick={() => {
             localStorage.clear();
             window.location.href = '/login';

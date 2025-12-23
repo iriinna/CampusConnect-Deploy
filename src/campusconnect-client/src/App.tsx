@@ -10,9 +10,12 @@ import CreateAnnouncement from './pages/CreateAnnouncement';
 import CreateEvent from './pages/Event/CreateEvent';
 import EditEvent from './pages/Event/UpdateEvent';
 import ViewEvent from './pages/Event/ViewEvent';
+import UpcomingEvents from './pages/Event/UpcomingEvent';
+import Groups from './pages/Groups/Groups';
+import GroupDetails from './pages/Groups/GroupDetails';
+import MyTasks from './pages/Groups/MyTasks';
 
 import './App.css';
-import UpcomingEvents from './pages/Event/UpcomingEvent';
 
 function App() {
   return (
@@ -31,6 +34,9 @@ function App() {
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/edit-event/:id" element={<EditEvent />} />
         <Route path="/event/:id" element={<ViewEvent />} />
+        <Route path="/groups" element={<Groups />} />
+        <Route path="/groups/:id" element={<GroupDetails />} />
+        <Route path="/my-tasks" element={<MyTasks />} />
       </Routes>
     </BrowserRouter>
   );

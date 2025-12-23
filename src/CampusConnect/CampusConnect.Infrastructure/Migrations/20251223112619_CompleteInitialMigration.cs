@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CampusConnect.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CompleteInitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,16 +50,16 @@ namespace CampusConnect.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StudentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastLoginAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -108,7 +108,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrganizerId = table.Column<int>(type: "int", nullable: false),
+                    OrganizerId = table.Column<int>(type: "int", nullable: true),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -262,8 +262,8 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "6a045a8c-649f-43e6-8327-24dd2dc7bdc5", "Admin", "ADMIN" },
-                    { 2, "3762750c-384f-45ab-8a53-9d4aac94c8cd", "User", "USER" }
+                    { 1, "80d0df97-9a34-4fce-8cc6-c730248b75d6", "Admin", "ADMIN" },
+                    { 2, "cd93387d-d9fe-44f6-a2b6-00fb274e2354", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -271,10 +271,10 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastLoginAt", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePictureUrl", "SecurityStamp", "StudentId", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 10, 0, "9dcd6a95-b535-4f21-b0fc-7421ef081d21", new DateTime(2025, 12, 21, 17, 58, 27, 678, DateTimeKind.Utc).AddTicks(2834), null, "admin1@unibuc.ro", true, "Andrei", null, "Popescu", false, null, "ADMIN1@UNIBUC.RO", "ADMIN1@UNIBUC.RO", "AQAAAAIAAYagAAAAEKH2NSFZ0gOu21D2sdlK1AlCmkOOmr5LR0tDayBKPMMXEQT5WolB2ciELA0t+xKbkQ==", null, false, null, "edb3d48d-b096-4306-8a4e-22bbd9feefe8", null, false, "admin1@unibuc.ro" },
-                    { 11, 0, "ec6ae678-ac3a-4e4c-a80a-a616a85513d9", new DateTime(2025, 12, 21, 17, 58, 27, 717, DateTimeKind.Utc).AddTicks(3940), null, "admin2@unibuc.ro", true, "Maria", null, "Ionescu", false, null, "ADMIN2@UNIBUC.RO", "ADMIN2@UNIBUC.RO", "AQAAAAIAAYagAAAAEFTR84cLf5qVlAaLH+2uG1QOV6YKYQf1sPXrFdSnsq9pqq+8eUMEpPsPZJzYzM18vw==", null, false, null, "b89e4316-e36b-4620-9c92-f071b3039d0f", null, false, "admin2@unibuc.ro" },
-                    { 12, 0, "81c66387-cb5b-49ed-a0f3-c053d8e92593", new DateTime(2025, 12, 21, 17, 58, 27, 754, DateTimeKind.Utc).AddTicks(9078), null, "student1@s.unibuc.ro", true, "Ion", null, "Vasilescu", false, null, "STUDENT1@S.UNIBUC.RO", "STUDENT1@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEOBPLuf56yx1A/wJFrp11HM/sdMaghd828KnvNlK7BN1in7Nlzt1BfpQEs7wszbiEQ==", null, false, null, "2c5896f6-8b0e-4847-9e10-b662fedaa792", null, false, "student1@s.unibuc.ro" },
-                    { 13, 0, "2d51fea5-2057-4bde-988c-b5843d94fe0f", new DateTime(2025, 12, 21, 17, 58, 27, 792, DateTimeKind.Utc).AddTicks(1387), null, "student2@s.unibuc.ro", true, "Elena", null, "Georgescu", false, null, "STUDENT2@S.UNIBUC.RO", "STUDENT2@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEMLLWG7Ox8BXbFxx2KD/qfXKQVwYsJ/xwRgxvlBdEwyhjy3KQ+AYlcZuGMF7fVxfCQ==", null, false, null, "58359f1e-67d4-43c2-a4ad-7a969f5c3f06", null, false, "student2@s.unibuc.ro" }
+                    { 10, 0, "91349f47-285d-492c-9476-19b04bdac18b", new DateTime(2025, 12, 23, 11, 26, 18, 588, DateTimeKind.Utc).AddTicks(3459), null, "admin1@unibuc.ro", true, "Andrei", null, "Popescu", false, null, "ADMIN1@UNIBUC.RO", "ADMIN1@UNIBUC.RO", "AQAAAAIAAYagAAAAEHn3SqBRgVWA/kMbDd8lH6YJjBKf4VbGu3f/aVOjFvsU2igbJbwUF7IgtJOFpdiZ9g==", null, false, null, "800be171-27fe-4716-9f2e-d42191fb506d", null, false, "admin1@unibuc.ro" },
+                    { 11, 0, "17797c47-fa9d-48c6-9782-4b7513857fa2", new DateTime(2025, 12, 23, 11, 26, 18, 634, DateTimeKind.Utc).AddTicks(2365), null, "admin2@unibuc.ro", true, "Maria", null, "Ionescu", false, null, "ADMIN2@UNIBUC.RO", "ADMIN2@UNIBUC.RO", "AQAAAAIAAYagAAAAEPXf4mvRXnCjjeVpEcnSR03XPmSf9x3KYv6QU/oXEpFuA+dRy4cUYfkfRXzOY7AW7w==", null, false, null, "cacefe33-e957-41df-ba81-08b92a9280c0", null, false, "admin2@unibuc.ro" },
+                    { 12, 0, "3619694d-6302-4913-81f4-81fb9347b71d", new DateTime(2025, 12, 23, 11, 26, 18, 678, DateTimeKind.Utc).AddTicks(9222), null, "student1@s.unibuc.ro", true, "Ion", null, "Vasilescu", false, null, "STUDENT1@S.UNIBUC.RO", "STUDENT1@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEP9BvmZZoIF8PEnymfFdx+xy/TcWI/N2Z1y521gPPDYlepQbdzHjmozTyxq7JGpqNA==", null, false, null, "dc2f9d9f-9d29-47b8-bff5-3578d6c80af3", null, false, "student1@s.unibuc.ro" },
+                    { 13, 0, "6c7851e7-b403-4c57-b7e7-7c4fe0b8d90f", new DateTime(2025, 12, 23, 11, 26, 18, 722, DateTimeKind.Utc).AddTicks(5132), null, "student2@s.unibuc.ro", true, "Elena", null, "Georgescu", false, null, "STUDENT2@S.UNIBUC.RO", "STUDENT2@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEDNgCB6E1zvvEyJZHrg65Lv5hhkQMeBoVUbesuQpPOWFOJIRGRpqud88YCY0Ri/uXw==", null, false, null, "ce608f39-a3c8-4728-a639-7707be901ebd", null, false, "student2@s.unibuc.ro" }
                 });
 
             migrationBuilder.InsertData(
@@ -340,6 +340,12 @@ namespace CampusConnect.Infrastructure.Migrations
                 name: "EmailIndex",
                 table: "Users",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
