@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../../index.css';
 
 // URL-ul de bază al API-ului
@@ -13,18 +13,29 @@ interface Announcement {
   createdAt: string;
 }
 
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  dateCreated: string;
+}
+
 function ProfileView() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [savedAnnouncements, setSavedAnnouncements] = useState<Announcement[]>([]);
+  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
+  const [participatingEvents, setParticipatingEvents] = useState<Event[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(true);
 
   // Extragem datele și token-ul din localStorage
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const token = localStorage.getItem('token');
 
-  // Fetch saved announcements (bookmarks) pentru userul logat
+  // Fetch saved announcements and events pentru userul logat
   useEffect(() => {
     const fetchSaved = async () => {
       if (!token) {
@@ -33,20 +44,49 @@ function ProfileView() {
       }
 
       try {
-        const res = await fetch(`${API_BASE_URL}/announcements/saved`, {
+        // Fetch saved announcements
+        const resAnnouncements = await fetch(`${API_BASE_URL}/announcements/saved`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
 
-        if (res.ok) {
-          const data: Announcement[] = await res.json();
+        if (resAnnouncements.ok) {
+          const data: Announcement[] = await resAnnouncements.json();
           setSavedAnnouncements(data);
         } else {
           console.error('Eroare la preluarea saved announcements');
         }
+
+        // Fetch saved events
+        const resEvents = await fetch(`${API_BASE_URL}/event/saved`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (resEvents.ok) {
+          const data: Event[] = await resEvents.json();
+          setSavedEvents(data);
+        } else {
+          console.error('Eroare la preluarea saved events');
+        }
+
+        // Fetch participating events
+        const resParticipating = await fetch(`${API_BASE_URL}/event/my-events`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (resParticipating.ok) {
+          const data: Event[] = await resParticipating.json();
+          setParticipatingEvents(data);
+        } else {
+          console.error('Eroare la preluarea participating events');
+        }
       } catch (err) {
-        console.error('Eroare de rețea la saved announcements', err);
+        console.error('Eroare de rețea la saved items', err);
       } finally {
         setLoadingSaved(false);
       }
@@ -129,15 +169,24 @@ function ProfileView() {
   };
 
   return (
-    <div>
+    <div className="container" style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       <button
-        className="back"
         onClick={() => (window.location.href = '/dashboard')}
+        style={{
+          marginBottom: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          fontSize: '16px'
+        }}
       >
-        &#x2190;
+        ← Înapoi la Dashboard
       </button>
-
-      <div className="container">
+      
+      <div>
         <h2>
           {user.firstName} {user.lastName}
         </h2>
@@ -172,7 +221,7 @@ function ProfileView() {
 
         {/* Secțiunea de Saved / Bookmarked Announcements */}
         <section style={{ marginTop: '30px' }}>
-          <h3>Saved announcements</h3>
+          <h3>Saved Announcements</h3>
 
           {loadingSaved ? (
             <p>Se încarcă anunțurile salvate...</p>
@@ -193,6 +242,65 @@ function ProfileView() {
                   <h4 style={{ display: 'inline-block', margin: 0 }}>{a.title}</h4>
                   <p>{a.content}</p>
                   <small>{new Date(a.createdAt).toLocaleString()}</small>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Secțiunea de Saved Events */}
+        <section style={{ marginTop: '30px' }}>
+          <h3>Saved Events</h3>
+
+          {loadingSaved ? (
+            <p>Se încarcă evenimentele salvate...</p>
+          ) : savedEvents.length === 0 ? (
+            <p>Nu ai încă evenimente salvate.</p>
+          ) : (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {savedEvents.map((e) => (
+                <li
+                  key={e.id}
+                  style={{
+                    marginBottom: '15px',
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                  }}
+                >
+                  <strong style={{ marginRight: '8px' }}>{e.category}</strong>
+                  <h4 style={{ display: 'inline-block', margin: 0 }}>{e.title}</h4>
+                  <p>{e.description}</p>
+                  <small>Data eveniment: {new Date(e.date).toLocaleString('ro-RO')}</small>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Secțiunea de Evenimente la care Participi */}
+        <section style={{ marginTop: '30px' }}>
+          <h3>My Events (Participing)</h3>
+
+          {loadingSaved ? (
+            <p>Se încarcă evenimentele...</p>
+          ) : participatingEvents.length === 0 ? (
+            <p>Nu participi la niciun eveniment.</p>
+          ) : (
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {participatingEvents.map((e) => (
+                <li
+                  key={e.id}
+                  style={{
+                    marginBottom: '15px',
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                    backgroundColor: '#f0f8ff',
+                  }}
+                >
+                  <strong style={{ marginRight: '8px' }}>{e.category}</strong>
+                  <h4 style={{ display: 'inline-block', margin: 0 }}>{e.title}</h4>
+                  <p>{e.description}</p>
+                  <small>Data eveniment: {new Date(e.date).toLocaleString('ro-RO')}</small>
                 </li>
               ))}
             </ul>

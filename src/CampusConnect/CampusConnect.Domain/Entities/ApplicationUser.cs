@@ -11,4 +11,6 @@ public class ApplicationUser : IdentityUser<int>
     public string? ProfilePictureUrl { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; }
+    public ICollection<EventParticipant> EventsJoined { get; set; } = new List<EventParticipant>();
+
 }

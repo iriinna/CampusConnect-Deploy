@@ -13,16 +13,19 @@ namespace CampusConnect.Application.Services;
 public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager; 
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
     private readonly string[] _allowedDomains;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole<int>> roleManager,
         IEmailService emailService,
         IConfiguration configuration)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
         _emailService = emailService;
         _configuration = configuration;
         _allowedDomains = configuration.GetSection("AllowedEmailDomains").Get<string[]>() 
@@ -31,7 +34,15 @@ public class AuthService : IAuthService
 
     public async Task<AuthResult> RegisterAsync(RegisterRequest request)
     {
-        // Validare domeniu email
+        if (!IsEmailDomainAllowed(request.Email))
+        {
+            return new AuthResult
+            {
+                Success = false,
+                Message = "Doar studenții sau angajații UniBuc pot crea cont (email-ul trebuie să fie @unibuc.ro sau @s.unibuc.ro)."
+            };
+        }
+        // 4. Verificare existență utilizator
         if (!IsEmailDomainAllowed(request.Email))
         {
             return new AuthResult
@@ -41,18 +52,16 @@ public class AuthService : IAuthService
             };
         }
 
-        // Verificare dacă emailul există deja
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
         {
             return new AuthResult
             {
                 Success = false,
-                Message = "Un cont cu acest email există deja"
+                Message = "Un cont cu acest email există deja."
             };
         }
 
-        // Creare user
         var user = new ApplicationUser
         {
             UserName = request.Email,
@@ -71,49 +80,79 @@ public class AuthService : IAuthService
             return new AuthResult
             {
                 Success = false,
-                Message = "Eroare la crearea contului",
-                Errors = result.Errors.Select(e => e.Description).ToList()
+                Message = "Eroare la crearea contului. Verifică dacă parola respectă cerințele.",
+                Errors = result.Errors.Select(e => e.Description).ToList() // Aici vei vedea erorile de complexitate parolă
             };
         }
 
-    var normalizedEmail = request.Email.ToLowerInvariant();
-    string role;
-    //Admin pentru adresele @unibuc.ro
-    if (normalizedEmail.EndsWith("@unibuc.ro"))
-    {
-        role = "Admin";
-    }
-    // User pentru adresele @s.unibuc.ro
-    else if (normalizedEmail.EndsWith("@s.unibuc.ro"))
-    {
-        role = "User";
-    }
-    else
-    {
-        role = "User"; 
-    }
+        // 5. Atribuire Rol bazat pe email
+        var normalizedEmail = request.Email.ToLowerInvariant();
+        string roleName;
 
-    var roleResult = await _userManager.AddToRoleAsync(user, role);
-
-    if (!roleResult.Succeeded)
-    {
-        await _userManager.DeleteAsync(user); 
-        
-        return new AuthResult
+        // Logica de atribuire roluri:
+        // - admin1@unibuc.ro și admin2@unibuc.ro -> Admin
+        // - *@s.unibuc.ro -> User (Studenți)
+        // - *@unibuc.ro (alte emailuri) -> Professor
+        if (normalizedEmail == "admin1@unibuc.ro" || normalizedEmail == "admin2@unibuc.ro")
         {
-            Success = false,
-            Message = $"Contul a fost creat, dar atribuirea rolului '{role}' a esuat. S-a anulat crearea contului.",
-            Errors = roleResult.Errors.Select(e => e.Description).ToList()
-        };
-    }
+            roleName = "Admin";
+        }
+        else if (normalizedEmail.EndsWith("@s.unibuc.ro"))
+        {
+            // Excepții pentru profesori cu adresă de student
+            if (normalizedEmail == "anastasia.ispas@s.unibuc.ro" || normalizedEmail == "irina-maria.istrate@s.unibuc.ro")
+            {
+                roleName = "Professor";
+            }
+            else
+            {
+                roleName = "User";
+            }
+        }
+        else if (normalizedEmail.EndsWith("@unibuc.ro"))
+        {
+            roleName = "Professor";
+        }
+        else
+        {
+            roleName = "User"; // Default pentru alte emailuri
+        }
+
+        // Asigură-te că rolul există în bază înainte de a-l atribui
+        if (!await _roleManager.RoleExistsAsync(roleName))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<int>(roleName));
+        }
+
+        var roleResult = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!roleResult.Succeeded)
+        {
+            // Dacă rolul eșuează, ștergem user-ul creat parțial pentru a nu lăsa date inconsistente
+            await _userManager.DeleteAsync(user); 
+            
+            return new AuthResult
+            {
+                Success = false,
+                Message = $"Eroare la atribuirea rolului '{roleName}'. Contul a fost anulat.",
+                Errors = roleResult.Errors.Select(e => e.Description).ToList()
+            };
+        }
+
+        // 6. Generare Token Confirmare Email
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        
-        // Encode token pentru URL
         var encodedToken = Uri.EscapeDataString(emailToken);
         var confirmationLink = $"{_configuration["AppSettings:FrontendUrl"]}/confirm-email?userId={user.Id}&token={encodedToken}";
 
-        // Trimite email de confirmare
-        await _emailService.SendEmailConfirmationAsync(user.Email, confirmationLink);
+        try 
+        {
+            await _emailService.SendEmailConfirmationAsync(user.Email, confirmationLink);
+        }
+        catch (Exception ex)
+        {
+            // Opțional: Logăm eroarea de email dar nu blocăm succesul contului
+            Console.WriteLine($"Email Error: {ex.Message}");
+        }
 
         return new AuthResult
         {
@@ -128,40 +167,27 @@ public class AuthService : IAuthService
 
         if (user == null)
         {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Email sau parolă incorectă"
-            };
+            return new AuthResult { Success = false, Message = "Email sau parolă incorectă." };
         }
 
-        // Verificare email confirmat
         if (!user.EmailConfirmed)
         {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Trebuie să confirmi emailul înainte de a te autentifica. Verifică inbox-ul."
-            };
+            return new AuthResult { Success = false, Message = "Trebuie să confirmi email-ul înainte de autentificare." };
         }
 
-        // Verificare parolă
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!isPasswordValid)
         {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Email sau parolă incorectă"
-            };
+            return new AuthResult { Success = false, Message = "Email sau parolă incorectă." };
         }
 
-        // Update last login
         user.LastLoginAt = DateTime.UtcNow;
         await _userManager.UpdateAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault() ?? "User";
 
-        // Generare JWT token
-        var token = GenerateJwtToken(user);
+        var token = GenerateJwtToken(user, role);
+
         var expirationDays = int.Parse(_configuration["JwtSettings:ExpirationInDays"] ?? "7");
 
         return new AuthResult
@@ -174,8 +200,9 @@ public class AuthService : IAuthService
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                UserId = user.Id,
-                ExpiresAt = DateTime.UtcNow.AddDays(expirationDays)
+                Id = user.Id,
+                ExpiresAt = DateTime.UtcNow.AddDays(expirationDays),
+                Role = role
             }
         };
     }
@@ -183,80 +210,30 @@ public class AuthService : IAuthService
     public async Task<AuthResult> ConfirmEmailAsync(int userId, string token)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) return new AuthResult { Success = false, Message = "Utilizator invalid." };
+        if (user.EmailConfirmed) return new AuthResult { Success = false, Message = "Email deja confirmat." };
 
-        if (user == null)
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Utilizator invalid"
-            };
-        }
-
-        if (user.EmailConfirmed)
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Emailul este deja confirmat"
-            };
-        }
-
-        // Decode token
-        var decodedToken = Uri.UnescapeDataString(token);
-        var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
+        var result = await _userManager.ConfirmEmailAsync(user, Uri.UnescapeDataString(token));
         if (!result.Succeeded)
         {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Token invalid sau expirat",
-                Errors = result.Errors.Select(e => e.Description).ToList()
-            };
+            return new AuthResult { Success = false, Message = "Token invalid sau expirat.", Errors = result.Errors.Select(e => e.Description).ToList() };
         }
 
-        return new AuthResult
-        {
-            Success = true,
-            Message = "Email confirmat cu succes! Acum te poți autentifica."
-        };
+        return new AuthResult { Success = true, Message = "Email confirmat cu succes!" };
     }
 
     public async Task<AuthResult> ResendEmailConfirmationAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) return new AuthResult { Success = false, Message = "Cont inexistent." };
+        if (user.EmailConfirmed) return new AuthResult { Success = false, Message = "Deja confirmat." };
 
-        if (user == null)
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Nu există niciun cont cu acest email"
-            };
-        }
-
-        if (user.EmailConfirmed)
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Emailul este deja confirmat"
-            };
-        }
-
-        // Generare token nou
         var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var encodedToken = Uri.EscapeDataString(emailToken);
-        var confirmationLink = $"{_configuration["AppSettings:FrontendUrl"]}/confirm-email?userId={user.Id}&token={encodedToken}";
-
+        var confirmationLink = $"{_configuration["AppSettings:FrontendUrl"]}/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(emailToken)}";
         await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
 
-        return new AuthResult
-        {
-            Success = true,
-            Message = "Email de confirmare retrimis. Verifică inbox-ul."
-        };
+        return new AuthResult { Success = true, Message = "Email de confirmare retrimis." };
+
     }
 
     private bool IsEmailDomainAllowed(string email)
@@ -264,7 +241,7 @@ public class AuthService : IAuthService
         return _allowedDomains.Any(domain => email.EndsWith(domain, StringComparison.OrdinalIgnoreCase));
     }
 
-    private string GenerateJwtToken(ApplicationUser user)
+    private string GenerateJwtToken(ApplicationUser user, string role)
     {
         var claims = new[]
         {
@@ -272,13 +249,14 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
+            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+            new Claim(ClaimTypes.Role, role)
+
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expirationDays = int.Parse(_configuration["JwtSettings:ExpirationInDays"] ?? "7");
-
         var token = new JwtSecurityToken(
             issuer: _configuration["JwtSettings:Issuer"],
             audience: _configuration["JwtSettings:Audience"],
