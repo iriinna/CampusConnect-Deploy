@@ -175,5 +175,95 @@ namespace CampusConnect.Api.Controllers
 
             return Ok();
         }
+
+        [HttpPost("{id}/save")]
+        [Authorize]
+        public async Task<IActionResult> SaveEvent(int id)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var eventItem = await _context.Events.FindAsync(id);
+            if (eventItem == null) return NotFound();
+
+            // Verifică dacă deja e salvat
+            var alreadySaved = await _context.SavedEvents
+                .AnyAsync(se => se.UserId == userId.Value && se.EventId == id);
+
+            if (alreadySaved)
+            {
+                return BadRequest("Evenimentul este deja salvat.");
+            }
+
+            var savedEvent = new SavedEvent
+            {
+                UserId = userId.Value,
+                EventId = id
+            };
+
+            _context.SavedEvents.Add(savedEvent);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}/unsave")]
+        [Authorize]
+        public async Task<IActionResult> UnsaveEvent(int id)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var savedEvent = await _context.SavedEvents
+                .FirstOrDefaultAsync(se => se.UserId == userId.Value && se.EventId == id);
+
+            if (savedEvent == null)
+            {
+                return BadRequest("Evenimentul nu este salvat.");
+            }
+
+            _context.SavedEvents.Remove(savedEvent);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("saved")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Event>>> GetSavedEvents()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var savedEvents = await _context.SavedEvents
+                .Where(se => se.UserId == userId.Value)
+                .Include(se => se.Event)
+                    .ThenInclude(e => e.Organizer)
+                .Include(se => se.Event)
+                    .ThenInclude(e => e.Participants)
+                .Select(se => se.Event)
+                .ToListAsync();
+
+            return Ok(savedEvents);
+        }
+
+        [HttpGet("my-events")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Event>>> GetMyParticipatingEvents()
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized();
+
+            var participatingEvents = await _context.EventParticipants
+                .Where(ep => ep.UserId == userId.Value)
+                .Include(ep => ep.Event)
+                    .ThenInclude(e => e.Organizer)
+                .Include(ep => ep.Event)
+                    .ThenInclude(e => e.Participants)
+                .Select(ep => ep.Event)
+                .ToListAsync();
+
+            return Ok(participatingEvents);
+        }
     }
 }

@@ -71,18 +71,35 @@ function UpcomingEvents() {
   if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="events-page">
+    <div className="events-page" style={{ position: 'relative', paddingTop: '10px' }}>
       <button
-        onClick={() => navigate("/dashboard")}
-        style={{ position: "fixed", top: "70px", left: "15px", padding: "3px 6px", fontSize: "12px", border: "1px solid #ccc", backgroundColor: "#007BFF", color: "#fff", cursor: "pointer", width: "30px", height: "25px", textAlign: "center", fontWeight: "bold", zIndex: 1000 }}
+        onClick={() => navigate('/dashboard')}
+        style={{
+          position: 'fixed',
+          top: '15px',
+          left: '15px',
+          padding: '2px 5px',
+          backgroundColor: 'transparent',
+          color: '#6c757d',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '24px',
+          fontWeight: 'normal',
+          zIndex: 1000,
+          opacity: 0.7,
+          transition: 'opacity 0.2s'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+        title="Înapoi la Dashboard"
       >
-        ←
+        ← 
       </button>
-      {/* Titlu dinamic în funcție de prezența căutării */}
+      
       <h1>
         {searchTerm ? `Rezultate căutare: "${searchTerm}"` : "Evenimente Viitoare"}
       </h1>
-
+      
       {events.length === 0 ? (
         <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}>
           <p className="no-events">

@@ -4,6 +4,22 @@ import '../../index.css';
 
 const API_BASE_URL = 'http://localhost:5099/api';
 const DELETE_PROFILE_URL = `${API_BASE_URL}/user/delete`;
+interface Announcement {
+  id: number;
+  title: string;
+  content: string;
+  category: string;
+  createdAt: string;
+}
+
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  dateCreated: string;
+}
 
 function ProfileView() {
   const { id } = useParams();
@@ -12,7 +28,6 @@ function ProfileView() {
   const [targetUser, setTargetUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [savedAnnouncements, setSavedAnnouncements] = useState<any[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const userJson = localStorage.getItem('user');
   const loggedInUser = userJson ? JSON.parse(userJson) : null;
@@ -22,10 +37,15 @@ function ProfileView() {
                         loggedInUser?.Id || 
                         loggedInUser?.ID || 
                         loggedInUser?.userId; 
-    const isOwnProfile = !id || 
+    const isOwnProfile: boolean = !id || 
                         id === "undefined" || 
                         (loggedInUserId !== null && String(id) === String(loggedInUserId));
 
+
+  const [savedAnnouncements, setSavedAnnouncements] = useState<Announcement[]>([]);
+  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
+  const [participatingEvents, setParticipatingEvents] = useState<Event[]>([]);
+  const [loadingSaved, setLoadingSaved] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -47,11 +67,51 @@ function ProfileView() {
         if (res.ok) {
           const data = await res.json();
           setTargetUser(data);
-        } else {
-          setMessage({ type: 'error', text: 'Profilul nu a putut fi găsit.' });
+          // Fetch saved announcements
+          const resAnnouncements = await fetch(`${API_BASE_URL}/announcements/saved`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (resAnnouncements.ok) {
+            const data: Announcement[] = await resAnnouncements.json();
+            setSavedAnnouncements(data);
+          } else {
+            setMessage({ type: 'error', text: 'Profilul nu a putut fi găsit.' });
+          }
+
+          // Fetch saved events
+          const resEvents = await fetch(`${API_BASE_URL}/event/saved`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (resEvents.ok) {
+            const data: Event[] = await resEvents.json();
+            setSavedEvents(data);
+          } else {
+            console.error('Eroare la preluarea saved events');
+          }
+
+          // Fetch participating events
+          const resParticipating = await fetch(`${API_BASE_URL}/event/my-events`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (resParticipating.ok) {
+            const data: Event[] = await resParticipating.json();
+            setParticipatingEvents(data);
+          } else {
+            console.error('Eroare la preluarea participating events');
+          }
         }
       } catch (err) {
         setMessage({ type: 'error', text: 'Eroare de conexiune la server.' });
+
       } finally {
         setLoading(false);
       }

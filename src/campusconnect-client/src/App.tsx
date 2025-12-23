@@ -13,8 +13,11 @@ import ViewEvent from './pages/Event/ViewEvent';
 import Navbar from './pages/Navbar';
 import Users from './pages/User/Users';
 import './App.css';
-import UpcomingEvents from './pages/Event/UpcomingEvent';
 import { Outlet } from 'react-router-dom';
+import UpcomingEvents from './pages/Event/UpcomingEvent';
+import Groups from './pages/Groups/Groups';
+import GroupDetails from './pages/Groups/GroupDetails';
+import MyTasks from './pages/Groups/MyTasks';
 
 const ProtectedLayout = () => {
   return (
@@ -37,8 +40,8 @@ function App() {
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Home />} />
-            <Route path="/profile" element={<ProfileView />} />
-            <Route path="/profile/:id" element={<ProfileView />} />
+          <Route path="/profile" element={<ProfileView />} />
+          <Route path="/profile/:id" element={<ProfileView />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/announcements" element={<Announcements />} />
           <Route path="/create-announcement" element={<CreateAnnouncement />} />
@@ -47,6 +50,9 @@ function App() {
           <Route path="/edit-event/:id" element={<EditEvent />} />
           <Route path="/event/:id" element={<ViewEvent />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/:id" element={<GroupDetails />} />
+          <Route path="/my-tasks" element={<MyTasks />} />
         </Route>
       </Routes>
 
