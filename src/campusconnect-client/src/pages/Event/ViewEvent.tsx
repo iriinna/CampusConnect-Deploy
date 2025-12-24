@@ -162,23 +162,7 @@ function ViewEvent() {
   const isOrganizer = currentUserId && String(currentUserId) === String(event.organizerId);
 
   return (
-    <div className="container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <button
-        onClick={() => navigate('/events')}
-        style={{
-          marginBottom: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontSize: '16px'
-        }}
-      >
-        ← Înapoi la Evenimente
-      </button>
-      
+    <div className="container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>      
       <div className="event-header">
         <h1>{event.title}</h1>
         <span className="badge">{event.category}</span>

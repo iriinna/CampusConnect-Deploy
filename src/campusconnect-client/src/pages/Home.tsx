@@ -54,15 +54,6 @@ function Home() {
           ✓ My Tasks (TO-DO)
         </button>
 
-        <button
-          onClick={() => {
-            localStorage.clear();
-            window.location.href = '/login';
-          }}
-          style={{ ...buttonStyle, background: '#dc3545', color: 'white' }}
-        >
-          Logout
-        </button>
       </div>
     </div>
   );

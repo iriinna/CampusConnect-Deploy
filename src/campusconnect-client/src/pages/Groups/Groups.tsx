@@ -261,19 +261,6 @@ const Groups = () => {
               {showCreateForm ? 'Anulează' : '+ Creează Grup'}
             </button>
           )}
-          <button
-            onClick={() => navigate('/dashboard')}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            Înapoi la Dashboard
-          </button>
         </div>
       </div>
 

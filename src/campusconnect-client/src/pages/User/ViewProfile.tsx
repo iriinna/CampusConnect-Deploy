@@ -32,6 +32,7 @@ function ProfileView() {
   const userJson = localStorage.getItem('user');
   const loggedInUser = userJson ? JSON.parse(userJson) : null;
   const token = localStorage.getItem('token');
+  const defaultProfilePic = "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
 
   const loggedInUserId = loggedInUser?.id || 
                         loggedInUser?.Id || 
@@ -155,15 +156,14 @@ function ProfileView() {
 
   return (
     <div>
-      <button className="back" onClick={() => navigate('/dashboard')}>&#x2190;</button>
       
       <div className="container" style={{ textAlign: 'center' }}>
         <div className="profile-card" style={{ background: '#fff', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
           
           <img 
-            src={targetUser.profilePictureUrl || targetUser.ProfilePictureUrl || 'https://www.w3schools.com/howto/img_avatar.png'} 
+            src={targetUser?.profilePictureUrl || defaultProfilePic} 
             alt="Profile"
-            style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover', border: '5px solid #007BFF', marginBottom: '20px' }} 
+            style={{ width: '150px', height: '150px', borderRadius: '50%', objectFit: 'cover', border: '5px solid #c7cacdff', marginBottom: '20px' }} 
           />
 
           <h2>
@@ -192,9 +192,21 @@ function ProfileView() {
                 >
                   {isDeleting ? 'Se șterge...' : 'Șterge contul'}
                 </button>
+                
               </div>
             </div>
           )}
+           {isOwnProfile && (
+            <button
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.href = '/login';
+                  }}
+                  style={{ background: '#dc3545', color: 'white' }}
+                >
+                  Logout
+                </button>
+           )}
         </div>
 
         {isOwnProfile && savedAnnouncements.length > 0 && (

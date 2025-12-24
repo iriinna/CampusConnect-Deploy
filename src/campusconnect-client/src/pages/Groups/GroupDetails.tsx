@@ -291,20 +291,6 @@ const GroupDetails = () => {
   return (
     <div className="container">
       <div style={{ marginBottom: '20px' }}>
-        <button
-          onClick={() => navigate('/groups')}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginBottom: '20px'
-          }}
-        >
-          ← Înapoi la Grupuri
-        </button>
 
         <div style={{
           backgroundColor: 'white',

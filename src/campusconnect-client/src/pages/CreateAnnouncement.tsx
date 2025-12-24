@@ -36,39 +36,6 @@ const CreateAnnouncement: React.FC = () => {
 
   return (
     <div className="container" style={{ paddingTop: '80px', position: 'relative' }}>
-      {/* Butonul „Înapoi” fixat în colț */}
-      <button
-        onClick={() => window.location.href = '/announcements'}
-        style={{
-          position: 'fixed',
-          top: '15px',
-          left: '15px',
-          padding: '2px 4px',
-          fontSize: '12px',
-          border: '1px solid #ccc',
-          backgroundColor: '#007BFF',
-          color: '#333',
-          cursor: 'pointer',
-          borderRadius: '0',
-          lineHeight: '1',
-          width: '30px',
-          height: '25px',
-          textAlign: 'center',
-          fontWeight: 'bold',
-          zIndex: 1000,
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = '#f5f5f5';
-          e.currentTarget.style.borderColor = '#999';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = '#fff';
-          e.currentTarget.style.borderColor = '#ccc';
-        }}
-      >
-        ←
-      </button>
-
       <h1>Create announcement</h1>
 
       <form onSubmit={handleSubmit}>

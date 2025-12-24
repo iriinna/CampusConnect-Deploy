@@ -17,7 +17,7 @@ const Users: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-
+  const defaultProfilePic = "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg";
   const searchTerm = new URLSearchParams(location.search).get('search') || '';
 
   useEffect(() => {
@@ -48,12 +48,6 @@ const Users: React.FC = () => {
 
   return (
     <div className="container" style={{ paddingTop: "80px" }}>
-      <button
-        onClick={() => navigate("/dashboard")}
-        style={{ position: "fixed", top: "70px", left: "15px", padding: "3px 6px", fontSize: "12px", border: "1px solid #ccc", backgroundColor: "#007BFF", color: "#fff", cursor: "pointer", width: "30px", height: "25px", textAlign: "center", fontWeight: "bold", zIndex: 1000 }}
-      >
-        ←
-      </button>
 
       <h1>{searchTerm ? `Results for: "${searchTerm}"` : "All Users"}</h1>
 
@@ -91,7 +85,7 @@ const Users: React.FC = () => {
                 border: '1px solid #eee'
             }}>
                 <img 
-                    src={user.profilePictureUrl || 'https://via.placeholder.com/100'} 
+                    src={user.profilePictureUrl || defaultProfilePic} 
                     alt="Profile" 
                     style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', marginBottom: '15px', border: '3px solid #f0f2f5' }} 
                 />

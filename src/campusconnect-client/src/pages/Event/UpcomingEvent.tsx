@@ -72,30 +72,6 @@ function UpcomingEvents() {
 
   return (
     <div className="events-page" style={{ position: 'relative', paddingTop: '10px' }}>
-      <button
-        onClick={() => navigate('/dashboard')}
-        style={{
-          position: 'fixed',
-          top: '15px',
-          left: '15px',
-          padding: '2px 5px',
-          backgroundColor: 'transparent',
-          color: '#6c757d',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '24px',
-          fontWeight: 'normal',
-          zIndex: 1000,
-          opacity: 0.7,
-          transition: 'opacity 0.2s'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-        onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
-        title="Înapoi la Dashboard"
-      >
-        ← 
-      </button>
-      
       <h1>
         {searchTerm ? `Rezultate căutare: "${searchTerm}"` : "Evenimente Viitoare"}
       </h1>

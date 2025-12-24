@@ -84,12 +84,7 @@ const Announcements: React.FC = () => {
 
   return (
     <div className="container" style={{ paddingTop: "80px", position: "relative" }}>
-      <button
-        onClick={() => navigate("/dashboard")}
-        style={{ position: "fixed", top: "70px", left: "15px", padding: "3px 6px", fontSize: "12px", border: "1px solid #ccc", backgroundColor: "#007BFF", color: "#fff", cursor: "pointer", width: "30px", height: "25px", textAlign: "center", fontWeight: "bold", zIndex: 1000 }}
-      >
-        ←
-      </button>
+
       <h1>{searchTerm ? `Results for: "${searchTerm}"` : "Announcements"}</h1>
       {!searchTerm && !category && announcements.length > 0 && (
         <button
@@ -111,6 +106,12 @@ const Announcements: React.FC = () => {
                Vezi toate anunțurile
             </button>
           )}
+          <button
+          onClick={() => navigate("/create-announcement")}
+          style={{ marginBottom: "20px", padding: "6px 12px", cursor: "pointer" }}
+        >
+          Create announcement
+        </button>
         </div>
       ) : (
         <>
