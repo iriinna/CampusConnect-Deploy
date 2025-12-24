@@ -115,26 +115,32 @@ namespace CampusConnect.API.Controllers
             return NotFound(new { message = "Eroare. Utilizatorul nu a fost gasit." });
         }
 
-        [HttpDelete("delete")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpDelete("delete/{id?}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser(int? id)
         {
-            var userId = GetCurrentUserId();
-            if (userId == null)
+            var currentUserId = GetCurrentUserId();
+            if (currentUserId == null)
             {
                 return Unauthorized(new { message = "ID-ul utilizatorului nu a putut fi extras din token." });
             }
 
-            var success = await _userService.DeleteUserAsync(userId.Value);
+            int targetId = id ?? currentUserId.Value;
+            var isAdmin = User.IsInRole("Admin");
 
+            if (targetId != currentUserId && !isAdmin)
+            {
+                return Unauthorized(); 
+            }
+
+            var success = await _userService.DeleteUserAsync(targetId);
             if (success)
             {
-                return NoContent(); 
+                return NoContent();
             }
-            
-            return NotFound(new { message = "Eroare. Utilizatorul nu a fost gasit." });
+
+            return NotFound(new { message = "Eroare. Utilizatorul nu a fost găsit." });
         }
     }
 }
