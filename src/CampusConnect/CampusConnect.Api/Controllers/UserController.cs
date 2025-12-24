@@ -142,5 +142,24 @@ namespace CampusConnect.API.Controllers
 
             return NotFound(new { message = "Eroare. Utilizatorul nu a fost găsit." });
         }
+
+        [HttpPatch("{id}/toggle-admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ToggleAdminRole(int id)
+        {
+            var newRole = await _userService.ToggleAdminRoleAsync(id);
+
+            if (newRole == null)
+            {
+                return NotFound(new { message = "Utilizatorul nu a fost găsit." });
+            }
+
+            return Ok(new 
+            { 
+                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}", 
+                newRole = newRole 
+            });
+        }
+
     }
 }
