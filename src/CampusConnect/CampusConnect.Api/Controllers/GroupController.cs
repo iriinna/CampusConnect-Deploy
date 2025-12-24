@@ -2,6 +2,7 @@ using CampusConnect.Application.DTOs.Groups;
 using CampusConnect.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CampusConnect.Api.Controllers;
 
@@ -16,8 +17,16 @@ public class GroupController : ControllerBase
     {
         _groupService = groupService;
     }
-
-    // Group Management
+    private int? GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+        return null;
+    }
+    
     [HttpPost]
     [Authorize(Roles = "Professor,Admin")]
     public async Task<ActionResult<GroupResponse>> CreateGroup([FromBody] CreateGroupRequest request)
@@ -98,11 +107,23 @@ public class GroupController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Professor,Admin")]
+    [Authorize] 
     public async Task<ActionResult> DeleteGroup(int id)
     {
         try
         {
+            var userId = GetCurrentUserId();
+            var isAdmin = User.IsInRole("Admin");
+
+            var group = await _groupService.GetGroupByIdAsync(id);
+            if (group == null) 
+                return NotFound(new { message = "Group not found" });
+
+            if (!isAdmin && group.ProfessorId != userId)
+            {
+                return Forbid();
+            }
+
             var result = await _groupService.DeleteGroupAsync(id);
             if (!result)
                 return NotFound(new { message = "Group not found" });
@@ -112,6 +133,10 @@ public class GroupController : ControllerBase
         catch (UnauthorizedAccessException ex)
         {
             return Forbid(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
         }
     }
 
@@ -150,7 +175,6 @@ public class GroupController : ControllerBase
         }
     }
 
-    // Task Management
     [HttpPost("{groupId}/tasks")]
     [Authorize(Roles = "Professor,Admin")]
     public async Task<ActionResult<GroupTaskResponse>> CreateTask(int groupId, [FromBody] CreateTaskRequest request)
@@ -181,13 +205,15 @@ public class GroupController : ControllerBase
         return Ok(tasks);
     }
 
+
     [HttpDelete("tasks/{taskId}")]
-    [Authorize(Roles = "Professor,Admin")]
+    [Authorize]
     public async Task<ActionResult> DeleteTask(int taskId)
     {
         try
         {
             var result = await _groupService.DeleteTaskAsync(taskId);
+            
             if (!result)
                 return NotFound(new { message = "Task not found" });
 
@@ -195,11 +221,14 @@ public class GroupController : ControllerBase
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Forbid(ex.Message);
+            return Forbid(ex.Message); 
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
         }
     }
 
-    // Saved Tasks
     [HttpPost("tasks/{taskId}/save")]
     public async Task<ActionResult> SaveTask(int taskId)
     {

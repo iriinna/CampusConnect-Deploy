@@ -22,7 +22,15 @@ import { Badge } from '../../components/ui/Badge';
 import { Avatar, AvatarFallback } from '../../components/ui/Avatar';
 
 const API_BASE_URL = 'http://localhost:5099/api';
-const DELETE_PROFILE_URL = `${API_BASE_URL}/user/delete`;
+const ROLE_CLAIM_TYPE = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
+interface DecodedToken {
+  nameid?: string;
+  sub?: string;
+  id?: string;
+  role?: string;
+  [key: string]: any; 
+}
 
 interface Announcement {
   id: number;
@@ -45,21 +53,22 @@ function ProfileView() {
   const navigate = useNavigate();
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadingSaved, setLoading] = useState(false);
   const [savedAnnouncements, setSavedAnnouncements] = useState<Announcement[]>([]);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [participatingEvents, setParticipatingEvents] = useState<Event[]>([]);
-  const [loadingSaved, setLoadingSaved] = useState(true);
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const fetchSaved = async () => {
+    const fetchProfile = async () => {
       if (!token) {
-        setLoadingSaved(false);
+        setLoading(false);
         return;
       }
 
+      setLoading(true);
       try {
         const [resAnnouncements, resEvents, resParticipating] = await Promise.all([
           fetch(`${API_BASE_URL}/announcements/saved`, {
@@ -90,12 +99,14 @@ function ProfileView() {
       } catch (err) {
         console.error('Network error fetching saved items', err);
       } finally {
-        setLoadingSaved(false);
+        setLoading(false);
       }
     };
 
-    fetchSaved();
-  }, [token]);
+    if (token) {
+        fetchProfile();
+    }
+  }, [token]); 
 
   if (!user.firstName || !token) {
     return (
@@ -109,7 +120,6 @@ function ProfileView() {
       </Layout>
     );
   }
-
   const handleDeleteAccount = async () => {
     if (
       !window.confirm(
@@ -120,15 +130,13 @@ function ProfileView() {
     }
 
     setIsDeleting(true);
-    setMessage(null);
-
     try {
-      const response = await fetch(DELETE_PROFILE_URL, {
+      const res = await fetch(`${API_BASE_URL}/user/delete/${user.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.status === 204) {
+      if (res.status === 204) {
         setMessage({
           type: 'success',
           text: 'Account deleted successfully! Redirecting...',
@@ -142,11 +150,11 @@ function ProfileView() {
         }, 2000);
       } else {
         const errorText =
-          response.status === 404
+          res.status === 404
             ? 'Account not found (possibly already deleted).'
-            : response.status === 401
+            : res.status === 401
             ? 'Session expired. Please log in again.'
-            : `HTTP error ${response.status}.`;
+            : `HTTP error ${res.status}.`;
 
         setMessage({
           type: 'error',

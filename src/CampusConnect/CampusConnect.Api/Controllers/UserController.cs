@@ -19,6 +19,23 @@ namespace CampusConnect.API.Controllers
             _userService = userService;
         }
         
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUsers([FromQuery] string? search)
+    {
+        var users = await _userService.SearchUsersAsync(search ?? "");
+        
+        var response = users.Select(u => new 
+        {
+            id = u.Id,
+            firstName = u.FirstName,
+            lastName = u.LastName,
+            profilePictureUrl = u.ProfilePictureUrl,
+            studentId = u.StudentId,
+            dateofBirth = u.DateOfBirth
+        });
+
+        return Ok(response);
+    }
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -47,6 +64,7 @@ namespace CampusConnect.API.Controllers
 
             var responseDto = new UserProfileResponse
             {
+                Id=user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 ProfilePictureUrl = user.ProfilePictureUrl,
@@ -57,6 +75,22 @@ namespace CampusConnect.API.Controllers
             return Ok(responseDto);
         }
 
+
+        [HttpGet("public-details/{id}")]
+        public async Task<IActionResult> GetPublicUserDetails(int id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null) return NotFound();
+
+            return Ok(new {
+                id = user.Id,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                studentId = user.StudentId,
+                profilePictureUrl = user.ProfilePictureUrl,
+                dateOfBirth = user.DateOfBirth 
+            });
+        }
         [HttpPut("update")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserProfileRequest model)
         {
@@ -81,26 +115,51 @@ namespace CampusConnect.API.Controllers
             return NotFound(new { message = "Eroare. Utilizatorul nu a fost gasit." });
         }
 
-        [HttpDelete("delete")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)] 
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [HttpDelete("delete/{id?}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser(int? id)
         {
-            var userId = GetCurrentUserId();
-            if (userId == null)
+            var currentUserId = GetCurrentUserId();
+            if (currentUserId == null)
             {
                 return Unauthorized(new { message = "ID-ul utilizatorului nu a putut fi extras din token." });
             }
 
-            var success = await _userService.DeleteUserAsync(userId.Value);
+            int targetId = id ?? currentUserId.Value;
+            var isAdmin = User.IsInRole("Admin");
 
+            if (targetId != currentUserId && !isAdmin)
+            {
+                return Unauthorized(); 
+            }
+
+            var success = await _userService.DeleteUserAsync(targetId);
             if (success)
             {
-                return NoContent(); 
+                return NoContent();
             }
-            
-            return NotFound(new { message = "Eroare. Utilizatorul nu a fost gasit." });
+
+            return NotFound(new { message = "Eroare. Utilizatorul nu a fost găsit." });
         }
+
+        [HttpPatch("{id}/toggle-admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ToggleAdminRole(int id)
+        {
+            var newRole = await _userService.ToggleAdminRoleAsync(id);
+
+            if (newRole == null)
+            {
+                return NotFound(new { message = "Utilizatorul nu a fost găsit." });
+            }
+
+            return Ok(new 
+            { 
+                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}", 
+                newRole = newRole 
+            });
+        }
+
     }
 }

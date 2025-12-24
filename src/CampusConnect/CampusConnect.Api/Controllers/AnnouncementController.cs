@@ -15,22 +15,41 @@ public class AnnouncementsController : ControllerBase
         _context = context;
     }
     private int? GetCurrentUserId()
+{
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (string.IsNullOrEmpty(userIdClaim))
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
-        {
-            return userId;
-        }
-        return null;
+        userIdClaim = User.FindFirst("id")?.Value;
     }
 
+    if (string.IsNullOrEmpty(userIdClaim))
+    {
+        userIdClaim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+    }
+
+    if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+    {
+        return userId;
+    }
+    return null;
+}
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category)
+    public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category, [FromQuery] string? search)
     {
         var query = _context.Announcements.AsQueryable();
+
         if (!string.IsNullOrWhiteSpace(category))
         {
             query = query.Where(a => a.Category == category);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim().ToLower();
+            query = query.Where(a => a.Title.ToLower().Contains(search) 
+                                || a.Content.ToLower().Contains(search));
         }
 
         var list = await query
@@ -49,38 +68,62 @@ public class AnnouncementsController : ControllerBase
         return Ok(announcement);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(Announcement announcement)
+[Authorize] 
+[HttpPost]
+public async Task<IActionResult> Create(Announcement announcement)
+{
+    var userId = GetCurrentUserId();
+    if (userId == null) return Unauthorized();
+
+    announcement.CreatedByUserId = userId.Value; 
+    if (announcement.CreatedAt == default) announcement.CreatedAt = DateTime.UtcNow;
+
+    _context.Announcements.Add(announcement);
+    await _context.SaveChangesAsync();
+    return CreatedAtAction(nameof(GetById), new { id = announcement.Id }, announcement);
+}
+
+[Authorize]
+[HttpPut("{id}")]
+public async Task<IActionResult> Update(int id, Announcement updated)
+{
+    var announcement = await _context.Announcements.FindAsync(id);
+    if (announcement == null) return NotFound();
+    var userId = GetCurrentUserId();
+    var isAdmin = User.IsInRole("Admin"); 
+    
+    if (announcement.CreatedByUserId != userId && !isAdmin)
     {
-        _context.Announcements.Add(announcement);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = announcement.Id }, announcement);
+        return Forbid(); 
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Announcement updated)
+    announcement.Title = updated.Title;
+    announcement.Content = updated.Content;
+    await _context.SaveChangesAsync();
+
+    return NoContent();
+}
+
+[Authorize]
+[HttpDelete("{id}")]
+public async Task<IActionResult> Delete(int id)
+{
+    var announcement = await _context.Announcements.FindAsync(id);
+    if (announcement == null) return NotFound();
+
+    var userId = GetCurrentUserId();
+    var isAdmin = User.IsInRole("Admin"); 
+
+    if (announcement.CreatedByUserId != userId && !isAdmin)
     {
-        var announcement = await _context.Announcements.FindAsync(id);
-        if (announcement == null) return NotFound();
-
-        announcement.Title = updated.Title;
-        announcement.Content = updated.Content;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        return Forbid();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var announcement = await _context.Announcements.FindAsync(id);
-        if (announcement == null) return NotFound();
+    _context.Announcements.Remove(announcement);
+    await _context.SaveChangesAsync();
 
-        _context.Announcements.Remove(announcement);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
+    return NoContent();
+}
 
 
     [Authorize]

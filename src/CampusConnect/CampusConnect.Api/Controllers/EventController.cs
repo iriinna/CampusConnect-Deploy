@@ -28,12 +28,22 @@ namespace CampusConnect.Api.Controllers
         }
 
         [HttpGet("upcoming")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetUpcomingEvents()
+        public async Task<ActionResult<IEnumerable<Event>>> GetUpcomingEvents([FromQuery] string? search = null)
         {
-            var events = await _context.Events
-                .Where(e => e.Date > DateTime.UtcNow) 
+            var query = _context.Events
+                .Where(e => e.Date > DateTime.UtcNow)
                 .Include(e => e.Participants)
-                .OrderBy(e => e.Date) 
+                .AsQueryable(); 
+                
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(e => e.Title.ToLower().Contains(search) 
+                                    || e.Description.ToLower().Contains(search));
+            }
+
+            var events = await query
+                .OrderBy(e => e.Date)
                 .ToListAsync();
 
             return Ok(events);
@@ -56,6 +66,13 @@ namespace CampusConnect.Api.Controllers
         {
             var userId = GetCurrentUserId();
             if (userId == null) return Unauthorized();
+            var isAdmin = User.IsInRole("Admin");
+            var isProfessor = User.IsInRole("Professor");
+
+            if (!isAdmin && !isProfessor)
+            {
+                return Unauthorized(); 
+            }
 
             eventItem.OrganizerId = userId.Value;
             eventItem.DateCreated = DateTime.UtcNow;
@@ -66,7 +83,7 @@ namespace CampusConnect.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { id = eventItem.Id }, eventItem);
         }
 
-        [HttpPut("{id}")]
+       [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> Update(int id, Event updatedEvent)
         {
@@ -74,7 +91,9 @@ namespace CampusConnect.Api.Controllers
             var existingEvent = await _context.Events.FindAsync(id);
 
             if (existingEvent == null) return NotFound();
-            if (userId != existingEvent.OrganizerId) 
+            var isAdmin = User.IsInRole("Admin");
+
+            if (userId != existingEvent.OrganizerId && !isAdmin) 
             {
                 return Unauthorized(); 
             }
@@ -97,10 +116,11 @@ namespace CampusConnect.Api.Controllers
             var eventItem = await _context.Events.FindAsync(id);
 
             if (eventItem == null) return NotFound();
+            var isAdmin = User.IsInRole("Admin");
 
-            if (userId!= eventItem.OrganizerId)
+            if (userId != eventItem.OrganizerId && !isAdmin)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             _context.Events.Remove(eventItem);
@@ -122,7 +142,6 @@ namespace CampusConnect.Api.Controllers
 
             if (eventItem == null) return NotFound();
 
-            // Verificare: Să nu participe de două ori
             if (eventItem.Participants.Any(p => p.UserId == userId.Value))
             {
                 return BadRequest("Deja participi la acest eveniment.");
@@ -175,8 +194,6 @@ namespace CampusConnect.Api.Controllers
 
             var eventItem = await _context.Events.FindAsync(id);
             if (eventItem == null) return NotFound();
-
-            // Verifică dacă deja e salvat
             var alreadySaved = await _context.SavedEvents
                 .AnyAsync(se => se.UserId == userId.Value && se.EventId == id);
 

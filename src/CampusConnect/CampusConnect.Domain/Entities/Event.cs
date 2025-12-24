@@ -1,5 +1,6 @@
 using CampusConnect.Domain.Entities;
 using System;
+namespace CampusConnect.Domain.Entities;
 public class Event
 {
     public int Id { get; set; }

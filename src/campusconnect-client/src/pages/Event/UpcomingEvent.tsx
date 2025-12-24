@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar,
@@ -42,17 +42,21 @@ const categories = [
 
 function UpcomingEvents() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extragem termenul de căutare din URL (?search=...)
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('search') || '';
 
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
 
   const checkAdmin = () => {
     const userString = localStorage.getItem('user');
     if (!userString) return false;
-
     try {
       const user = JSON.parse(userString);
       return user.role?.toLowerCase() === 'admin' || user.isAdmin === true;
@@ -63,11 +67,19 @@ function UpcomingEvents() {
 
   const isAdmin = checkAdmin();
 
-  const fetchUpcomingEvents = async () => {
+  // Funcția de fetch primește acum searchTerm ca parametru
+  const fetchEvents = async (search: string) => {
+    setLoading(true);
+    setError(''); // Resetăm eroarea la fiecare căutare nouă
     try {
-      const response = await fetch(`${API_BASE_URL}/event/upcoming`);
-      if (!response.ok) throw new Error('Could not load events.');
+      // Dacă search există, adăugăm parametrul în URL, altfel chemăm endpoint-ul simplu
+      const url = search 
+        ? `${API_BASE_URL}/event/upcoming?search=${encodeURIComponent(search)}`
+        : `${API_BASE_URL}/event/upcoming`;
 
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Nu s-au putut incarca evenimentele.');
+      
       const data = await response.json();
       setEvents(data);
     } catch (err) {
@@ -78,9 +90,11 @@ function UpcomingEvents() {
     }
   };
 
+  // Acest useEffect "ascultă" de schimbările din URL
+  // Când utilizatorul scrie în bara de search și apasă Enter, searchTerm se schimbă și declanșează fetch-ul
   useEffect(() => {
-    fetchUpcomingEvents();
-  }, []);
+    fetchEvents(searchTerm);
+  }, [searchTerm]);
 
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
@@ -177,12 +191,14 @@ function UpcomingEvents() {
               {/* Search and Category Filter */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Search events..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={localSearchTerm}
+                    onChange={(e) => {
+                      setLocalSearchTerm(e.target.value);
+                      navigate(`?search=${encodeURIComponent(e.target.value)}`);
+                    }}
                     className="pl-10"
                   />
                 </div>

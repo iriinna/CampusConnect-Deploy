@@ -9,6 +9,7 @@ namespace CampusConnect.Domain.Entities
     public required string Content { get; set; }
 
     public string Category { get; set; } = "General";
+    public int CreatedByUserId { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow; 
 }

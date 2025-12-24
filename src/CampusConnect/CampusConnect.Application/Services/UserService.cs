@@ -14,6 +14,19 @@ namespace CampusConnect.Application.Services
             _userManager = userManager;
         }
 
+        public async Task<IEnumerable<ApplicationUser>> SearchUsersAsync(string search)
+        {
+            var usersQuery = _userManager.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                usersQuery = usersQuery.Where(u => u.FirstName.ToLower().Contains(search) 
+                                               || u.LastName.ToLower().Contains(search));
+            }
+
+            return await Task.FromResult(usersQuery.ToList());
+        }
         public async Task<ApplicationUser?> GetUserByIdAsync(int userId)
         {
             return await _userManager.FindByIdAsync(userId.ToString());
@@ -61,6 +74,46 @@ namespace CampusConnect.Application.Services
             var result = await _userManager.DeleteAsync(user);
 
             return result.Succeeded;
+        }
+        public async Task<string> ToggleAdminRoleAsync(int userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null) return null; 
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var isAdmin = currentRoles.Contains("Admin");
+
+            string newRole;
+
+            if (isAdmin)
+            {
+                var email = user.Email?.ToLower() ?? "";
+
+                if (email.Contains("s.unibuc.ro"))
+                {
+                    newRole = "User"; 
+                }
+                else if (email.Contains("unibuc.ro"))
+                {
+                    newRole = "Professor";
+                }
+                else
+                {
+                    newRole = "User"; 
+                }
+            }
+            else
+            {
+                newRole = "Admin";
+            }
+
+            if (currentRoles.Any())
+            {
+                await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            }
+
+            await _userManager.AddToRoleAsync(user, newRole);
+            return newRole;
         }
     }
 }

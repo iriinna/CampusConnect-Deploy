@@ -19,6 +19,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
+import { useLocation, useNavigate } from 'react-router-dom';
+import '../index.css';
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
@@ -45,12 +47,18 @@ const Announcements = () => {
   const [category, setCategory] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchAnnouncements = async () => {
       setLoading(true);
       try {
-        const params = category ? `?category=${encodeURIComponent(category)}` : '';
-        const res = await fetch(`${API_BASE_URL}/announcements${params}`);
+        const params = new URLSearchParams();
+        if (category) params.append('category', category);
+        if (searchTerm) params.append('search', searchTerm);
+
+        const res = await fetch(`${API_BASE_URL}/announcements?${params.toString()}`);
         const data = await res.json();
         setAnnouncements(data);
       } catch (err) {
@@ -59,14 +67,12 @@ const Announcements = () => {
         setLoading(false);
       }
     };
-
     fetchAnnouncements();
-  }, [category]);
+  }, [category, location.search]); 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
-
     const fetchSaved = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/announcements/saved`, {
@@ -74,7 +80,6 @@ const Announcements = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-
         if (res.ok) {
           const data = await res.json();
           setSavedIds(data.map((a: any) => a.id));
@@ -83,7 +88,6 @@ const Announcements = () => {
         console.error('Error fetching saved announcements', err);
       }
     };
-
     fetchSaved();
   }, []);
 
@@ -95,7 +99,6 @@ const Announcements = () => {
     }
 
     const isSaved = savedIds.includes(id);
-
     try {
       const res = await fetch(`${API_BASE_URL}/announcements/${id}/bookmark`, {
         method: isSaved ? 'DELETE' : 'POST',
