@@ -1,5 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import '../index.css';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import {
+  Megaphone,
+  Plus,
+  Star,
+  Trash2,
+  Filter,
+  Search,
+  Calendar,
+  Tag,
+  BookmarkPlus,
+  BookmarkCheck,
+  Sparkles,
+} from 'lucide-react';
+import { Layout } from '../components/Layout';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { Input } from '../components/ui/Input';
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
@@ -11,18 +30,26 @@ interface Announcement {
   createdAt: string;
 }
 
-const Announcements: React.FC = () => {
+const categories = [
+  { value: '', label: 'All Categories', color: 'bg-slate-500' },
+  { value: 'Academic', label: 'Academic', color: 'bg-blue-500' },
+  { value: 'Sports', label: 'Sports', color: 'bg-green-500' },
+  { value: 'Events', label: 'Events', color: 'bg-purple-500' },
+  { value: 'General', label: 'General', color: 'bg-orange-500' },
+];
+
+const Announcements = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [savedIds, setSavedIds] = useState<number[]>([]);
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // 1) Fetch announcements (cu filtrare pe categorie)
   useEffect(() => {
     const fetchAnnouncements = async () => {
       setLoading(true);
       try {
-        const params = category ? `?category=${encodeURIComponent(category)}` : "";
+        const params = category ? `?category=${encodeURIComponent(category)}` : '';
         const res = await fetch(`${API_BASE_URL}/announcements${params}`);
         const data = await res.json();
         setAnnouncements(data);
@@ -36,17 +63,16 @@ const Announcements: React.FC = () => {
     fetchAnnouncements();
   }, [category]);
 
-  // 2) Fetch saved announcements (bookmark-urile userului logat)
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) return;
 
     const fetchSaved = async () => {
       try {
         const res = await fetch(`${API_BASE_URL}/announcements/saved`, {
           headers: {
-            "Authorization": `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (res.ok) {
@@ -54,19 +80,17 @@ const Announcements: React.FC = () => {
           setSavedIds(data.map((a: any) => a.id));
         }
       } catch (err) {
-        console.error("Eroare la preluarea saved announcements", err);
+        console.error('Error fetching saved announcements', err);
       }
     };
 
     fetchSaved();
   }, []);
 
-  // 3) Toggle bookmark (save / unsave)
   const handleToggleBookmark = async (id: number) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      alert("Trebuie să fii logat ca să salvezi un anunț.");
-      window.location.href = "/login";
+      alert('You need to be logged in to save announcements.');
       return;
     }
 
@@ -74,25 +98,24 @@ const Announcements: React.FC = () => {
 
     try {
       const res = await fetch(`${API_BASE_URL}/announcements/${id}/bookmark`, {
-        method: isSaved ? "DELETE" : "POST",
+        method: isSaved ? 'DELETE' : 'POST',
         headers: {
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.ok || res.status === 204) {
-        setSavedIds(prev =>
-          isSaved ? prev.filter(x => x !== id) : [...prev, id]
+        setSavedIds((prev) =>
+          isSaved ? prev.filter((x) => x !== id) : [...prev, id]
         );
       }
     } catch (err) {
-      console.error("Eroare bookmark:", err);
+      console.error('Bookmark error:', err);
     }
   };
 
-  // 4) Delete announcement
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Ești sigur că vrei să ștergi acest anunț?')) return;
+    if (!window.confirm('Are you sure you want to delete this announcement?')) return;
 
     try {
       const response = await fetch(`${API_BASE_URL}/announcements/${id}`, {
@@ -100,157 +123,219 @@ const Announcements: React.FC = () => {
       });
 
       if (response.ok) {
-        setAnnouncements(prev => prev.filter(a => a.id !== id));
+        setAnnouncements((prev) => prev.filter((a) => a.id !== id));
       }
     } catch (err) {
-      console.error("Eroare la ștergere:", err);
+      console.error('Delete error:', err);
     }
   };
 
-  if (loading) return <p>Se încarcă anunțurile...</p>;
+  const filteredAnnouncements = announcements.filter((a) =>
+    a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    a.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const getCategoryColor = (cat: string) => {
+    const found = categories.find((c) => c.value === cat);
+    return found?.color || 'bg-slate-500';
+  };
 
   return (
-    <div className="container" style={{ paddingTop: "80px", position: "relative" }}>
-      {/* Buton Înapoi */}
-      <button
-        onClick={() => window.location.href = "/dashboard"}
-        style={{
-          position: "fixed",
-          top: "15px",
-          left: "15px",
-          padding: "3px 6px",
-          fontSize: "12px",
-          border: "1px solid #ccc",
-          backgroundColor: "#007BFF",
-          color: "#fff",
-          cursor: "pointer",
-          width: "30px",
-          height: "25px",
-          textAlign: "center",
-          fontWeight: "bold",
-          zIndex: 1000
-        }}
-      >
-        ←
-      </button>
+    <Layout>
+      <div className="space-y-6">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 p-8 text-white shadow-2xl"
+        >
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6TTI0IDBoNnY2aC02VjB6TTAgMjRoNnY2SDB2LTZ6bTAgMGg2djZIMHYtNnoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
-      <h1>Announcements</h1>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <Megaphone className="h-8 w-8" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold flex items-center gap-2">
+                    Announcements
+                    <Sparkles className="h-6 w-6 text-yellow-300" />
+                  </h1>
+                  <p className="text-white/80 mt-1">Stay updated with campus news and events</p>
+                </div>
+              </div>
+            </div>
 
-      <button
-        onClick={() => window.location.href = "/create-announcement"}
-        style={{ marginBottom: "20px", padding: "6px 12px", cursor: "pointer" }}
-      >
-        Create announcement
-      </button>
+            <Link to="/create-announcement">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button className="bg-white text-blue-600 hover:bg-white/90 shadow-lg">
+                  <Plus className="h-5 w-5 mr-2" />
+                  Create Announcement
+                </Button>
+              </motion.div>
+            </Link>
+          </div>
+        </motion.div>
 
-      {/* Dropdown categorie */}
-      <div style={{ marginBottom: "15px" }}>
-        <label>
-          Category:{" "}
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="">All</option>
-            <option value="Academic">Academic</option>
-            <option value="Sports">Sports</option>
-            <option value="Events">Events</option>
-            <option value="General">General</option>
-          </select>
-        </label>
-      </div>
-
-      {announcements.length === 0 ? (
-        <p>Nu există anunțuri disponibile.</p>
-      ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {announcements.map(a => {
-            const isSaved = savedIds.includes(a.id);
-
-            return (
-              <li
-                key={a.id}
-                style={{
-                  marginBottom: "20px",
-                  border: "1px solid #ccc",
-                  borderRadius: "12px",
-                  padding: "14px 16px",
-                  boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
-                  backgroundColor: "#fff",
-                }}
-              >
-                {/* HEADER: stea + categorie + buton ștergere */}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "8px",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    {/* BOOKMARK BUTTON */}
-                    <button
-                      type="button"
-                      onClick={() => handleToggleBookmark(a.id)}
-                      style={{
-                        border: "none",
-                        background: "transparent",
-                        padding: 0,
-                        margin: 0,
-                        cursor: "pointer",
-                        fontSize: "18px",
-                        color: isSaved ? "#f5c518" : "#bbb",
-                        outline: "none",
-                        boxShadow: "none",
-                      }}
-                      title={isSaved ? "Remove from saved" : "Save announcement"}
-                    >
-                      {isSaved ? "★" : "☆"}
-                    </button>
-
-                    <strong
-                      style={{
-                        fontSize: "12px",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        color: "#777",
-                      }}
-                    >
-                      {a.category}
-                    </strong>
-                  </div>
-
-                  {/* DELETE BUTTON */}
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(a.id)}
-                    style={{
-                      border: "none",
-                      background: "transparent",
-                      padding: 0,
-                      margin: 0,
-                      cursor: "pointer",
-                      fontSize: "16px",
-                      color: "#ff4d4f",
-                      outline: "none",
-                      boxShadow: "none",
-                    }}
-                    title="Șterge anunțul"
-                  >
-                    ×
-                  </button>
+        {/* Filters Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Search announcements..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
 
-                {/* CONȚINUT CARD */}
-                <h3 style={{ margin: "4px 0 8px 0" }}>{a.title}</h3>
-                <p style={{ margin: "0 0 8px 0" }}>{a.content}</p>
-                <small style={{ color: "#888" }}>
-                  {new Date(a.createdAt).toLocaleString()}
-                </small>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
+                {/* Category Filter */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-2">
+                  <Filter className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                  <div className="flex gap-2">
+                    {categories.map((cat) => (
+                      <motion.div key={cat.value} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button
+                          variant={category === cat.value ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setCategory(cat.value)}
+                          className="whitespace-nowrap"
+                        >
+                          {cat.label}
+                        </Button>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Tag className="h-4 w-4" />
+                  <span>{filteredAnnouncements.length} announcements</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="h-4 w-4" />
+                  <span>{savedIds.length} saved</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Announcements Grid */}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : filteredAnnouncements.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
+          >
+            <Megaphone className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-xl font-semibold mb-2">No announcements found</h3>
+            <p className="text-muted-foreground">Try adjusting your filters or search term</p>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {filteredAnnouncements.map((announcement, index) => {
+                const isSaved = savedIds.includes(announcement.id);
+                const categoryColor = getCategoryColor(announcement.category);
+
+                return (
+                  <motion.div
+                    key={announcement.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ delay: index * 0.05 }}
+                    layout
+                  >
+                    <Card className="group relative overflow-hidden border-2 hover:border-primary/50 transition-all h-full hover:shadow-xl">
+                      {/* Gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                      <CardHeader className="relative">
+                        {/* Header with category and actions */}
+                        <div className="flex items-start justify-between mb-3">
+                          <Badge className={`${categoryColor} text-white border-0`}>
+                            {announcement.category}
+                          </Badge>
+
+                          <div className="flex items-center gap-2">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleToggleBookmark(announcement.id)}
+                              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+                            >
+                              {isSaved ? (
+                                <BookmarkCheck className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                              ) : (
+                                <BookmarkPlus className="h-5 w-5 text-muted-foreground" />
+                              )}
+                            </motion.button>
+
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => handleDelete(announcement.id)}
+                              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                            >
+                              <Trash2 className="h-5 w-5 text-red-500" />
+                            </motion.button>
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <CardTitle className="text-xl line-clamp-2 group-hover:text-primary transition-colors">
+                          {announcement.title}
+                        </CardTitle>
+                      </CardHeader>
+
+                      <CardContent>
+                        {/* Content */}
+                        <p className="text-muted-foreground line-clamp-3 mb-4">
+                          {announcement.content}
+                        </p>
+
+                        {/* Footer with date */}
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {new Date(announcement.createdAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        )}
+      </div>
+    </Layout>
   );
 };
 

@@ -1,11 +1,40 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../../index.css'; 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Calendar,
+  ArrowLeft,
+  Sparkles,
+  MapPin,
+  Clock,
+  Users,
+  Edit,
+  Trash2,
+  UserPlus,
+  UserMinus,
+  BookmarkPlus,
+  BookmarkCheck,
+  Tag,
+  Shield,
+} from 'lucide-react';
+import { Layout } from '../../components/Layout';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Skeleton } from '../../components/ui/Skeleton'; 
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
+const categories = [
+  { value: 'Academic', label: 'Academic', color: 'bg-blue-500' },
+  { value: 'Sports', label: 'Sports', color: 'bg-green-500' },
+  { value: 'Cultural', label: 'Cultural', color: 'bg-purple-500' },
+  { value: 'Social', label: 'Social', color: 'bg-pink-500' },
+  { value: 'Workshop', label: 'Workshop', color: 'bg-orange-500' },
+];
+
 interface CurrentUser {
-  id?: number; 
+  id?: number;
   userId?: number;
   firstName: string;
 }
@@ -18,7 +47,7 @@ interface EventData {
   date: string;
   location: string;
   organizerId: number;
-  participants: any[]; 
+  participants: any[];
 }
 
 function ViewEvent() {
@@ -155,87 +184,270 @@ function ViewEvent() {
     }
   };
 
-  if (loading) return <div>Se incarca...</div>;
-  if (error || !event) return <div className="error">{error || "Eveniment inexistent"}</div>;
-
   const currentUserId = currentUser?.userId || currentUser?.id;
-  const isOrganizer = currentUserId && String(currentUserId) === String(event.organizerId);
+  const isOrganizer = currentUserId && String(currentUserId) === String(event?.organizerId);
+  const categoryColor = categories.find((c) => c.value === event?.category)?.color || 'bg-slate-500';
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="space-y-6">
+          <Skeleton className="h-48 w-full rounded-2xl" />
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-8 w-3/4" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-32 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <Layout>
+        <div className="text-center py-12">
+          <Shield className="h-16 w-16 mx-auto text-red-500 mb-4" />
+          <h3 className="text-xl font-semibold mb-2 text-red-500">Error</h3>
+          <p className="text-muted-foreground mb-4">{error || 'Event not found'}</p>
+          <Button onClick={() => navigate('/events')}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Events
+          </Button>
+        </div>
+      </Layout>
+    );
+  }
+
+  const eventDate = new Date(event.date);
 
   return (
-    <div className="container" style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <button
-        onClick={() => navigate('/events')}
-        style={{
-          marginBottom: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontSize: '16px'
-        }}
-      >
-        ← Înapoi la Evenimente
-      </button>
-      
-      <div className="event-header">
-        <h1>{event.title}</h1>
-        <span className="badge">{event.category}</span>
-      </div>
-
-      <div className="event-details" style={{ marginTop: '20px' }}>
-        <p><strong>Data:</strong> {new Date(event.date).toLocaleString('ro-RO')}</p>
-        <p><strong>Descriere:</strong></p>
-        <p>{event.description}</p>
-        <p><strong>Participanti:</strong> {event.participants?.length || 0}</p>
-      </div>
-
-      <div className="event-join" style={{ marginTop: '20px' }}>
-        <button 
-          onClick={handleJoinToggle} 
-          className={isJoined ? 'btn-secondary' : 'btn-primary'}
+    <Layout>
+      <div className="space-y-6">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 p-8 text-white shadow-2xl"
         >
-          {isJoined ? 'Paraseste Evenimentul' : 'Participa la Eveniment'}
-        </button>
-        
-        <button 
-          onClick={handleSaveToggle} 
-          style={{
-            marginLeft: '10px',
-            padding: '10px 20px',
-            backgroundColor: isSaved ? '#ffc107' : '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          {isSaved ? '⭐ Salvat' : '☆ Salvează Eveniment'}
-        </button>
-      </div>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6TTI0IDBoNnY2aC02VjB6TTAgMjRoNnY2SDB2LTZ6bTAgMGg2djZIMHYtNnoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
-      <div className="event-actions" style={{ marginTop: '30px', display: 'flex', gap: '10px' }}>
-        
-        {isOrganizer && (
-          <>
-            <button 
-              onClick={() => navigate(`/edit-event/${event.id}`)}
-              className="btn-secondary"
-            >
-              Editeaza
-            </button>
-            <button 
-              onClick={handleDelete}
-              className="btn-danger"
-              style={{ backgroundColor: 'red', color: 'white' }}
-            >
-              Sterge
-            </button>
-          </>
-        )}
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <Badge className={`${categoryColor} text-white border-0`}>{event.category}</Badge>
+              </div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <Calendar className="h-8 w-8" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold flex items-center gap-2">
+                    {event.title}
+                    <Sparkles className="h-6 w-6 text-yellow-300" />
+                  </h1>
+                  <p className="text-white/80 mt-1">Event Details</p>
+                </div>
+              </div>
+            </div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => navigate('/events')}
+                className="bg-white text-purple-600 hover:bg-white/90 shadow-lg"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back
+              </Button>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Event Info Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/20">
+                    <Clock className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Date & Time</p>
+                    <p className="font-semibold">
+                      {eventDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </p>
+                    <p className="text-sm">
+                      {eventDate.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/20">
+                    <MapPin className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Location</p>
+                    <p className="font-semibold">{event.location}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-purple-100 dark:bg-purple-900/20">
+                    <Users className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Participants</p>
+                    <p className="text-2xl font-bold">{event.participants?.length || 0}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Description */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Tag className="h-5 w-5" />
+                Description
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground whitespace-pre-wrap">{event.description}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle>Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-wrap gap-3">
+                {/* Join/Leave Button */}
+                <Button
+                  onClick={handleJoinToggle}
+                  variant={isJoined ? 'outline' : 'default'}
+                  className={isJoined ? 'hover:bg-red-50 hover:text-red-600 hover:border-red-200' : ''}
+                >
+                  {isJoined ? (
+                    <>
+                      <UserMinus className="h-4 w-4 mr-2" />
+                      Leave Event
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Join Event
+                    </>
+                  )}
+                </Button>
+
+                {/* Save/Unsave Button */}
+                <Button
+                  onClick={handleSaveToggle}
+                  variant="outline"
+                  className={
+                    isSaved
+                      ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-900'
+                      : ''
+                  }
+                >
+                  {isSaved ? (
+                    <>
+                      <BookmarkCheck className="h-4 w-4 mr-2" />
+                      Saved
+                    </>
+                  ) : (
+                    <>
+                      <BookmarkPlus className="h-4 w-4 mr-2" />
+                      Save Event
+                    </>
+                  )}
+                </Button>
+
+                {/* Organizer Actions */}
+                {isOrganizer && (
+                  <>
+                    <Button onClick={() => navigate(`/edit-event/${event.id}`)} variant="outline">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+
+                    <Button
+                      onClick={handleDelete}
+                      variant="outline"
+                      className="hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/20"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {isOrganizer && (
+                <div className="mt-4 p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-900">
+                  <p className="text-sm text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    You are the organizer of this event
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmEmail from './pages/ConfirmEmail';
@@ -15,30 +16,30 @@ import Groups from './pages/Groups/Groups';
 import GroupDetails from './pages/Groups/GroupDetails';
 import MyTasks from './pages/Groups/MyTasks';
 
-import './App.css';
-
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/confirm-email" element={<ConfirmEmail />} />
-        <Route path="/dashboard" element={<Home />} />
-        <Route path="/profile" element={<ViewProfile />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/announcements" element={<Announcements />} />
-        <Route path="/create-announcement" element={<CreateAnnouncement />} />
-        <Route path="/events" element={<UpcomingEvents />} />
-        <Route path="/create-event" element={<CreateEvent />} />
-        <Route path="/edit-event/:id" element={<EditEvent />} />
-        <Route path="/event/:id" element={<ViewEvent />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="/groups/:id" element={<GroupDetails />} />
-        <Route path="/my-tasks" element={<MyTasks />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/confirm-email" element={<ConfirmEmail />} />
+          <Route path="/dashboard" element={<Home />} />
+          <Route path="/profile" element={<ViewProfile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/create-announcement" element={<CreateAnnouncement />} />
+          <Route path="/events" element={<UpcomingEvents />} />
+          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/edit-event/:id" element={<EditEvent />} />
+          <Route path="/event/:id" element={<ViewEvent />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/:id" element={<GroupDetails />} />
+          <Route path="/my-tasks" element={<MyTasks />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 export default App;

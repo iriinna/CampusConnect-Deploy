@@ -1,8 +1,31 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Users,
+  ArrowLeft,
+  Sparkles,
+  BookOpen,
+  GraduationCap,
+  FileText,
+  Plus,
+  Save,
+  Trash2,
+  CheckCircle2,
+  Circle,
+  Calendar,
+  ClipboardList,
+  Shield,
+  X,
+} from 'lucide-react';
+import { Layout } from '../../components/Layout';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Badge } from '../../components/ui/Badge';
+import { Skeleton } from '../../components/ui/Skeleton';
 import { groupApi } from '../../services/groupApi';
 import type { Group, GroupTask } from '../../services/groupApi';
-import '../../index.css';
 
 interface TaskCardProps {
   task: GroupTask;
@@ -18,138 +41,129 @@ interface TaskCardProps {
 const TaskCard = ({ task, onSave, onUnsave, onComplete, onIncomplete, onDelete, isProfessor, isGroupOwner }: TaskCardProps) => {
   const formatDate = (date?: string) => {
     if (!date) return null;
-    return new Date(date).toLocaleDateString('ro-RO', {
+    return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   };
 
-  return (
-    <div style={{
-      border: '1px solid #ddd',
-      borderRadius: '8px',
-      padding: '15px',
-      marginBottom: '15px',
-      backgroundColor: task.isCompleted ? '#e8f5e9' : 'white',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-        <div style={{ flex: 1 }}>
-          <h4 style={{ margin: '0 0 10px 0', color: '#333' }}>
-            {task.isCompleted && '✓ '}
-            {task.title}
-          </h4>
-          {task.description && (
-            <p style={{ color: '#666', margin: '5px 0', fontSize: '14px' }}>
-              {task.description}
-            </p>
-          )}
-          <div style={{ marginTop: '10px', fontSize: '13px', color: '#888' }}>
-            <p style={{ margin: '3px 0' }}>
-              👨‍🏫 {task.createdByProfessorName}
-            </p>
-            {task.dueDate && (
-              <p style={{ margin: '3px 0', color: new Date(task.dueDate) < new Date() ? '#dc3545' : '#888' }}>
-                📅 Deadline: {formatDate(task.dueDate)}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
+  const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && !task.isCompleted;
 
-      <div style={{ display: 'flex', gap: '10px', marginTop: '15px', flexWrap: 'wrap' }}>
-        {!isProfessor && (
-          <>
-            {task.isSavedByUser ? (
-              <>
-                <button
-                  onClick={() => onUnsave && onUnsave(task.id)}
-                  style={{
-                    padding: '6px 12px',
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    fontSize: '13px'
-                  }}
-                >
-                  Elimină din Salvate
-                </button>
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card className={`${task.isCompleted ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900' : ''} ${isOverdue ? 'border-red-200 dark:border-red-900' : ''}`}>
+        <CardContent className="pt-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
                 {task.isCompleted ? (
-                  <button
-                    onClick={() => onIncomplete && onIncomplete(task.id)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: '#ffc107',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '5px',
-                      cursor: 'pointer',
-                      fontSize: '13px'
-                    }}
-                  >
-                    Marchează ca Nefinalizat
-                  </button>
+                  <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
                 ) : (
-                  <button
-                    onClick={() => onComplete && onComplete(task.id)}
-                    style={{
-                      padding: '6px 12px',
-                      backgroundColor: '#28a745',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '5px',
-                      cursor: 'pointer',
-                      fontSize: '13px'
-                    }}
+                  <Circle className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                )}
+                <h4 className="font-semibold text-lg">
+                  {task.title}
+                </h4>
+              </div>
+
+              {task.description && (
+                <p className="text-muted-foreground text-sm ml-7 mb-3">
+                  {task.description}
+                </p>
+              )}
+
+              <div className="flex flex-wrap gap-3 ml-7 text-sm">
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  <GraduationCap className="h-4 w-4" />
+                  <span>{task.createdByProfessorName}</span>
+                </div>
+
+                {task.dueDate && (
+                  <div className={`flex items-center gap-1.5 ${isOverdue ? 'text-red-600 dark:text-red-400 font-medium' : 'text-muted-foreground'}`}>
+                    <Calendar className="h-4 w-4" />
+                    <span>{formatDate(task.dueDate)}</span>
+                    {isOverdue && <Badge variant="danger" className="ml-1 text-xs">Overdue</Badge>}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {!isProfessor && (
+              <>
+                {task.isSavedByUser ? (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onUnsave && onUnsave(task.id)}
+                      className="text-xs"
+                    >
+                      <X className="h-3 w-3 mr-1" />
+                      Remove from Saved
+                    </Button>
+                    {task.isCompleted ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onIncomplete && onIncomplete(task.id)}
+                        className="text-xs hover:bg-yellow-50 hover:border-yellow-200"
+                      >
+                        <Circle className="h-3 w-3 mr-1" />
+                        Mark Incomplete
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="default"
+                        onClick={() => onComplete && onComplete(task.id)}
+                        className="text-xs bg-green-600 hover:bg-green-700"
+                      >
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Mark Complete
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="default"
+                    onClick={() => onSave && onSave(task.id)}
+                    className="text-xs"
                   >
-                    Marchează ca Finalizat
-                  </button>
+                    <Save className="h-3 w-3 mr-1" />
+                    Save Task
+                  </Button>
                 )}
               </>
-            ) : (
-              <button
-                onClick={() => onSave && onSave(task.id)}
-                style={{
-                  padding: '6px 12px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '13px'
-                }}
-              >
-                💾 Salvează Task
-              </button>
             )}
-          </>
-        )}
 
-        {isGroupOwner && onDelete && (
-          <button
-            onClick={() => {
-              if (window.confirm('Sigur vrei să ștergi acest task?')) {
-                onDelete(task.id);
-              }
-            }}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              fontSize: '13px'
-            }}
-          >
-            Șterge Task
-          </button>
-        )}
-      </div>
-    </div>
+            {isGroupOwner && onDelete && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this task?')) {
+                    onDelete(task.id);
+                  }
+                }}
+                className="text-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 dark:hover:bg-red-950/20"
+              >
+                <Trash2 className="h-3 w-3 mr-1" />
+                Delete
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 
@@ -161,29 +175,18 @@ const GroupDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', description: '', dueDate: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isProfessor = user.role === 'Professor';
   const isAdmin = user.role === 'Admin';
-  
-  // Calculate these based on the loaded group
+
   const isGroupOwner = useMemo(() => {
     if (!group) return false;
-    console.log('Checking ownership:', {
-      groupProfessorId: group.professorId,
-      userId: user.id,
-      userIdNumber: Number(user.id),
-      match: group.professorId === Number(user.id)
-    });
     return group.professorId === Number(user.id);
   }, [group, user.id]);
-  
+
   const canManageTasks = useMemo(() => {
-    console.log('Can manage tasks:', {
-      isGroupOwner,
-      isAdmin,
-      result: isGroupOwner || isAdmin
-    });
     return isGroupOwner || isAdmin;
   }, [isGroupOwner, isAdmin]);
 
@@ -195,15 +198,12 @@ const GroupDetails = () => {
     setLoading(true);
     try {
       const groupData = await groupApi.getGroupById(Number(id));
-      console.log('Group data loaded:', groupData);
-      console.log('Current user:', user);
       setGroup(groupData);
       const tasksData = await groupApi.getGroupTasks(Number(id));
       setTasks(tasksData);
     } catch (error) {
       console.error('Error loading group details:', error);
-      alert('Eroare la încărcarea grupului');
-      setGroup(null); // Asigură-te că group este null în caz de eroare
+      setGroup(null);
     } finally {
       setLoading(false);
     }
@@ -211,219 +211,399 @@ const GroupDetails = () => {
 
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       await groupApi.createTask(Number(id), {
         title: newTask.title,
         description: newTask.description || undefined,
         dueDate: newTask.dueDate || undefined
       });
-      alert('Task-ul a fost creat cu succes!');
       setShowCreateForm(false);
       setNewTask({ title: '', description: '', dueDate: '' });
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error creating task:', error);
-      alert('Eroare la crearea task-ului');
+      alert('Error creating task');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleSaveTask = async (taskId: number) => {
     try {
       await groupApi.saveTask(taskId);
-      alert('Task salvat în profilul tău!');
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error saving task:', error);
-      alert('Eroare la salvarea task-ului');
+      alert('Error saving task');
     }
   };
 
   const handleUnsaveTask = async (taskId: number) => {
     try {
       await groupApi.unsaveTask(taskId);
-      alert('Task eliminat din salvate');
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error unsaving task:', error);
-      alert('Eroare la eliminarea task-ului');
+      alert('Error removing task from saved');
     }
   };
 
   const handleCompleteTask = async (taskId: number) => {
     try {
       await groupApi.markTaskAsCompleted(taskId);
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error completing task:', error);
-      alert('Eroare la marcarea task-ului');
+      alert('Error marking task as complete');
     }
   };
 
   const handleIncompleteTask = async (taskId: number) => {
     try {
       await groupApi.markTaskAsIncomplete(taskId);
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error marking task as incomplete:', error);
-      alert('Eroare la marcarea task-ului');
+      alert('Error marking task as incomplete');
     }
   };
 
   const handleDeleteTask = async (taskId: number) => {
     try {
       await groupApi.deleteTask(taskId);
-      alert('Task-ul a fost șters');
-      loadGroupDetails();
+      await loadGroupDetails();
     } catch (error) {
       console.error('Error deleting task:', error);
-      alert('Eroare la ștergerea task-ului');
+      alert('Error deleting task');
     }
   };
 
   if (loading) {
-    return <div className="container"><p>Se încarcă...</p></div>;
+    return (
+      <Layout>
+        <div className="space-y-6">
+          <Skeleton className="h-48 w-full rounded-2xl" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Skeleton className="h-32 w-full rounded-xl" />
+            <Skeleton className="h-32 w-full rounded-xl" />
+            <Skeleton className="h-32 w-full rounded-xl" />
+          </div>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-32" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    );
   }
 
   if (!group) {
-    return <div className="container"><p>Grupul nu a fost găsit</p></div>;
+    return (
+      <Layout>
+        <div className="text-center py-12">
+          <Shield className="h-16 w-16 mx-auto text-red-500 mb-4" />
+          <h3 className="text-xl font-semibold mb-2 text-red-500">Error</h3>
+          <p className="text-muted-foreground mb-4">Group not found</p>
+          <Button onClick={() => navigate('/groups')}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Groups
+          </Button>
+        </div>
+      </Layout>
+    );
   }
 
   return (
-    <div className="container">
-      <div style={{ marginBottom: '20px' }}>
-        <button
-          onClick={() => navigate('/groups')}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginBottom: '20px'
-          }}
+    <Layout>
+      <div className="space-y-6">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 p-8 text-white shadow-2xl"
         >
-          ← Înapoi la Grupuri
-        </button>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6TTI0IDBoNnY2aC02VjB6TTAgMjRoNnY2SDB2LTZ6bTAgMGg2djZIMHYtNnoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
-        <div style={{
-          backgroundColor: 'white',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '20px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-        }}>
-          <h1 style={{ margin: '0 0 10px 0' }}>{group.name}</h1>
-          <p style={{ color: '#666', margin: '5px 0' }}>
-            <strong>Materie:</strong> {group.subject}
-          </p>
-          <p style={{ color: '#666', margin: '5px 0' }}>
-            <strong>Professor:</strong> {group.professorName}
-          </p>
-          {group.description && (
-            <p style={{ color: '#666', margin: '10px 0' }}>{group.description}</p>
-          )}
-          <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
-            <span style={{ color: '#888' }}>👥 {group.membersCount} membri</span>
-            <span style={{ color: '#888' }}>📝 {group.tasksCount} taskuri</span>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <Users className="h-8 w-8" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold flex items-center gap-2">
+                    {group.name}
+                    <Sparkles className="h-6 w-6 text-yellow-300" />
+                  </h1>
+                  <p className="text-white/80 mt-1">Group Details & Tasks</p>
+                </div>
+              </div>
+            </div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={() => navigate('/groups')}
+                className="bg-white text-emerald-600 hover:bg-white/90 shadow-lg"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back
+              </Button>
+            </motion.div>
           </div>
-        </div>
-      </div>
+        </motion.div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>Taskuri</h2>
-        {canManageTasks && (
-          <button
-            onClick={() => setShowCreateForm(!showCreateForm)}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
+        {/* Group Info Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
           >
-            {showCreateForm ? 'Anulează' : '+ Adaugă Task'}
-          </button>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/20">
+                    <BookOpen className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Subject</p>
+                    <p className="font-semibold">{group.subject}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-purple-100 dark:bg-purple-900/20">
+                    <GraduationCap className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Professor</p>
+                    <p className="font-semibold">{group.professorName}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/20">
+                    <Users className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Members</p>
+                    <p className="text-2xl font-bold">{group.membersCount}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Description */}
+        {group.description && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Description
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{group.description}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Tasks Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <ClipboardList className="h-5 w-5" />
+                  Tasks ({tasks.length})
+                </CardTitle>
+                {canManageTasks && (
+                  <Button
+                    onClick={() => setShowCreateForm(!showCreateForm)}
+                    variant={showCreateForm ? 'outline' : 'default'}
+                  >
+                    {showCreateForm ? (
+                      <>
+                        <X className="h-4 w-4 mr-2" />
+                        Cancel
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Task
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              <AnimatePresence>
+                {showCreateForm && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mb-6"
+                  >
+                    <Card className="bg-secondary/50">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Create New Task</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <form onSubmit={handleCreateTask} className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              Title <span className="text-red-500">*</span>
+                            </label>
+                            <Input
+                              type="text"
+                              placeholder="Enter task title..."
+                              value={newTask.title}
+                              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                              required
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              Description
+                            </label>
+                            <textarea
+                              placeholder="Enter task description..."
+                              value={newTask.description}
+                              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                              rows={3}
+                              className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-y"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              Due Date
+                            </label>
+                            <Input
+                              type="date"
+                              value={newTask.dueDate}
+                              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                            />
+                          </div>
+
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full"
+                          >
+                            {isSubmitting ? (
+                              <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Creating...
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="h-4 w-4 mr-2" />
+                                Create Task
+                              </>
+                            )}
+                          </Button>
+                        </form>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {tasks.length === 0 ? (
+                <div className="text-center py-12">
+                  <ClipboardList className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+                  <p className="text-muted-foreground">No tasks in this group yet</p>
+                  {canManageTasks && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Click "Add Task" to create the first task
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <AnimatePresence>
+                    {tasks.map((task) => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        onSave={handleSaveTask}
+                        onUnsave={handleUnsaveTask}
+                        onComplete={handleCompleteTask}
+                        onIncomplete={handleIncompleteTask}
+                        onDelete={canManageTasks ? handleDeleteTask : undefined}
+                        isProfessor={isProfessor}
+                        isGroupOwner={canManageTasks}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Owner Badge */}
+        {isGroupOwner && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Card className="bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-900">
+              <CardContent className="pt-6">
+                <p className="text-sm text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  You are the owner of this group
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
       </div>
-
-      {showCreateForm && (
-        <div style={{
-          backgroundColor: 'white',
-          padding: '20px',
-          borderRadius: '8px',
-          marginBottom: '20px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-        }}>
-          <h3>Creează Task Nou</h3>
-          <form onSubmit={handleCreateTask}>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Titlu *</label>
-              <input
-                type="text"
-                value={newTask.title}
-                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                required
-                style={{ width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ddd' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Descriere</label>
-              <textarea
-                value={newTask.description}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                rows={3}
-                style={{ width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ddd' }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px' }}>Deadline</label>
-              <input
-                type="date"
-                value={newTask.dueDate}
-                onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                style={{ width: '100%', padding: '8px', borderRadius: '5px', border: '1px solid #ddd' }}
-              />
-            </div>
-            <button
-              type="submit"
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Creează Task
-            </button>
-          </form>
-        </div>
-      )}
-
-      {tasks.length === 0 ? (
-        <p style={{ textAlign: 'center', color: '#888', padding: '40px' }}>
-          Nu există taskuri în acest grup
-        </p>
-      ) : (
-        tasks.map(task => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onSave={handleSaveTask}
-            onUnsave={handleUnsaveTask}
-            onComplete={handleCompleteTask}
-            onIncomplete={handleIncompleteTask}
-            onDelete={canManageTasks ? handleDeleteTask : undefined}
-            isProfessor={isProfessor}
-            isGroupOwner={canManageTasks}
-          />
-        ))
-      )}
-    </div>
+    </Layout>
   );
 };
 
