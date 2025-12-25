@@ -1,3 +1,4 @@
+using CampusConnect.Application.Interfaces;
 using CampusConnect.Domain.Entities;
 using CampusConnect.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace CampusConnect.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAchievementService _achievementService;
 
-        public EventController(ApplicationDbContext context)
+        public EventController(ApplicationDbContext context, IAchievementService achievementService)
         {
             _context = context;
+            _achievementService = achievementService;
         }
         private int? GetCurrentUserId()
         {
@@ -156,6 +159,8 @@ namespace CampusConnect.Api.Controllers
 
             _context.EventParticipants.Add(participation);
             await _context.SaveChangesAsync();
+
+            await _achievementService.CheckAndGrantEventAchievementAsync(userId.Value);
 
             return Ok();
         }

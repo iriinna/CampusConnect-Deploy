@@ -15,12 +15,14 @@ namespace CampusConnect.Api.Controllers;
 public class GroupController : ControllerBase
 {
     private readonly IGroupService _groupService;
-    private readonly ApplicationDbContext _context; // 1. Injectam DB Context
+    private readonly ApplicationDbContext _context;
+    private readonly IAchievementService _achievementService;
 
-    public GroupController(IGroupService groupService, ApplicationDbContext context)
+    public GroupController(IGroupService groupService, ApplicationDbContext context, IAchievementService achievementService)
     {
         _groupService = groupService;
         _context = context;
+        _achievementService = achievementService;
     }
 
     private int? GetCurrentUserId()
@@ -171,6 +173,12 @@ public async Task<ActionResult<object>> GetGroupById(int id)
             var result = await _groupService.JoinGroupAsync(id);
             if (!result)
                 return BadRequest(new { message = "Could not join group. You may already be a member." });
+
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                await _achievementService.CheckAndGrantGroupAchievementAsync(userId.Value);
+            }
 
             return Ok(new { message = "Successfully joined the group" });
         }
@@ -337,6 +345,12 @@ public async Task<IActionResult> DeleteTask(int taskId)
             var result = await _groupService.MarkTaskAsCompletedAsync(taskId);
             if (!result)
                 return BadRequest(new { message = "Task not found in your saved tasks" });
+
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                await _achievementService.CheckAndGrantTaskAchievementsAsync(userId.Value);
+            }
 
             return Ok(new { message = "Task marked as completed" });
         }

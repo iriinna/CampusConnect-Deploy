@@ -12,5 +12,6 @@ public class ApplicationUser : IdentityUser<int>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastLoginAt { get; set; }
     public ICollection<EventParticipant> EventsJoined { get; set; } = new List<EventParticipant>();
+    public ICollection<UserAchievement> UserAchievements { get; set; } = new List<UserAchievement>();
 
 }
