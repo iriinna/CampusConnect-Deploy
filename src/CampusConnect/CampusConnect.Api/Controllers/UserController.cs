@@ -13,10 +13,12 @@ namespace CampusConnect.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IActivityLoggerService _activityLogger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IActivityLoggerService activityLogger)
         {
             _userService = userService;
+            _activityLogger = activityLogger;
         }
         
     public async Task<IActionResult> GetAllUsers()
@@ -152,6 +154,7 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
 
             if (success)
             {
+                await _activityLogger.LogActivityAsync(userId.Value, "Update", "UserProfile", userId.Value, null, "Updated user profile");
                 return Ok(new { message = "Profil actualizat cu succes!" });
             }
             

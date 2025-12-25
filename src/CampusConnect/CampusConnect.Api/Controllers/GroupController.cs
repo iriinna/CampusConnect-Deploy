@@ -15,12 +15,16 @@ namespace CampusConnect.Api.Controllers;
 public class GroupController : ControllerBase
 {
     private readonly IGroupService _groupService;
-    private readonly ApplicationDbContext _context; // 1. Injectam DB Context
+    private readonly ApplicationDbContext _context;
+    private readonly IAchievementService _achievementService;
+    private readonly IActivityLoggerService _activityLogger;
 
-    public GroupController(IGroupService groupService, ApplicationDbContext context)
+    public GroupController(IGroupService groupService, ApplicationDbContext context, IAchievementService achievementService, IActivityLoggerService activityLogger)
     {
         _groupService = groupService;
         _context = context;
+        _achievementService = achievementService;
+        _activityLogger = activityLogger;
     }
 
     private int? GetCurrentUserId()
@@ -40,6 +44,7 @@ public class GroupController : ControllerBase
         try
         {
             var group = await _groupService.CreateGroupAsync(request);
+            await _activityLogger.LogActivityAsync(GetCurrentUserId().Value, "Create", "Group", group.Id, group.Name, "Created a new group");
             return Ok(group);
         }
         catch (UnauthorizedAccessException ex)
@@ -67,10 +72,7 @@ public async Task<ActionResult<object>> GetGroupById(int id)
         .FirstOrDefaultAsync(g => g.Id == id);
 
     if (group == null) return NotFound();
-
-    // Returnăm un obiect nou ca să fim siguri că trimitem membrii
-    // și nu avem probleme de "Reference Loop" (Grup -> Membru -> Grup)
-    return Ok(new 
+     return Ok(new 
     {
         group.Id,
         group.Name,
@@ -149,7 +151,7 @@ public async Task<ActionResult<object>> GetGroupById(int id)
             var result = await _groupService.DeleteGroupAsync(id);
             if (!result)
                 return NotFound(new { message = "Group not found" });
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Delete", "Group", group.Id, group.Name, "Deleted a group");
             return Ok(new { message = "Group deleted successfully" });
         }
         catch (UnauthorizedAccessException ex)
@@ -172,6 +174,12 @@ public async Task<ActionResult<object>> GetGroupById(int id)
             if (!result)
                 return BadRequest(new { message = "Could not join group. You may already be a member." });
 
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                await _achievementService.CheckAndGrantGroupAchievementAsync(userId.Value);
+            }
+            await _activityLogger.LogActivityAsync(userId.Value, "Join", "Group", id, null, "Joined a group");
             return Ok(new { message = "Successfully joined the group" });
         }
         catch (UnauthorizedAccessException ex)
@@ -188,7 +196,8 @@ public async Task<ActionResult<object>> GetGroupById(int id)
             var result = await _groupService.LeaveGroupAsync(id);
             if (!result)
                 return BadRequest(new { message = "You are not a member of this group" });
-
+            var userId = GetCurrentUserId();
+            await _activityLogger.LogActivityAsync(userId.Value, "Leave", "Group", id, null, "Left a group");
             return Ok(new { message = "Successfully left the group" });
         }
         catch (UnauthorizedAccessException ex)
@@ -238,7 +247,7 @@ public async Task<ActionResult<object>> GetGroupById(int id)
                     await _context.SaveChangesAsync();
                 }
             }
-
+            await _activityLogger.LogActivityAsync(currentUserId.Value, "Create", "GroupTask", task.Id, task.Title, $"Created a new task in group {groupInfo?.Name}");
             return Ok(task);
         }
         catch (UnauthorizedAccessException ex)
@@ -290,7 +299,7 @@ public async Task<IActionResult> DeleteTask(int taskId)
     _context.SavedTasks.RemoveRange(savedTasks);
     _context.GroupTasks.Remove(task);
     await _context.SaveChangesAsync();
-
+    await _activityLogger.LogActivityAsync(userId.Value, "Delete", "GroupTask", task.Id, task.Title, "Deleted a task");
     return Ok(new { message = "Task deleted successfully" });
 }
 
@@ -303,6 +312,12 @@ public async Task<IActionResult> DeleteTask(int taskId)
             var result = await _groupService.SaveTaskAsync(taskId);
             if (!result)
                 return BadRequest(new { message = "Task not found or already saved" });
+            
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                await _activityLogger.LogActivityAsync(userId.Value, "Save", "GroupTask", taskId, null, "Saved a task");
+            }
 
             return Ok(new { message = "Task saved successfully" });
         }
@@ -337,6 +352,13 @@ public async Task<IActionResult> DeleteTask(int taskId)
             var result = await _groupService.MarkTaskAsCompletedAsync(taskId);
             if (!result)
                 return BadRequest(new { message = "Task not found in your saved tasks" });
+
+            var userId = GetCurrentUserId();
+            if (userId.HasValue)
+            {
+                await _achievementService.CheckAndGrantTaskAchievementsAsync(userId.Value);
+                await _activityLogger.LogActivityAsync(userId.Value, "Complete", "GroupTask", taskId, null, "Marked a task as completed");
+            }
 
             return Ok(new { message = "Task marked as completed" });
         }

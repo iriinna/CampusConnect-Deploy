@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
@@ -7,14 +7,11 @@ import {
   Users,
   CheckSquare,
   TrendingUp,
-  Bell,
   Sparkles,
   ArrowRight,
-  Star,
   Clock,
-  BookOpen,
-  Award,
-  UserCog, // Importam iconita pentru Admin
+  UserCog,
+  Trophy
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -23,6 +20,9 @@ import { Badge } from '../components/ui/Badge';
 import { Avatar, AvatarFallback } from '../components/ui/Avatar';
 import { dashboardService } from '../services/dashboardService';
 import type { DashboardStats } from '../services/dashboardService';
+import achievementApi, { type UserAchievement } from '../services/achievementApi';
+import activityApi from '../services/activityApi';
+import { formatActivity, type FormattedActivity } from '../utils/activityFormatter';
 
 interface CurrentUser {
   id?: number;
@@ -48,17 +48,27 @@ function Home() {
     user.userRoles?.includes('Admin') || 
     user.isAdmin === true;
 
+  const navigate = useNavigate();
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [myAchievements, setMyAchievements] = useState<UserAchievement[]>([]);
+  const [recentActivities, setRecentActivities] = useState<FormattedActivity[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const data = await dashboardService.getDashboardStats();
+        const [data, achievements, activities] = await Promise.all([
+          dashboardService.getDashboardStats(),
+          achievementApi.getMyAchievements(),
+          activityApi.getRecentActivities()
+        ]);
+
         setDashboardStats(data);
+        setMyAchievements(achievements);
+        setRecentActivities(activities.map(formatActivity));
       } catch (error) {
-        console.error("Failed to fetch dashboard stats", error);
+        console.error("Failed to fetch dashboard data", error);
       } finally {
         setLoading(false);
       }
@@ -137,6 +147,16 @@ function Home() {
       gradient: 'from-orange-500 via-red-500 to-pink-500',
       badge: dashboardStats ? `${pendingTasks} pending` : '0 pending',
     },
+    
+    ...(isAdmin ? [{
+      title: 'Achievements',
+      description: 'Manage Achievements',
+      icon: Trophy,
+      link: '/manage-achievements',
+      gradient: 'from-yellow-500 via-yellow-600 to-yellow-700',
+      badge: 'Admin',
+    }] : []),
+
     // Adaugam butonul de Users conditionat
     ...(isAdmin ? [{
       title: 'Users',
@@ -146,19 +166,10 @@ function Home() {
       gradient: 'from-slate-600 via-slate-700 to-slate-800',
       badge: 'Admin',
     }] : [])
+
+
   ];
 
-  const recentActivity = [
-    { title: 'New assignment posted', time: '2 hours ago', type: 'task' },
-    { title: 'Upcoming event tomorrow', time: '5 hours ago', type: 'event' },
-    { title: 'Group discussion updated', time: '1 day ago', type: 'group' },
-  ];
-
-  const achievements = [
-    { title: 'Early Bird', description: 'Completed 5 tasks before deadline', icon: Award },
-    { title: 'Team Player', description: 'Active in 3+ study groups', icon: Users },
-    { title: 'Scholar', description: 'Attended 10+ academic events', icon: BookOpen },
-  ];
 
   return (
     <Layout>
@@ -267,7 +278,7 @@ function Home() {
           </div>
 
           {/* 4. Grid dinamic: 5 coloane daca e admin, 4 daca nu */}
-          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${isAdmin ? '5' : '4'} gap-6`}>
+          <div className={isAdmin ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'}>
             {quickActions.map((action, index) => {
               const Icon = action.icon;
               return (
@@ -325,34 +336,59 @@ function Home() {
                     <Clock className="h-5 w-5" />
                     Recent Activity
                   </CardTitle>
-                  <Button variant="ghost" size="sm">
-                    <Bell className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/activity-history')}
+                  >
+                    View All
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 + index * 0.1 }}
-                      className="flex items-start space-x-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        {activity.type === 'task' && <CheckSquare className="h-5 w-5 text-primary" />}
-                        {activity.type === 'event' && <Calendar className="h-5 w-5 text-primary" />}
-                        {activity.type === 'group' && <Users className="h-5 w-5 text-primary" />}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium">{activity.title}</p>
-                        <p className="text-sm text-muted-foreground">{activity.time}</p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                    </motion.div>
-                  ))}
-                </div>
+                {recentActivities.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Clock className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">No recent activity</p>
+                    <p className="text-xs mt-1">Your actions will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentActivities.map((activity, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
+                        className="flex items-start space-x-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
+                        onClick={() => {
+                          if (activity.type === 'group' && activity.entityId) {
+                            navigate(`/groups/${activity.entityId}`);
+                          } else if (activity.type === 'event' && activity.entityId) {
+                            navigate(`/events/${activity.entityId}`);
+                          } else if (activity.type === 'announcement' && activity.entityId) {
+                            navigate(`/announcements`);
+                          }
+                        }}
+                      >
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          {activity.type === 'task' && <CheckSquare className="h-5 w-5 text-primary" />}
+                          {activity.type === 'event' && <Calendar className="h-5 w-5 text-primary" />}
+                          {activity.type === 'group' && <Users className="h-5 w-5 text-primary" />}
+                          {activity.type === 'announcement' && <Megaphone className="h-5 w-5 text-primary" />}
+                          {activity.type === 'profile' && <UserCog className="h-5 w-5 text-primary" />}
+                          {activity.type === 'achievement' && <Trophy className="h-5 w-5 text-primary" />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{activity.title}</p>
+                          <p className="text-sm text-muted-foreground">{activity.time}</p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -365,36 +401,56 @@ function Home() {
           >
             <Card className="h-full bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border-yellow-200 dark:border-yellow-800">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-                  <Star className="h-5 w-5 fill-current" />
-                  Achievements
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
+                    <Trophy className="h-5 w-5" />
+                    Achievements
+                  </CardTitle>
+                  {myAchievements.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => navigate('/achievements')}
+                      className="text-yellow-700 hover:text-yellow-800 dark:text-yellow-400"
+                    >
+                      View All
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {achievements.map((achievement, index) => {
-                    const Icon = achievement.icon;
-                    return (
+                {myAchievements.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Trophy className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">No achievements yet</p>
+                    <p className="text-xs mt-1">Complete tasks and join groups to unlock achievements!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {myAchievements.slice(0, 3).map((achievement, index) => (
                       <motion.div
-                        key={index}
+                        key={achievement.id}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.6 + index * 0.1 }}
                         className="p-3 rounded-lg bg-white/50 dark:bg-black/20 border border-yellow-200 dark:border-yellow-800"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/50">
-                            <Icon className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                          </div>
+                          <div className="text-2xl">{achievement.icon}</div>
                           <div className="flex-1">
                             <p className="font-semibold text-sm">{achievement.title}</p>
                             <p className="text-xs text-muted-foreground">{achievement.description}</p>
                           </div>
                         </div>
                       </motion.div>
-                    );
-                  })}
-                </div>
+                    ))}
+                    {myAchievements.length > 3 && (
+                      <p className="text-center text-xs text-muted-foreground pt-2">
+                        +{myAchievements.length - 3} more achievements
+                      </p>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>

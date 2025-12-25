@@ -9,31 +9,33 @@ using Microsoft.AspNetCore.Authorization;
 public class AnnouncementsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
+    private readonly IActivityLoggerService _activityLogger;
 
-    public AnnouncementsController(ApplicationDbContext context)
+    public AnnouncementsController(ApplicationDbContext context, IActivityLoggerService activityLogger)
     {
         _context = context;
+        _activityLogger = activityLogger;
     }
     private int? GetCurrentUserId()
-{
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-    if (string.IsNullOrEmpty(userIdClaim))
     {
-        userIdClaim = User.FindFirst("id")?.Value;
-    }
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    if (string.IsNullOrEmpty(userIdClaim))
-    {
-        userIdClaim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
-    }
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            userIdClaim = User.FindFirst("id")?.Value;
+        }
 
-    if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
-    {
-        return userId;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            userIdClaim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        }
+
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+        return null;
     }
-    return null;
-}
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Announcement>>> GetAll([FromQuery] string? category, [FromQuery] string? search)
@@ -99,8 +101,10 @@ public async Task<IActionResult> Create(Announcement announcement)
             });
 
             _context.Notifications.AddRange(notifications);
+
             await _context.SaveChangesAsync();
         }
+        await _activityLogger.LogActivityAsync(userId.Value, "Create", "Announcement", announcement.Id, announcement.Title, "Created a new announcement");
     return CreatedAtAction(nameof(GetById), new { id = announcement.Id }, announcement);
 }
 
@@ -124,6 +128,7 @@ public async Task<IActionResult> Create(Announcement announcement)
         });
         
         await _context.SaveChangesAsync();
+        await _activityLogger.LogActivityAsync(userId.Value, "Subscribe", "CategorySubscription", null, category, "Subscribed to a category");
         return Ok(new { message = $"Subscribed to {category}" });
     }
 
@@ -142,6 +147,7 @@ public async Task<IActionResult> Create(Announcement announcement)
 
         _context.CategorySubscriptions.Remove(sub);
         await _context.SaveChangesAsync();
+        await _activityLogger.LogActivityAsync(userId.Value, "Unsubscribe", "CategorySubscription", null, category, "Unsubscribed from a category");
         return Ok(new { message = $"Unsubscribed from {category}" });
     }
 
@@ -177,7 +183,7 @@ public async Task<IActionResult> Update(int id, Announcement updated)
     announcement.Title = updated.Title;
     announcement.Content = updated.Content;
     await _context.SaveChangesAsync();
-
+    await _activityLogger.LogActivityAsync(userId.Value, "Update", "Announcement", announcement.Id, announcement.Title, "Updated an announcement");
     return NoContent();
 }
 
@@ -198,7 +204,7 @@ public async Task<IActionResult> Delete(int id)
 
     _context.Announcements.Remove(announcement);
     await _context.SaveChangesAsync();
-
+    await _activityLogger.LogActivityAsync(userId.Value, "Delete", "Announcement", announcement.Id, announcement.Title, "Deleted an announcement");
     return NoContent();
 }
 
@@ -226,7 +232,7 @@ public async Task<IActionResult> Delete(int id)
 
         _context.SavedAnnouncements.Add(saved);
         await _context.SaveChangesAsync();
-
+        await _activityLogger.LogActivityAsync(userId.Value, "Bookmark", "Announcement", id, null, "Bookmarked an announcement");
         return Ok();
     }
 
@@ -245,7 +251,7 @@ public async Task<IActionResult> Delete(int id)
 
         _context.SavedAnnouncements.Remove(saved);
         await _context.SaveChangesAsync();
-
+        await _activityLogger.LogActivityAsync(userId.Value, "Unbookmark", "Announcement", id, null, "Unbookmarked an announcement");
         return NoContent();
     }
 
@@ -262,7 +268,8 @@ public async Task<IActionResult> Delete(int id)
             .Select(sa => sa.Announcement)
             .OrderByDescending(a => a.CreatedAt)
             .ToListAsync();
-
+        
+        await _activityLogger.LogActivityAsync(userId.Value, "GetSaved", "Announcement", null, null, "Retrieved saved announcements");
         return Ok(announcements);
     }
 
