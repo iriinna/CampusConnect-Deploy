@@ -32,17 +32,34 @@ const CreateAnnouncement = () => {
     setAdding(true);
     setError('');
 
+    // 1. Recuperează token-ul (adaptează cheia 'token' dacă ai numit-o altfel la login)
+    const token = localStorage.getItem('token'); 
+
+    if (!token) {
+        setError('Nu ești autentificat. Te rugăm să te loghezi.');
+        setAdding(false);
+        return;
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/announcements`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+        },
         body: JSON.stringify({ title, content, category }),
       });
 
       if (response.ok) {
         navigate('/announcements');
       } else {
-        setError('Failed to create announcement. Please try again.');
+        // Opțional: Poți verifica statusul exact
+        if (response.status === 401) {
+             setError('Sesiunea a expirat. Te rugăm să te reautentifici.');
+        } else {
+             setError('Failed to create announcement. Please try again.');
+        }
       }
     } catch (error) {
       console.error('Connection error:', error);

@@ -64,8 +64,19 @@ function UpcomingEvents() {
       return false;
     }
   };
+  const checkProfessor = () => {
+    const userString = localStorage.getItem('user');
+    if (!userString) return false;
+    try {
+      const user = JSON.parse(userString);
+      return user.role?.toLowerCase() === 'professor';
+    } catch (e) {
+      return false;
+    }
+  };
 
   const isAdmin = checkAdmin();
+  const isProfessor = checkProfessor();
 
   // Funcția de fetch primește acum searchTerm ca parametru
   const fetchEvents = async (search: string) => {
@@ -166,15 +177,15 @@ function UpcomingEvents() {
               </div>
             </div>
 
-            {isAdmin && (
+            {(isAdmin || isProfessor) && (
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  onClick={() => navigate('/create-event')}
-                  className="bg-white text-purple-600 hover:bg-white/90 shadow-lg"
-                >
-                  <Plus className="h-5 w-5 mr-2" />
-                  Create Event
-                </Button>
+              <Button
+                onClick={() => navigate('/create-event')}
+                className="bg-white text-purple-600 hover:bg-white/90 shadow-lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Create Event
+              </Button>
               </motion.div>
             )}
           </div>

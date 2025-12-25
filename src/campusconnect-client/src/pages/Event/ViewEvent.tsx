@@ -183,9 +183,19 @@ function ViewEvent() {
       alert("Eroare la procesarea cererii.");
     }
   };
-
+  const checkAdmin = () => {
+    const userString = localStorage.getItem('user');
+    if (!userString) return false;
+    try {
+      const user = JSON.parse(userString);
+      return user.role?.toLowerCase() === 'admin' || user.isAdmin === true;
+    } catch (e) {
+      return false;
+    }
+  };
   const currentUserId = currentUser?.userId || currentUser?.id;
   const isOrganizer = currentUserId && String(currentUserId) === String(event?.organizerId);
+  const isAdmin = checkAdmin();
   const categoryColor = categories.find((c) => c.value === event?.category)?.color || 'bg-slate-500';
 
   if (loading) {
@@ -416,7 +426,7 @@ function ViewEvent() {
                 </Button>
 
                 {/* Organizer Actions */}
-                {isOrganizer && (
+                {(isOrganizer || isAdmin) && (
                   <>
                     <Button onClick={() => navigate(`/edit-event/${event.id}`)} variant="outline">
                       <Edit className="h-4 w-4 mr-2" />

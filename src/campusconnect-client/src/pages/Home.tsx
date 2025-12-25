@@ -14,6 +14,7 @@ import {
   Clock,
   BookOpen,
   Award,
+  UserCog, // Importam iconita pentru Admin
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -23,17 +24,44 @@ import { Avatar, AvatarFallback } from '../components/ui/Avatar';
 import { dashboardService } from '../services/dashboardService';
 import type { DashboardStats } from '../services/dashboardService';
 
+interface CurrentUser {
+  id?: number;
+  userId?: number;
+  firstName: string;
+  lastName?: string;
+  email?: string;
+  role?: string;     // Caz 1: Rol unic string
+  roles?: string[];  // Caz 2: Lista de roluri
+  userRoles?: string[]; // Caz 3: Alt nume posibil pentru lista
+  isAdmin?: boolean;
+}
+
 function Home() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // 1. Citim user-ul din localStorage
+  const user: CurrentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  // 2. Logica robusta pentru verificare Admin
+  // Verificam toate locurile posibile unde ar putea fi stocat rolul
+  const isAdmin = 
+    user.role === 'Admin' || 
+    user.roles?.includes('Admin') || 
+    user.userRoles?.includes('Admin') || 
+    user.isAdmin === true;
+
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
-      const data = await dashboardService.getDashboardStats();
-      setDashboardStats(data);
-      setLoading(false);
+      try {
+        const data = await dashboardService.getDashboardStats();
+        setDashboardStats(data);
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats", error);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchStats();
   }, []);
@@ -75,6 +103,7 @@ function Home() {
 
   const pendingTasks = dashboardStats ? dashboardStats.totalTasks - dashboardStats.tasksCompleted : 0;
 
+  // 3. Definim actiunile rapide
   const quickActions = [
     {
       title: 'Announcements',
@@ -108,6 +137,15 @@ function Home() {
       gradient: 'from-orange-500 via-red-500 to-pink-500',
       badge: dashboardStats ? `${pendingTasks} pending` : '0 pending',
     },
+    // Adaugam butonul de Users conditionat
+    ...(isAdmin ? [{
+      title: 'Users',
+      description: 'Manage system users',
+      icon: UserCog,
+      link: '/users',
+      gradient: 'from-slate-600 via-slate-700 to-slate-800',
+      badge: 'Admin',
+    }] : [])
   ];
 
   const recentActivity = [
@@ -228,7 +266,8 @@ function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* 4. Grid dinamic: 5 coloane daca e admin, 4 daca nu */}
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${isAdmin ? '5' : '4'} gap-6`}>
             {quickActions.map((action, index) => {
               const Icon = action.icon;
               return (

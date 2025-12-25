@@ -19,10 +19,9 @@ namespace CampusConnect.API.Controllers
             _userService = userService;
         }
         
-    [HttpGet("search")]
-    public async Task<IActionResult> SearchUsers([FromQuery] string? search)
+    public async Task<IActionResult> GetAllUsers()
     {
-        var users = await _userService.SearchUsersAsync(search ?? "");
+        var users = await _userService.GetAllUsersAsync();
         
         var response = users.Select(u => new 
         {
@@ -31,11 +30,55 @@ namespace CampusConnect.API.Controllers
             lastName = u.LastName,
             profilePictureUrl = u.ProfilePictureUrl,
             studentId = u.StudentId,
-            dateofBirth = u.DateOfBirth
+            dateofBirth = u.DateOfBirth,
+
         });
 
         return Ok(response);
+    }   
+    
+ [HttpGet("search")]
+public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQuery] string? search)
+{
+    // 1. Obținem lista de useri din baza de date
+    var users = await _userService.SearchUsersAsync(search ?? "");
+    
+    var resultList = new List<UserSummaryDto>();
+
+    // 2. Iterăm prin fiecare user pentru a-i afla rolul specific
+    foreach (var user in users)
+    {
+        // Apelează metoda din service care interoghează Identity
+        var roles = await _userService.GetUserRolesAsync(user);
+
+        // 3. Determinăm rolul dominant (Prioritate: Admin > Professor > User)
+        string displayRole = "User";
+
+        if (roles.Contains("Admin"))
+        {
+            displayRole = "Admin";
+        }
+        else if (roles.Contains("Professor"))
+        {
+            displayRole = "Professor";
+        }
+
+        // 4. Construim obiectul DTO
+        resultList.Add(new UserSummaryDto
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            ProfilePictureUrl = user.ProfilePictureUrl,
+            StudentId = user.StudentId,
+            Role = displayRole // Aici va fi acum valoarea corectă
+        });
     }
+
+    return Ok(resultList);
+}
+
+[HttpGet("current-user-id")]
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

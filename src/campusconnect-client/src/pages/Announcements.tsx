@@ -24,12 +24,21 @@ import '../index.css';
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
+interface CurrentUser {
+  id?: number;
+  userId?: number;
+  firstName: string;
+  role?: string;
+  isAdmin?: boolean;
+}
+
 interface Announcement {
   id: number;
   title: string;
   content: string;
   category: string;
   createdAt: string;
+  createdByUserId: number;
 }
 
 const categories = [
@@ -46,9 +55,23 @@ const Announcements = () => {
   const [savedIds, setSavedIds] = useState<number[]>([]);
   const [category, setCategory] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+      const userString = localStorage.getItem('user');
+      if (userString) {
+        try {
+            const userObj = JSON.parse(userString);
+            setCurrentUser(userObj);
+        } catch (e) {
+            console.error("Error parsing user from localstorage");
+        }
+      }
+  }, []);
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -68,7 +91,7 @@ const Announcements = () => {
       }
     };
     fetchAnnouncements();
-  }, [category, location.search]); 
+  }, [category, location.search, searchTerm]); // Added searchTerm to dependency
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -120,13 +143,29 @@ const Announcements = () => {
   const handleDelete = async (id: number) => {
     if (!window.confirm('Are you sure you want to delete this announcement?')) return;
 
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert("You have to be logged in to delete announcements.");
+        return;
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/announcements/${id}`, {
         method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.ok) {
         setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+      } else {
+        if (response.status === 403) {
+            alert("You do not have permission to delete this announcement (you can only delete announcements you created).");
+        } else {
+            alert("A apărut o eroare la ștergere.");
+        }
       }
     } catch (err) {
       console.error('Delete error:', err);
@@ -143,6 +182,10 @@ const Announcements = () => {
     return found?.color || 'bg-slate-500';
   };
 
+  // 2. Logic to determine permissions
+  const currentUserId = currentUser?.userId || currentUser?.id;
+  const isAdmin = currentUser?.role === 'Admin' || currentUser?.role === 'admin' || currentUser?.isAdmin === true;
+  const isProfessor = currentUser?.role === 'Professor' || currentUser?.role === 'professor';
   return (
     <Layout>
       <div className="space-y-6">
@@ -152,6 +195,7 @@ const Announcements = () => {
           animate={{ opacity: 1, y: 0 }}
           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 p-8 text-white shadow-2xl"
         >
+           {/* ... Header Content ... */}
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6TTI0IDBoNnY2aC02VjB6TTAgMjRoNnY2SDB2LTZ6bTAgMGg2djZIMHYtNnoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
           <div className="relative z-10 flex items-center justify-between">
@@ -169,17 +213,19 @@ const Announcements = () => {
                 </div>
               </div>
             </div>
-
-            <Link to="/create-announcement">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button className="bg-white text-blue-600 hover:bg-white/90 shadow-lg">
-                  <Plus className="h-5 w-5 mr-2" />
-                  Create Announcement
-                </Button>
-              </motion.div>
-            </Link>
+            { (isAdmin && isProfessor) && (
+              <Link to="/create-announcement">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button className="bg-white text-blue-600 hover:bg-white/90 shadow-lg">
+                    <Plus className="h-5 w-5 mr-2" />
+                    Create Announcement
+                  </Button>
+                </motion.div>
+              </Link>
+            )}
           </div>
         </motion.div>
+        
 
         {/* Filters Section */}
         <motion.div
@@ -258,6 +304,8 @@ const Announcements = () => {
               {filteredAnnouncements.map((announcement, index) => {
                 const isSaved = savedIds.includes(announcement.id);
                 const categoryColor = getCategoryColor(announcement.category);
+                
+                const isCreator = currentUserId && Number(currentUserId) === announcement.createdByUserId;
 
                 return (
                   <motion.div
@@ -269,11 +317,9 @@ const Announcements = () => {
                     layout
                   >
                     <Card className="group relative overflow-hidden border-2 hover:border-primary/50 transition-all h-full hover:shadow-xl">
-                      {/* Gradient overlay on hover */}
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                       <CardHeader className="relative">
-                        {/* Header with category and actions */}
                         <div className="flex items-start justify-between mb-3">
                           <Badge className={`${categoryColor} text-white border-0`}>
                             {announcement.category}
@@ -292,31 +338,30 @@ const Announcements = () => {
                                 <BookmarkPlus className="h-5 w-5 text-muted-foreground" />
                               )}
                             </motion.button>
-
-                            <motion.button
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                              onClick={() => handleDelete(announcement.id)}
-                              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
-                            >
-                              <Trash2 className="h-5 w-5 text-red-500" />
-                            </motion.button>
+                            
+                            {(isAdmin || isCreator) && (
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => handleDelete(announcement.id)}
+                                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
+                              >
+                                <Trash2 className="h-5 w-5 text-red-500" />
+                              </motion.button>
+                            )}
                           </div>
                         </div>
 
-                        {/* Title */}
                         <CardTitle className="text-xl line-clamp-2 group-hover:text-primary transition-colors">
                           {announcement.title}
                         </CardTitle>
                       </CardHeader>
 
                       <CardContent>
-                        {/* Content */}
                         <p className="text-muted-foreground line-clamp-3 mb-4">
                           {announcement.content}
                         </p>
 
-                        {/* Footer with date */}
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Calendar className="h-4 w-4" />
                           <span>

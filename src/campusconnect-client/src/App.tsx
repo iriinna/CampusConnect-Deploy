@@ -11,10 +11,8 @@ import CreateAnnouncement from './pages/CreateAnnouncement';
 import CreateEvent from './pages/Event/CreateEvent';
 import EditEvent from './pages/Event/UpdateEvent';
 import ViewEvent from './pages/Event/ViewEvent';
-import Navbar from './pages/Navbar';
 import Users from './pages/User/Users';
 import './App.css';
-import { Outlet } from 'react-router-dom';
 import UpcomingEvents from './pages/Event/UpcomingEvent';
 import Groups from './pages/Groups/Groups';
 import GroupDetails from './pages/Groups/GroupDetails';
@@ -31,6 +29,7 @@ function App() {
           <Route path="/confirm-email" element={<ConfirmEmail />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/profile" element={<ViewProfile />} />
+          <Route path="/profile/:id" element={<ViewProfile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/announcements" element={<Announcements />} />
           <Route path="/create-announcement" element={<CreateAnnouncement />} />
@@ -45,6 +44,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
+
   );
 }
 export default App;

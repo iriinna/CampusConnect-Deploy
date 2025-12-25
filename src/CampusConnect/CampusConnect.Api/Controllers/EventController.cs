@@ -144,7 +144,7 @@ namespace CampusConnect.Api.Controllers
 
             if (eventItem.Participants.Any(p => p.UserId == userId.Value))
             {
-                return BadRequest("Deja participi la acest eveniment.");
+                return BadRequest("You are already participating in this event");
             }
 
             var participation = new EventParticipant
@@ -176,7 +176,7 @@ namespace CampusConnect.Api.Controllers
             var participation = eventItem.Participants.FirstOrDefault(p => p.UserId == userId.Value);
             if (participation == null)
             {
-                return BadRequest("Nu participi la acest eveniment.");
+                return BadRequest("You are not participating in this event.");
             }
 
             _context.EventParticipants.Remove(participation);
@@ -199,7 +199,7 @@ namespace CampusConnect.Api.Controllers
 
             if (alreadySaved)
             {
-                return BadRequest("Evenimentul este deja salvat.");
+                return BadRequest("The event is already saved.");
             }
 
             var savedEvent = new SavedEvent
@@ -226,7 +226,7 @@ namespace CampusConnect.Api.Controllers
 
             if (savedEvent == null)
             {
-                return BadRequest("Evenimentul nu este salvat.");
+                return BadRequest("The event is not saved.");
             }
 
             _context.SavedEvents.Remove(savedEvent);
@@ -272,5 +272,6 @@ namespace CampusConnect.Api.Controllers
 
             return Ok(participatingEvents);
         }
+
     }
 }

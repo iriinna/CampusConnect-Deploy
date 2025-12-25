@@ -80,9 +80,86 @@ public async Task<IActionResult> Create(Announcement announcement)
 
     _context.Announcements.Add(announcement);
     await _context.SaveChangesAsync();
+    var subscribers = await _context.CategorySubscriptions
+            .Where(s => s.Category == announcement.Category && s.UserId != userId.Value)
+            .Select(s => s.UserId)
+            .Distinct()
+            .ToListAsync();
+
+        if (subscribers.Any())
+        {
+            var notifications = subscribers.Select(subUserId => new Notification
+            {
+                UserId = subUserId,
+                Message = $"Anunț nou în categoria {announcement.Category}: {announcement.Title}",
+                RelatedEntityType = "Announcement",
+                RelatedEntityId = announcement.Id,
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false
+            });
+
+            _context.Notifications.AddRange(notifications);
+            await _context.SaveChangesAsync();
+        }
     return CreatedAtAction(nameof(GetById), new { id = announcement.Id }, announcement);
 }
 
+    [Authorize]
+    [HttpPost("subscribe")]
+    public async Task<IActionResult> SubscribeToCategory([FromBody] string category)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+        if (string.IsNullOrWhiteSpace(category)) return BadRequest("Invalid category");
+
+        var exists = await _context.CategorySubscriptions
+            .AnyAsync(s => s.UserId == userId.Value && s.Category == category);
+
+        if (exists) return BadRequest("Already subscribed.");
+
+        _context.CategorySubscriptions.Add(new CategorySubscription 
+        { 
+            UserId = userId.Value, 
+            Category = category 
+        });
+        
+        await _context.SaveChangesAsync();
+        return Ok(new { message = $"Subscribed to {category}" });
+    }
+
+    // 3. ENDPOINT PENTRU DEZABONARE
+    [Authorize]
+    [HttpPost("unsubscribe")]
+    public async Task<IActionResult> UnsubscribeFromCategory([FromBody] string category)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var sub = await _context.CategorySubscriptions
+            .FirstOrDefaultAsync(s => s.UserId == userId.Value && s.Category == category);
+
+        if (sub == null) return NotFound("Subscription not found.");
+
+        _context.CategorySubscriptions.Remove(sub);
+        await _context.SaveChangesAsync();
+        return Ok(new { message = $"Unsubscribed from {category}" });
+    }
+
+    // 4. LISTA CATEGORIILOR ABONATE (pentru UI)
+    [Authorize]
+    [HttpGet("subscriptions")]
+    public async Task<IActionResult> GetMySubscriptions()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var categories = await _context.CategorySubscriptions
+            .Where(s => s.UserId == userId.Value)
+            .Select(s => s.Category)
+            .ToListAsync();
+
+        return Ok(categories);
+    }
 [Authorize]
 [HttpPut("{id}")]
 public async Task<IActionResult> Update(int id, Announcement updated)

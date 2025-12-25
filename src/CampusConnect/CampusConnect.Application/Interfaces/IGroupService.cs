@@ -20,7 +20,7 @@ public interface IGroupService
     // Task Management (doar profesorul care a creat grupul poate posta taskuri)
     Task<GroupTaskResponse> CreateTaskAsync(int groupId, CreateTaskRequest request);
     Task<IEnumerable<GroupTaskResponse>> GetGroupTasksAsync(int groupId);
-    Task<bool> DeleteTaskAsync(int taskId);
+    Task<bool> DeleteTaskAsync(int taskId, int userId);
     
     // Saved Tasks (studenții pot salva taskuri)
     Task<bool> SaveTaskAsync(int taskId);

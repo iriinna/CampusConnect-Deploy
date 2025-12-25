@@ -24,6 +24,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<GroupMember> GroupMembers { get; set; }
     public DbSet<GroupTask> GroupTasks { get; set; }
     public DbSet<SavedTask> SavedTasks { get; set; }
+    public DbSet<CategorySubscription> CategorySubscriptions { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -64,17 +64,32 @@ public class GroupService : IGroupService
         return groups.Select(g => MapToGroupResponse(g, userId).Result);
     }
 
-    public async Task<GroupResponse?> GetGroupByIdAsync(int groupId)
-    {
-        var userId = _currentUserService.GetCurrentUserId() ?? 0;
-        var group = await _context.Groups
-            .Include(g => g.Professor)
-            .Include(g => g.Members)
-            .Include(g => g.Tasks)
-            .FirstOrDefaultAsync(g => g.Id == groupId);
+    public async Task<GroupResponse> GetGroupByIdAsync(int id)
+{
+    var group = await _context.Groups
+        .Include(g => g.Professor)
+        .Include(g => g.Members) // <--- CRUCIAL pentru butonul de Join/Leave
+        .FirstOrDefaultAsync(g => g.Id == id);
 
-        return group == null ? null : await MapToGroupResponse(group, userId);
-    }
+    if (group == null) return null;
+
+    return new GroupResponse
+    {
+        Id = group.Id,
+        Name = group.Name,
+        Subject = group.Subject,
+        Description = group.Description,
+        ProfessorId = group.ProfessorId,
+        MembersCount = group.Members.Count,
+        ProfessorName = $"{group.Professor.FirstName} {group.Professor.LastName}",
+        CreatedAt = group.CreatedAt,
+        IsActive = group.IsActive,
+        TasksCount = await _context.GroupTasks.CountAsync(t => t.GroupId == group.Id),
+        IsUserMember = group.Members.Any(m => m.UserId == _currentUserService.GetCurrentUserId() ? true : false)
+
+    };
+
+}
 
     public async Task<IEnumerable<GroupResponse>> GetMyGroupsAsync()
     {
@@ -251,31 +266,26 @@ public class GroupService : IGroupService
 
         return tasks.Select(t => MapToTaskResponse(t, userId).Result);
     }
+public async Task<bool> DeleteTaskAsync(int taskId, int userId)
+{
+    var task = await _context.GroupTasks
+        .Include(t => t.Group) 
+        .FirstOrDefaultAsync(t => t.Id == taskId);
 
-    public async Task<bool> DeleteTaskAsync(int taskId)
+    if (task == null) return false;
+
+    if (task.Group.ProfessorId != userId) 
     {
-        var userId = _currentUserService.GetCurrentUserId();
-        if (userId == null)
-            throw new UnauthorizedAccessException("User not authenticated");
-
-        var task = await _context.GroupTasks
-            .Include(t => t.Group)
-            .FirstOrDefaultAsync(t => t.Id == taskId);
-
-        if (task == null)
-            return false;
-
-        var user = await _userManager.FindByIdAsync(userId.ToString()!);
-        var roles = await _userManager.GetRolesAsync(user!);
-        var isAdmin = roles.Contains("Admin");
-
-        if (task.Group.ProfessorId != userId.Value && !isAdmin)
-            throw new UnauthorizedAccessException("Only the group professor or admins can delete tasks");
-
-        _context.GroupTasks.Remove(task);
-        await _context.SaveChangesAsync();
-        return true;
+        throw new UnauthorizedAccessException("Nu aveți permisiunea să ștergeți acest task.");
     }
+    var savedTasks = _context.SavedTasks.Where(st => st.TaskId == taskId);
+    _context.SavedTasks.RemoveRange(savedTasks);
+
+    _context.GroupTasks.Remove(task);
+    await _context.SaveChangesAsync();
+
+    return true;
+}
 
     public async Task<bool> SaveTaskAsync(int taskId)
     {

@@ -3,6 +3,9 @@ using CampusConnect.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using CampusConnect.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using CampusConnect.Domain.Entities;
 
 namespace CampusConnect.Api.Controllers;
 
@@ -12,11 +15,14 @@ namespace CampusConnect.Api.Controllers;
 public class GroupController : ControllerBase
 {
     private readonly IGroupService _groupService;
+    private readonly ApplicationDbContext _context; // 1. Injectam DB Context
 
-    public GroupController(IGroupService groupService)
+    public GroupController(IGroupService groupService, ApplicationDbContext context)
     {
         _groupService = groupService;
+        _context = context;
     }
+
     private int? GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -54,15 +60,31 @@ public class GroupController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GroupResponse>> GetGroupById(int id)
+public async Task<ActionResult<object>> GetGroupById(int id)
+{
+    var group = await _context.Groups // sau _context.StudyGroups
+        .Include(g => g.Members) // <--- LINIA ASTA LIPSEȘTE SAU NU MERGE
+        .FirstOrDefaultAsync(g => g.Id == id);
+
+    if (group == null) return NotFound();
+
+    // Returnăm un obiect nou ca să fim siguri că trimitem membrii
+    // și nu avem probleme de "Reference Loop" (Grup -> Membru -> Grup)
+    return Ok(new 
     {
-        var group = await _groupService.GetGroupByIdAsync(id);
-        if (group == null)
-            return NotFound(new { message = "Group not found" });
-
-        return Ok(group);
-    }
-
+        group.Id,
+        group.Name,
+        group.Subject,
+        group.Description,
+        group.ProfessorId,
+        // Trimitem lista explicit:
+        Members = group.Members.Select(gm => new { 
+            // Verifică în modelul tău GroupMember cum se numește câmpul cu ID-ul studentului
+            // Poate fi UserId sau StudentId
+            StudentId = gm.UserId 
+        }).ToList()
+    });
+}
     [HttpGet("my-groups")]
     public async Task<ActionResult<IEnumerable<GroupResponse>>> GetMyGroups()
     {
@@ -182,6 +204,41 @@ public class GroupController : ControllerBase
         try
         {
             var task = await _groupService.CreateTaskAsync(groupId, request);
+            
+            var currentUserId = GetCurrentUserId();
+            
+            var groupInfo = await _context.Groups
+                .Include(g => g.Members)
+                .Where(g => g.Id == groupId)
+                .Select(g => new { 
+                    g.Name, 
+                    MemberIds = g.Members.Select(m => m.UserId).ToList() 
+                })
+                .FirstOrDefaultAsync();
+
+            if (groupInfo != null && currentUserId.HasValue)
+            {
+                var membersToNotify = groupInfo.MemberIds
+                    .Where(uid => uid != currentUserId.Value)
+                    .ToList();
+
+                if (membersToNotify.Any())
+                {
+                    var notifications = membersToNotify.Select(userId => new Notification
+                    {
+                        UserId = userId,
+                        Message = $"Task nou în grupul '{groupInfo.Name}': {task.Title}",
+                        RelatedEntityType = "GroupTask", 
+                        RelatedEntityId = groupId,       
+                        CreatedAt = DateTime.UtcNow,
+                        IsRead = false
+                    });
+
+                    _context.Notifications.AddRange(notifications);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             return Ok(task);
         }
         catch (UnauthorizedAccessException ex)
@@ -197,6 +254,7 @@ public class GroupController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+    
 
     [HttpGet("{groupId}/tasks")]
     public async Task<ActionResult<IEnumerable<GroupTaskResponse>>> GetGroupTasks(int groupId)
@@ -207,27 +265,35 @@ public class GroupController : ControllerBase
 
 
     [HttpDelete("tasks/{taskId}")]
-    [Authorize]
-    public async Task<ActionResult> DeleteTask(int taskId)
-    {
-        try
-        {
-            var result = await _groupService.DeleteTaskAsync(taskId);
-            
-            if (!result)
-                return NotFound(new { message = "Task not found" });
+[Authorize]
+public async Task<IActionResult> DeleteTask(int taskId)
+{
+    var userId = GetCurrentUserId();
+    if (userId == null) return Unauthorized();
 
-            return Ok(new { message = "Task deleted successfully" });
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid(ex.Message); 
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+    var task = await _context.GroupTasks
+        .Include(t => t.Group) 
+        .FirstOrDefaultAsync(t => t.Id == taskId);
+
+    if (task == null) return NotFound("Task not found");
+
+    if (task.Group.ProfessorId != userId && !User.IsInRole("Admin"))
+    {
+        return StatusCode(403, new { 
+            message = "Nu aveți dreptul să ștergeți acest task.",
+            myId = userId,
+            ownerId = task.Group.ProfessorId
+        });
     }
+
+    var savedTasks = _context.SavedTasks.Where(st => st.TaskId == taskId);
+    _context.SavedTasks.RemoveRange(savedTasks);
+    _context.GroupTasks.Remove(task);
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Task deleted successfully" });
+}
+
 
     [HttpPost("tasks/{taskId}/save")]
     public async Task<ActionResult> SaveTask(int taskId)

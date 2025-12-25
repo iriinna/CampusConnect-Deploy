@@ -17,6 +17,8 @@ import {
   ClipboardList,
   Shield,
   X,
+  UserPlus,
+  LogOut,
 } from 'lucide-react';
 import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
@@ -49,7 +51,7 @@ const TaskCard = ({ task, onSave, onUnsave, onComplete, onIncomplete, onDelete, 
   };
 
   const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && !task.isCompleted;
-
+ 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -178,13 +180,27 @@ const GroupDetails = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const currentUserId = user.id || user.userId || localStorage.getItem('userId');
+  const token = localStorage.getItem('token');
   const isProfessor = user.role === 'Professor';
   const isAdmin = user.role === 'Admin';
 
   const isGroupOwner = useMemo(() => {
-    if (!group) return false;
-    return group.professorId === Number(user.id);
-  }, [group, user.id]);
+    if (!group || !currentUserId) return false;
+    return Number(group.professorId) === Number(currentUserId);
+  }, [group, currentUserId]);
+
+  const isMember = useMemo(() => {
+    if (!group || !currentUserId) return false;
+
+    const membersList = (group as any).members || (group as any).Members || [];
+
+    return membersList.some((m: any) => {
+        const memberId = m.studentId || m.StudentId || m.userId || m.UserId || m.id;
+        
+        return Number(memberId) === Number(currentUserId);
+    });
+  }, [group, currentUserId]);
 
   const canManageTasks = useMemo(() => {
     return isGroupOwner || isAdmin;
@@ -206,6 +222,55 @@ const GroupDetails = () => {
       setGroup(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleJoinGroup = async () => {
+    try {
+      const res = await fetch(`http://localhost:5099/api/group/${id}/join`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+        }
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Succes: " + data.message);
+        await loadGroupDetails(); 
+      } else {
+        alert("Eroare: " + data.message);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+      alert("An error occurred while trying to join the group.");
+    }
+  };
+
+  const handleLeaveGroup = async () => {
+    if(!window.confirm("Are you sure you want to exit the group?")) return;
+    
+    try {
+      const res = await fetch(`http://localhost:5099/api/group/${id}/leave`, {
+        method: 'POST', 
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+        }
+      });
+      
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Succes: " + data.message);
+        await loadGroupDetails(); 
+      } else {
+        alert("Eroare: " + data.message);
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -441,6 +506,28 @@ const GroupDetails = () => {
             </Card>
           </motion.div>
         )}
+
+        <div className="flex gap-2">
+            {!isGroupOwner && !isMember && (
+                <Button onClick={handleJoinGroup} className="bg-white text-emerald-600 hover:bg-gray-100 border border-emerald-600">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Participate
+                </Button>
+            )}
+
+            {!isGroupOwner && isMember && (
+                <Button onClick={handleLeaveGroup} variant="destructive">
+                <LogOut className="h-4 w-4 mr-2" />
+                Leave Group
+                </Button>
+            )}
+
+            {isGroupOwner && (
+                <Badge className="bg-yellow-400 text-black px-4 py-2 text-sm h-10 flex items-center">
+                Owner
+                </Badge>
+            )}
+        </div>
 
         {/* Tasks Section */}
         <motion.div
