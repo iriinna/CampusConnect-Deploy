@@ -28,12 +28,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
+    public DbSet<UserActivity> UserActivities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // Configurări custom pentru ApplicationUser
         builder.Entity<ApplicationUser>(entity =>
         {
             entity.Property(e => e.FirstName)
@@ -272,7 +272,32 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // 14. Seed Achievements
+        // 14. Configurare UserActivity
+        builder.Entity<UserActivity>(entity =>
+        {
+            entity.Property(a => a.ActivityType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityName)
+                .HasMaxLength(300);
+
+            entity.Property(a => a.Description)
+                .HasMaxLength(500);
+
+            entity.HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(a => new { a.UserId, a.CreatedAt });
+        });
+
+        // 15. Seed Achievements
         builder.Entity<Achievement>().HasData(
             new Achievement
             {

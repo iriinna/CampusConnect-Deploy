@@ -19,6 +19,7 @@ import GroupDetails from './pages/Groups/GroupDetails';
 import MyTasks from './pages/Groups/MyTasks';
 import AllAchievements from './pages/Achievements/AllAchievements';
 import ManageAchievements from './pages/Achievements/ManageAchievements';
+import ActivityHistory from './pages/ActivityHistory';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/my-tasks" element={<MyTasks />} />
           <Route path="/achievements" element={<AllAchievements />} />
           <Route path="/manage-achievements" element={<ManageAchievements />} />
+          <Route path="/activity-history" element={<ActivityHistory />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

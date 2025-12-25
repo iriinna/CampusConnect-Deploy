@@ -7,7 +7,6 @@ import {
   Users,
   CheckSquare,
   TrendingUp,
-  Bell,
   Sparkles,
   ArrowRight,
   Clock,
@@ -22,6 +21,8 @@ import { Avatar, AvatarFallback } from '../components/ui/Avatar';
 import { dashboardService } from '../services/dashboardService';
 import type { DashboardStats } from '../services/dashboardService';
 import achievementApi, { type UserAchievement } from '../services/achievementApi';
+import activityApi from '../services/activityApi';
+import { formatActivity, type FormattedActivity } from '../utils/activityFormatter';
 
 interface CurrentUser {
   id?: number;
@@ -50,19 +51,24 @@ function Home() {
   const navigate = useNavigate();
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [myAchievements, setMyAchievements] = useState<UserAchievement[]>([]);
+  const [recentActivities, setRecentActivities] = useState<FormattedActivity[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const data = await dashboardService.getDashboardStats();
-        setDashboardStats(data);
+        const [data, achievements, activities] = await Promise.all([
+          dashboardService.getDashboardStats(),
+          achievementApi.getMyAchievements(),
+          activityApi.getRecentActivities()
+        ]);
 
-        const achievements = await achievementApi.getMyAchievements();
+        setDashboardStats(data);
         setMyAchievements(achievements);
+        setRecentActivities(activities.map(formatActivity));
       } catch (error) {
-        console.error("Failed to fetch dashboard stats", error);
+        console.error("Failed to fetch dashboard data", error);
       } finally {
         setLoading(false);
       }
@@ -164,11 +170,6 @@ function Home() {
 
   ];
 
-  const recentActivity = [
-    { title: 'New assignment posted', time: '2 hours ago', type: 'task' },
-    { title: 'Upcoming event tomorrow', time: '5 hours ago', type: 'event' },
-    { title: 'Group discussion updated', time: '1 day ago', type: 'group' },
-  ];
 
   return (
     <Layout>
@@ -335,34 +336,59 @@ function Home() {
                     <Clock className="h-5 w-5" />
                     Recent Activity
                   </CardTitle>
-                  <Button variant="ghost" size="sm">
-                    <Bell className="h-4 w-4" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/activity-history')}
+                  >
+                    View All
+                    <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 + index * 0.1 }}
-                      className="flex items-start space-x-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
-                    >
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        {activity.type === 'task' && <CheckSquare className="h-5 w-5 text-primary" />}
-                        {activity.type === 'event' && <Calendar className="h-5 w-5 text-primary" />}
-                        {activity.type === 'group' && <Users className="h-5 w-5 text-primary" />}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium">{activity.title}</p>
-                        <p className="text-sm text-muted-foreground">{activity.time}</p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                    </motion.div>
-                  ))}
-                </div>
+                {recentActivities.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Clock className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">No recent activity</p>
+                    <p className="text-xs mt-1">Your actions will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentActivities.map((activity, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 + index * 0.1 }}
+                        className="flex items-start space-x-4 p-4 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer"
+                        onClick={() => {
+                          if (activity.type === 'group' && activity.entityId) {
+                            navigate(`/groups/${activity.entityId}`);
+                          } else if (activity.type === 'event' && activity.entityId) {
+                            navigate(`/events/${activity.entityId}`);
+                          } else if (activity.type === 'announcement' && activity.entityId) {
+                            navigate(`/announcements`);
+                          }
+                        }}
+                      >
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          {activity.type === 'task' && <CheckSquare className="h-5 w-5 text-primary" />}
+                          {activity.type === 'event' && <Calendar className="h-5 w-5 text-primary" />}
+                          {activity.type === 'group' && <Users className="h-5 w-5 text-primary" />}
+                          {activity.type === 'announcement' && <Megaphone className="h-5 w-5 text-primary" />}
+                          {activity.type === 'profile' && <UserCog className="h-5 w-5 text-primary" />}
+                          {activity.type === 'achievement' && <Trophy className="h-5 w-5 text-primary" />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{activity.title}</p>
+                          <p className="text-sm text-muted-foreground">{activity.time}</p>
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>

@@ -1,7 +1,9 @@
 using CampusConnect.Application.DTOs.Achievements;
 using CampusConnect.Application.Interfaces;
+using CampusConnect.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CampusConnect.Api.Controllers;
 
@@ -10,12 +12,33 @@ namespace CampusConnect.Api.Controllers;
 public class AchievementController : ControllerBase
 {
     private readonly IAchievementService _achievementService;
+    private readonly IActivityLoggerService _activityLogger;
 
-    public AchievementController(IAchievementService achievementService)
+    public AchievementController(IAchievementService achievementService, IActivityLoggerService activityLogger)
     {
         _achievementService = achievementService;
+        _activityLogger=activityLogger;
     }
+    private int? GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            userIdClaim = User.FindFirst("id")?.Value;
+        }
+
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            userIdClaim = User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+        }
+
+        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        {
+            return userId;
+        }
+        return null;
+    }
     // GET: api/achievement
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AchievementResponse>>> GetAllAchievements()
@@ -65,10 +88,12 @@ public class AchievementController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AchievementResponse>> CreateAchievement([FromBody] CreateAchievementRequest request)
     {
+        var userId = GetCurrentUserId();
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var achievement = await _achievementService.CreateAchievementAsync(request);
+        await _activityLogger.LogActivityAsync(userId.Value, "Create", "Achievement", achievement.Id, achievement.Title, "Created a new achievement");
         return CreatedAtAction(nameof(GetAchievementById), new { id = achievement.Id }, achievement);
     }
 
@@ -77,13 +102,14 @@ public class AchievementController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<AchievementResponse>> UpdateAchievement(int id, [FromBody] UpdateAchievementRequest request)
     {
+        var userId = GetCurrentUserId();
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var achievement = await _achievementService.UpdateAchievementAsync(id, request);
         if (achievement == null)
             return NotFound();
-
+        await _activityLogger.LogActivityAsync(userId.Value, "Update", "Achievement", achievement.Id, achievement.Title, "Updated an achievement");
         return Ok(achievement);
     }
 
@@ -92,10 +118,12 @@ public class AchievementController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAchievement(int id)
     {
+        var userId = GetCurrentUserId();
         var result = await _achievementService.DeleteAchievementAsync(id);
+
         if (!result)
             return NotFound();
-
+        await _activityLogger.LogActivityAsync(userId.Value, "Delete", "Achievement", id, null, "Deleted an achievement");
         return NoContent();
     }
 }
