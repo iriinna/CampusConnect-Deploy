@@ -398,4 +398,191 @@ public async Task<IActionResult> DeleteTask(int taskId)
             return Unauthorized(new { message = ex.Message });
         }
     }
+
+    // ============= Course Materials Endpoints =============
+    
+    [HttpPost("{groupId}/materials")]
+    [Authorize(Roles = "Professor,Admin")]
+    public async Task<ActionResult<CourseMaterialDto>> UploadCourseMaterial(int groupId, [FromForm] CreateCourseMaterialRequest request)
+    {
+        try
+        {
+            request.GroupId = groupId;
+            var material = await _groupService.UploadCourseMaterialAsync(request);
+            await _activityLogger.LogActivityAsync(GetCurrentUserId().Value, "Upload", "CourseMaterial", material.Id, material.Title, $"Uploaded course material '{material.Title}'");
+            return Ok(material);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{groupId}/materials")]
+    public async Task<ActionResult<IEnumerable<CourseMaterialDto>>> GetGroupMaterials(int groupId)
+    {
+        try
+        {
+            var materials = await _groupService.GetGroupMaterialsAsync(groupId);
+            return Ok(materials);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("materials/{materialId}")]
+    [Authorize(Roles = "Professor,Admin")]
+    public async Task<ActionResult> DeleteCourseMaterial(int materialId)
+    {
+        try
+        {
+            await _groupService.DeleteCourseMaterialAsync(materialId);
+            await _activityLogger.LogActivityAsync(GetCurrentUserId().Value, "Delete", "CourseMaterial", materialId, null, "Deleted a course material");
+            return Ok(new { message = "Course material deleted successfully" });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("{groupId}/forward-announcement/{announcementId}")]
+    [Authorize(Roles = "Professor,Admin")]
+    public async Task<ActionResult> ForwardAnnouncementToGroup(int groupId, int announcementId)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+                return Unauthorized();
+
+            // Check if group exists
+            var group = await _context.Groups.FindAsync(groupId);
+            if (group == null)
+                return NotFound(new { message = "Group not found" });
+
+            // Check if user is the professor of this group
+            if (group.ProfessorId != userId.Value)
+                return Unauthorized(new { message = "Only the group professor can forward announcements" });
+
+            // Check if announcement exists
+            var announcement = await _context.Announcements.FindAsync(announcementId);
+            if (announcement == null)
+                return NotFound(new { message = "Announcement not found" });
+
+            // Create group announcement entry
+            var groupAnnouncement = new GroupAnnouncement
+            {
+                GroupId = groupId,
+                AnnouncementId = announcementId,
+                ForwardedByProfessorId = userId.Value,
+                ForwardedAt = DateTime.UtcNow
+            };
+
+            _context.GroupAnnouncements.Add(groupAnnouncement);
+            await _context.SaveChangesAsync();
+
+            await _activityLogger.LogActivityAsync(userId.Value, "Forward", "Announcement", announcementId, announcement.Title, $"Forwarded announcement to group: {group.Name}");
+
+            return Ok(new { message = "Announcement forwarded successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("{groupId}/announcements")]
+    public async Task<ActionResult> GetGroupAnnouncements(int groupId)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+                return Unauthorized();
+
+            // Check if user is a member or the professor
+            var group = await _context.Groups
+                .Include(g => g.Members)
+                .FirstOrDefaultAsync(g => g.Id == groupId);
+
+            if (group == null)
+                return NotFound(new { message = "Group not found" });
+
+            var isMember = group.Members.Any(m => m.UserId == userId.Value);
+            var isProfessor = group.ProfessorId == userId.Value;
+
+            if (!isMember && !isProfessor)
+                return Unauthorized(new { message = "You must be a member of this group" });
+
+            var announcements = await _context.GroupAnnouncements
+                .Where(ga => ga.GroupId == groupId)
+                .Include(ga => ga.Announcement)
+                .Include(ga => ga.ForwardedByProfessor)
+                .OrderByDescending(ga => ga.ForwardedAt)
+                .Select(ga => new
+                {
+                    ga.Id,
+                    ga.AnnouncementId,
+                    Title = ga.Announcement.Title,
+                    Content = ga.Announcement.Content,
+                    Category = ga.Announcement.Category,
+                    ga.ForwardedAt,
+                    ForwardedByProfessorName = ga.ForwardedByProfessor.FirstName + " " + ga.ForwardedByProfessor.LastName
+                })
+                .ToListAsync();
+
+            return Ok(announcements);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{groupId}/announcements/{groupAnnouncementId}")]
+    [Authorize(Roles = "Professor,Admin")]
+    public async Task<ActionResult> DeleteGroupAnnouncement(int groupId, int groupAnnouncementId)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            if (!userId.HasValue)
+                return Unauthorized();
+
+            // Get the group announcement
+            var groupAnnouncement = await _context.GroupAnnouncements
+                .Include(ga => ga.Group)
+                .Include(ga => ga.Announcement)
+                .FirstOrDefaultAsync(ga => ga.Id == groupAnnouncementId && ga.GroupId == groupId);
+
+            if (groupAnnouncement == null)
+                return NotFound(new { message = "Announcement not found in this group" });
+
+            // Check if user is the one who forwarded it
+            if (groupAnnouncement.ForwardedByProfessorId != userId.Value)
+                return Unauthorized(new { message = "You can only delete announcements you forwarded" });
+
+            _context.GroupAnnouncements.Remove(groupAnnouncement);
+            await _context.SaveChangesAsync();
+
+            await _activityLogger.LogActivityAsync(userId.Value, "Delete", "GroupAnnouncement", groupAnnouncementId, groupAnnouncement.Announcement.Title, $"Deleted announcement from group: {groupAnnouncement.Group.Name}");
+
+            return Ok(new { message = "Announcement removed from group successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }
