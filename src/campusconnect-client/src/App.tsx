@@ -17,6 +17,7 @@ import UpcomingEvents from './pages/Event/UpcomingEvent';
 import Groups from './pages/Groups/Groups';
 import GroupDetails from './pages/Groups/GroupDetails';
 import MyTasks from './pages/Groups/MyTasks';
+import CampusMap from './pages/CampusMap/CampusMap';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path='/users' element={<Users />} />
           <Route path="/groups/:id" element={<GroupDetails />} />
           <Route path="/my-tasks" element={<MyTasks />} />
+          <Route path="/campus-map" element={<CampusMap />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

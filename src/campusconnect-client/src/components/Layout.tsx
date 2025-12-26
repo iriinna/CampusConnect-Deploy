@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home,
   Megaphone,
-  Calendar,
+  Calendar as CalendarIcon,
   Users,
   CheckSquare,
   User,
   LogOut,
   Menu,
-  X
+  X,
+  MapPin
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
@@ -46,9 +47,10 @@ export function Layout({ children }: LayoutProps) {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: Home },
     { name: 'Announcements', path: '/announcements', icon: Megaphone },
-    { name: 'Events', path: '/events', icon: Calendar },
+    { name: 'Events', path: '/events', icon: CalendarIcon },
     { name: 'Groups', path: '/groups', icon: Users },
     { name: 'My Tasks', path: '/my-tasks', icon: CheckSquare },
+    { name: 'Campus Map', path: '/campus-map', icon: MapPin },
   ];
 
   const isActive = (path: string) => location.pathname === path;
