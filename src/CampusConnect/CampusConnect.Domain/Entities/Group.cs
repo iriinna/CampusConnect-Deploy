@@ -14,4 +14,5 @@ public class Group
     // Relații
     public ICollection<GroupMember> Members { get; set; } = new List<GroupMember>();
     public ICollection<GroupTask> Tasks { get; set; } = new List<GroupTask>();
+    public ICollection<CourseMaterial> CourseMaterials { get; set; } = new List<CourseMaterial>();
 }

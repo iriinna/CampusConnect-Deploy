@@ -23,6 +23,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Group> Groups { get; set; }
     public DbSet<GroupMember> GroupMembers { get; set; }
     public DbSet<GroupTask> GroupTasks { get; set; }
+    public DbSet<CourseMaterial> CourseMaterials { get; set; }
+    public DbSet<GroupAnnouncement> GroupAnnouncements { get; set; }
     public DbSet<SavedTask> SavedTasks { get; set; }
     public DbSet<CategorySubscription> CategorySubscriptions { get; set; }
     public DbSet<Notification> Notifications { get; set; }
@@ -225,6 +227,60 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .WithMany(t => t.SavedByUsers)
                 .HasForeignKey(st => st.TaskId)
                 .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        // 10a. Configurare CourseMaterial
+        builder.Entity<CourseMaterial>(entity =>
+        {
+            entity.Property(cm => cm.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(cm => cm.Description)
+                .HasMaxLength(1000);
+
+            entity.Property(cm => cm.FileName)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.Property(cm => cm.FileUrl)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(cm => cm.FileType)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.HasOne(cm => cm.Group)
+                .WithMany(g => g.CourseMaterials)
+                .HasForeignKey(cm => cm.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(cm => cm.UploadedByProfessor)
+                .WithMany()
+                .HasForeignKey(cm => cm.UploadedByProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // 10a. Configurare GroupAnnouncement
+        builder.Entity<GroupAnnouncement>(entity =>
+        {
+            entity.HasOne(ga => ga.Group)
+                .WithMany()
+                .HasForeignKey(ga => ga.GroupId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ga => ga.Announcement)
+                .WithMany()
+                .HasForeignKey(ga => ga.AnnouncementId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ga => ga.ForwardedByProfessor)
+                .WithMany()
+                .HasForeignKey(ga => ga.ForwardedByProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(ga => new { ga.GroupId, ga.AnnouncementId });
         });
 
         // 11. Configurare SavedEvent

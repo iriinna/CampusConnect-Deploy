@@ -28,6 +28,8 @@ import { Badge } from '../../components/ui/Badge';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { groupApi } from '../../services/groupApi';
 import type { Group, GroupTask } from '../../services/groupApi';
+import CourseMaterials from './CourseMaterials';
+import GroupChat from './GroupChat';
 
 interface TaskCardProps {
   task: GroupTask;
@@ -529,165 +531,184 @@ const GroupDetails = () => {
             )}
         </div>
 
-        {/* Tasks Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="h-5 w-5" />
-                  Tasks ({tasks.length})
-                </CardTitle>
-                {canManageTasks && (
-                  <Button
-                    onClick={() => setShowCreateForm(!showCreateForm)}
-                    variant={showCreateForm ? 'outline' : 'default'}
-                  >
-                    {showCreateForm ? (
-                      <>
-                        <X className="h-4 w-4 mr-2" />
-                        Cancel
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Task
-                      </>
+        {/* Main Content Grid - Left: Tasks + Materials, Right: Chat */}
+        {(isMember || isGroupOwner) && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Tasks and Materials */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Tasks Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <ClipboardList className="h-5 w-5" />
+                      Tasks ({tasks.length})
+                    </CardTitle>
+                    {canManageTasks && (
+                      <Button
+                        onClick={() => setShowCreateForm(!showCreateForm)}
+                        variant={showCreateForm ? 'outline' : 'default'}
+                      >
+                        {showCreateForm ? (
+                          <>
+                            <X className="h-4 w-4 mr-2" />
+                            Cancel
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Task
+                          </>
+                        )}
+                      </Button>
                     )}
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <AnimatePresence>
-                {showCreateForm && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-6"
-                  >
-                    <Card className="bg-secondary/50">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Create New Task</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <form onSubmit={handleCreateTask} className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium mb-2">
-                              Title <span className="text-red-500">*</span>
-                            </label>
-                            <Input
-                              type="text"
-                              placeholder="Enter task title..."
-                              value={newTask.title}
-                              onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium mb-2">
-                              Description
-                            </label>
-                            <textarea
-                              placeholder="Enter task description..."
-                              value={newTask.description}
-                              onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                              rows={3}
-                              className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-y"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              Due Date
-                            </label>
-                            <Input
-                              type="date"
-                              value={newTask.dueDate}
-                              onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                            />
-                          </div>
-
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="w-full"
-                          >
-                            {isSubmitting ? (
-                              <>
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Creating...
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Create Task
-                              </>
-                            )}
-                          </Button>
-                        </form>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {tasks.length === 0 ? (
-                <div className="text-center py-12">
-                  <ClipboardList className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
-                  <p className="text-muted-foreground">No tasks in this group yet</p>
-                  {canManageTasks && (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Click "Add Task" to create the first task
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-3">
+                  </div>
+                </CardHeader>
+                <CardContent>
                   <AnimatePresence>
-                    {tasks.map((task) => (
-                      <TaskCard
-                        key={task.id}
-                        task={task}
-                        onSave={handleSaveTask}
-                        onUnsave={handleUnsaveTask}
-                        onComplete={handleCompleteTask}
-                        onIncomplete={handleIncompleteTask}
-                        onDelete={canManageTasks ? handleDeleteTask : undefined}
-                        isProfessor={isProfessor}
-                        isGroupOwner={canManageTasks}
-                      />
-                    ))}
-                  </AnimatePresence>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+                    {showCreateForm && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mb-6"
+                      >
+                        <Card className="bg-secondary/50">
+                          <CardHeader>
+                            <CardTitle className="text-lg">Create New Task</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <form onSubmit={handleCreateTask} className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-medium mb-2">
+                                  Title <span className="text-red-500">*</span>
+                                </label>
+                                <Input
+                                  type="text"
+                                  placeholder="Enter task title..."
+                                  value={newTask.title}
+                                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                                  required
+                                />
+                              </div>
 
-        {/* Owner Badge */}
-        {isGroupOwner && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <Card className="bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-900">
-              <CardContent className="pt-6">
-                <p className="text-sm text-orange-800 dark:text-orange-400 flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
-                  You are the owner of this group
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+                              <div>
+                                <label className="block text-sm font-medium mb-2">
+                                  Description
+                                </label>
+                                <textarea
+                                  placeholder="Enter task description..."
+                                  value={newTask.description}
+                                  onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                                  rows={3}
+                                  className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent resize-y"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                                  <Calendar className="h-4 w-4" />
+                                  Due Date
+                                </label>
+                                <Input
+                                  type="date"
+                                  value={newTask.dueDate}
+                                  onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                                />
+                              </div>
+
+                              <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full"
+                              >
+                                {isSubmitting ? (
+                                  <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    Creating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Create Task
+                                  </>
+                                )}
+                              </Button>
+                            </form>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {tasks.length === 0 ? (
+                    <div className="text-center py-12">
+                      <ClipboardList className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+                      <p className="text-muted-foreground">No tasks in this group yet</p>
+                      {canManageTasks && (
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Click "Add Task" to create the first task
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <AnimatePresence>
+                        {tasks.map((task) => (
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            onSave={handleSaveTask}
+                            onUnsave={handleUnsaveTask}
+                            onComplete={handleCompleteTask}
+                            onIncomplete={handleIncompleteTask}
+                            onDelete={canManageTasks ? handleDeleteTask : undefined}
+                            isProfessor={isProfessor}
+                            isGroupOwner={canManageTasks}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Course Materials Section */}
+            <CourseMaterials 
+              groupId={Number(id)} 
+              isGroupOwner={isGroupOwner}
+            />
+
+            {/* Owner Badge */}
+            {isGroupOwner && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Card className="bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-900">
+                  <CardContent className="pt-6">
+                    <p className="text-sm text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      You are the owner of this group
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Right Column - Group Chat */}
+          <div className="lg:col-span-1">
+            <GroupChat groupId={Number(id)} />
+          </div>
+        </div>
         )}
       </div>
     </Layout>
