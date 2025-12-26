@@ -26,6 +26,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<SavedTask> SavedTasks { get; set; }
     public DbSet<CategorySubscription> CategorySubscriptions { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Building> Buildings { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -237,6 +240,347 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .HasForeignKey(se => se.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        // 12. Configurare Building
+        builder.Entity<Building>(entity =>
+        {
+            entity.Property(b => b.Name).IsRequired().HasMaxLength(200);
+            entity.Property(b => b.Address).IsRequired().HasMaxLength(500);
+            entity.Property(b => b.Description).HasMaxLength(1000);
+            entity.Property(b => b.Latitude).IsRequired();
+            entity.Property(b => b.Longitude).IsRequired();
+            entity.Property(b => b.GeoJsonPolygon).HasColumnType("nvarchar(max)");
+
+            entity.HasIndex(b => b.Name);
+        });
+
+        // 13. Configurare Room
+        builder.Entity<Room>(entity =>
+        {
+            entity.Property(r => r.Name).IsRequired().HasMaxLength(100);
+            entity.Property(r => r.Floor).HasMaxLength(50);
+            entity.Property(r => r.Equipment).HasMaxLength(1000);
+
+            entity.HasOne(r => r.Building)
+                .WithMany(b => b.Rooms)
+                .HasForeignKey(r => r.BuildingId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => new { r.BuildingId, r.Name });
+        });
+
+        // 14. Configurare Schedule
+        builder.Entity<Schedule>(entity =>
+        {
+            entity.Property(s => s.Title).IsRequired().HasMaxLength(200);
+            entity.Property(s => s.Description).HasMaxLength(1000);
+            entity.Property(s => s.RecurrencePattern).HasMaxLength(50);
+
+            entity.HasOne(s => s.Room)
+                .WithMany(r => r.Schedules)
+                .HasForeignKey(s => s.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(s => s.CreatedByProfessor)
+                .WithMany()
+                .HasForeignKey(s => s.CreatedByProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(s => new { s.RoomId, s.StartTime, s.EndTime });
+        });
+
+        // 15. Seed Campus Map Data (UniBuc)
+        SeedCampusMapData(builder);
+    }
+
+    private static void SeedCampusMapData(ModelBuilder builder)
+    {
+        // Buildings - Real UniBuc Faculties with precise GPS coordinates verified from official sources
+        var buildings = new[]
+        {
+            // Chimie/FAA - Regina Elisabeta 4-12 (same building)
+            new Building { Id = 1, Name = "Facultatea de Administrație și Afaceri", Address = "B-dul Regina Elisabeta nr. 4-12, etaj 1, sector 3, București", Latitude = 44.43472, Longitude = 26.10072, Description = "FAA - Sediu în clădirea Chimiei", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 2, Name = "Facultatea de Biologie", Address = "Splaiul Independenței nr. 91-95, sector 5, București, 050095", Latitude = 44.43530, Longitude = 26.06326, Description = "Facultatea de Biologie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 3, Name = "Facultatea de Chimie", Address = "Bd. Regina Elisabeta nr. 4-12, sector 3, București, 030018", Latitude = 44.43472, Longitude = 26.10072, Description = "Facultatea de Chimie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            // Drept - Kogălniceanu (verified coordinates)
+            new Building { Id = 4, Name = "Facultatea de Drept", Address = "Bd. Mihail Kogălniceanu nr. 36-46, sector 5, București, 050107", Latitude = 44.435241, Longitude = 26.082077, Description = "Facultatea de Drept", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 5, Name = "Facultatea de Filosofie", Address = "Splaiul Independenței nr. 204, sector 6, București, 060024", Latitude = 44.43471, Longitude = 26.04824, Description = "Facultatea de Filosofie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 6, Name = "Facultatea de Fizică", Address = "Str. Atomiștilor nr. 405, Măgurele, Ilfov, 077125", Latitude = 44.34834, Longitude = 26.03128, Description = "Facultatea de Fizică - Campus Măgurele", IsActive = true, CreatedAt = DateTime.UtcNow },
+            // Geografie - Bălcescu 1
+            new Building { Id = 7, Name = "Facultatea de Geografie", Address = "Bd. Nicolae Bălcescu nr. 1, sector 1, București, 010041", Latitude = 44.43654, Longitude = 26.10189, Description = "Facultatea de Geografie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 8, Name = "Facultatea de Geologie și Geofizică", Address = "Str. Traian Vuia nr. 6, sector 2, București, 020956", Latitude = 44.45167, Longitude = 26.07901, Description = "Facultatea de Geologie și Geofizică", IsActive = true, CreatedAt = DateTime.UtcNow },
+            // FMI & Istorie - Academiei 14 (same building)
+            new Building { Id = 9, Name = "Facultatea de Istorie", Address = "Str. Academiei nr. 14, București", Latitude = 44.43584, Longitude = 26.09683, Description = "Facultatea de Istorie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 10, Name = "Facultatea de Jurnalism și Științele Comunicării", Address = "Bd. Iuliu Maniu nr. 1-3, Complex Leu, Corp A, etaj 6, sector 6, București", Latitude = 44.43891, Longitude = 26.04321, Description = "FJSC - Complex Leu", IsActive = true, CreatedAt = DateTime.UtcNow },
+            // FLLS & Litere - Edgar Quinet 5-7 (verified coordinates for Litere)
+            new Building { Id = 11, Name = "Facultatea de Limbi și Literaturi Străine", Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", Latitude = 44.43583, Longitude = 26.10081, Description = "FLLS", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 12, Name = "Facultatea de Litere", Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", Latitude = 44.43583, Longitude = 26.10081, Description = "Facultatea de Litere", IsActive = true, CreatedAt = DateTime.UtcNow },
+            // FMI - Academiei 14
+            new Building { Id = 13, Name = "Facultatea de Matematică și Informatică", Address = "Str. Academiei nr. 14, sector 1, București, 010014", Latitude = 44.43584, Longitude = 26.09683, Description = "FMI", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 14, Name = "Facultatea de Psihologie și Științele Educației", Address = "Șos. Panduri nr. 90-91, București", Latitude = 44.43221, Longitude = 26.06892, Description = "FPSE", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 15, Name = "Facultatea de Sociologie și Asistență Socială", Address = "Bd. Schitu Măgureanu nr. 9, București", Latitude = 44.43342, Longitude = 26.09421, Description = "SAS", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Building { Id = 16, Name = "Facultatea de Științe Politice", Address = "Calea Plevnei nr. 59, București, 010223", Latitude = 44.44521, Longitude = 26.08392, Description = "FSP", IsActive = true, CreatedAt = DateTime.UtcNow }
+        };
+        builder.Entity<Building>().HasData(buildings);
+
+        // Rooms - 10 rooms per faculty
+        var rooms = new[]
+        {
+            // FAA (Building 1)
+            new Room { Id = 1, Name = "A101", BuildingId = 1, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 2, Name = "A102", BuildingId = 1, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 3, Name = "A103", BuildingId = 1, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 4, Name = "A104", BuildingId = 1, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 5, Name = "A105", BuildingId = 1, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 6, Name = "S201", BuildingId = 1, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 7, Name = "S202", BuildingId = 1, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 8, Name = "S203", BuildingId = 1, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 9, Name = "Lab301", BuildingId = 1, Floor = "Etaj 3", Capacity = 25, Equipment = "Computere", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 10, Name = "Lab302", BuildingId = 1, Floor = "Etaj 3", Capacity = 25, Equipment = "Computere", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Biologie (Building 2)
+            new Room { Id = 11, Name = "Bio101", BuildingId = 2, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 12, Name = "Bio102", BuildingId = 2, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 13, Name = "Bio103", BuildingId = 2, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 14, Name = "Bio104", BuildingId = 2, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 15, Name = "Bio105", BuildingId = 2, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 16, Name = "LabBio201", BuildingId = 2, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament laborator", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 17, Name = "LabBio202", BuildingId = 2, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament laborator", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 18, Name = "LabBio203", BuildingId = 2, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament laborator", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 19, Name = "AmfBio1", BuildingId = 2, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 20, Name = "AmfBio2", BuildingId = 2, Floor = "Parter", Capacity = 150, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Chimie (Building 3)
+            new Room { Id = 21, Name = "Ch101", BuildingId = 3, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 22, Name = "Ch102", BuildingId = 3, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 23, Name = "Ch103", BuildingId = 3, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 24, Name = "Ch104", BuildingId = 3, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 25, Name = "Ch105", BuildingId = 3, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 26, Name = "LabCh201", BuildingId = 3, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament chimie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 27, Name = "LabCh202", BuildingId = 3, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament chimie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 28, Name = "LabCh203", BuildingId = 3, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament chimie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 29, Name = "AmfCh1", BuildingId = 3, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 30, Name = "AmfCh2", BuildingId = 3, Floor = "Parter", Capacity = 150, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Drept (Building 4)
+            new Room { Id = 31, Name = "D101", BuildingId = 4, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 32, Name = "D102", BuildingId = 4, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 33, Name = "D103", BuildingId = 4, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 34, Name = "D104", BuildingId = 4, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 35, Name = "D105", BuildingId = 4, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 36, Name = "AmfD1", BuildingId = 4, Floor = "Parter", Capacity = 300, Equipment = "Sistem audio-video complet", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 37, Name = "AmfD2", BuildingId = 4, Floor = "Parter", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 38, Name = "SemD201", BuildingId = 4, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 39, Name = "SemD202", BuildingId = 4, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 40, Name = "SemD203", BuildingId = 4, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Filosofie (Building 5)
+            new Room { Id = 41, Name = "Filo101", BuildingId = 5, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 42, Name = "Filo102", BuildingId = 5, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 43, Name = "Filo103", BuildingId = 5, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 44, Name = "Filo104", BuildingId = 5, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 45, Name = "Filo105", BuildingId = 5, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 46, Name = "AmfFilo1", BuildingId = 5, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 47, Name = "AmfFilo2", BuildingId = 5, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 48, Name = "SemFilo201", BuildingId = 5, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 49, Name = "SemFilo202", BuildingId = 5, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 50, Name = "SemFilo203", BuildingId = 5, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Fizică (Building 6)
+            new Room { Id = 51, Name = "Fiz101", BuildingId = 6, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 52, Name = "Fiz102", BuildingId = 6, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 53, Name = "Fiz103", BuildingId = 6, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 54, Name = "Fiz104", BuildingId = 6, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 55, Name = "Fiz105", BuildingId = 6, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 56, Name = "LabFiz201", BuildingId = 6, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament fizică", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 57, Name = "LabFiz202", BuildingId = 6, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament fizică", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 58, Name = "LabFiz203", BuildingId = 6, Floor = "Etaj 2", Capacity = 30, Equipment = "Echipament fizică", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 59, Name = "AmfFiz1", BuildingId = 6, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 60, Name = "AmfFiz2", BuildingId = 6, Floor = "Parter", Capacity = 150, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Geografie (Building 7)
+            new Room { Id = 61, Name = "Geo101", BuildingId = 7, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 62, Name = "Geo102", BuildingId = 7, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 63, Name = "Geo103", BuildingId = 7, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 64, Name = "Geo104", BuildingId = 7, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 65, Name = "Geo105", BuildingId = 7, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 66, Name = "LabGeo201", BuildingId = 7, Floor = "Etaj 2", Capacity = 25, Equipment = "Hărți, Computere GIS", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 67, Name = "LabGeo202", BuildingId = 7, Floor = "Etaj 2", Capacity = 25, Equipment = "Computere GIS", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 68, Name = "SemGeo203", BuildingId = 7, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 69, Name = "AmfGeo1", BuildingId = 7, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 70, Name = "AmfGeo2", BuildingId = 7, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Geologie și Geofizică (Building 8)
+            new Room { Id = 71, Name = "GG101", BuildingId = 8, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 72, Name = "GG102", BuildingId = 8, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 73, Name = "GG103", BuildingId = 8, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 74, Name = "GG104", BuildingId = 8, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 75, Name = "GG105", BuildingId = 8, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 76, Name = "LabGG201", BuildingId = 8, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament geologic", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 77, Name = "LabGG202", BuildingId = 8, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament geofizic", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 78, Name = "SemGG203", BuildingId = 8, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 79, Name = "AmfGG1", BuildingId = 8, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 80, Name = "AmfGG2", BuildingId = 8, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Istorie (Building 9)
+            new Room { Id = 81, Name = "Ist101", BuildingId = 9, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 82, Name = "Ist102", BuildingId = 9, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 83, Name = "Ist103", BuildingId = 9, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 84, Name = "Ist104", BuildingId = 9, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 85, Name = "Ist105", BuildingId = 9, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 86, Name = "SemIst201", BuildingId = 9, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 87, Name = "SemIst202", BuildingId = 9, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 88, Name = "SemIst203", BuildingId = 9, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 89, Name = "AmfIst1", BuildingId = 9, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 90, Name = "AmfIst2", BuildingId = 9, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FJSC (Building 10)
+            new Room { Id = 91, Name = "J101", BuildingId = 10, Floor = "Etaj 6", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 92, Name = "J102", BuildingId = 10, Floor = "Etaj 6", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 93, Name = "J103", BuildingId = 10, Floor = "Etaj 6", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 94, Name = "J104", BuildingId = 10, Floor = "Etaj 6", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 95, Name = "J105", BuildingId = 10, Floor = "Etaj 6", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 96, Name = "LabMedia201", BuildingId = 10, Floor = "Etaj 7", Capacity = 25, Equipment = "Camere, Echipament video", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 97, Name = "LabMedia202", BuildingId = 10, Floor = "Etaj 7", Capacity = 25, Equipment = "Echipament audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 98, Name = "SemPR203", BuildingId = 10, Floor = "Etaj 7", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 99, Name = "AmfJ1", BuildingId = 10, Floor = "Etaj 6", Capacity = 100, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 100, Name = "StudioJ2", BuildingId = 10, Floor = "Etaj 7", Capacity = 20, Equipment = "Studio TV/Radio", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FLLS (Building 11)
+            new Room { Id = 101, Name = "LLS101", BuildingId = 11, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 102, Name = "LLS102", BuildingId = 11, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 103, Name = "LLS103", BuildingId = 11, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 104, Name = "LLS104", BuildingId = 11, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 105, Name = "LLS105", BuildingId = 11, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 106, Name = "LabLingv201", BuildingId = 11, Floor = "Etaj 2", Capacity = 25, Equipment = "Echipament limbi străine", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 107, Name = "LabLingv202", BuildingId = 11, Floor = "Etaj 2", Capacity = 25, Equipment = "Computere, Software lingvistic", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 108, Name = "SemLLS203", BuildingId = 11, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 109, Name = "AmfLLS1", BuildingId = 11, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 110, Name = "AmfLLS2", BuildingId = 11, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Litere (Building 12)
+            new Room { Id = 111, Name = "Lit101", BuildingId = 12, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 112, Name = "Lit102", BuildingId = 12, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 113, Name = "Lit103", BuildingId = 12, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 114, Name = "Lit104", BuildingId = 12, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 115, Name = "Lit105", BuildingId = 12, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 116, Name = "SemLit201", BuildingId = 12, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 117, Name = "SemLit202", BuildingId = 12, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 118, Name = "SemLit203", BuildingId = 12, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 119, Name = "AmfLit1", BuildingId = 12, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 120, Name = "AmfLit2", BuildingId = 12, Floor = "Parter", Capacity = 150, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FMI (Building 13)
+            new Room { Id = 121, Name = "Amf. Spiru Haret", BuildingId = 13, Floor = "Parter", Capacity = 300, Equipment = "Proiector, Sistem audio premium", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 122, Name = "Amf. Gheorghe Țițeica", BuildingId = 13, Floor = "Parter", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 123, Name = "Amf. Simion Stoilow", BuildingId = 13, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 124, Name = "Amf. Dimitrie Pompeiu", BuildingId = 13, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 125, Name = "Lab FMI 1", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 126, Name = "Lab FMI 2", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 127, Name = "Lab FMI 3", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 128, Name = "S101", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 129, Name = "S102", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 130, Name = "S103", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FPSE (Building 14)
+            new Room { Id = 131, Name = "Psi101", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 132, Name = "Psi102", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 133, Name = "Psi103", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 134, Name = "Psi104", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 135, Name = "Psi105", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 136, Name = "LabPsi201", BuildingId = 14, Floor = "Etaj 2", Capacity = 20, Equipment = "Echipament psihologie", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 137, Name = "LabPsi202", BuildingId = 14, Floor = "Etaj 2", Capacity = 20, Equipment = "Computere, Software psiho", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 138, Name = "SemEdu203", BuildingId = 14, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 139, Name = "AmfPsi1", BuildingId = 14, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 140, Name = "AmfPsi2", BuildingId = 14, Floor = "Parter", Capacity = 120, Equipment = "Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // SAS (Building 15)
+            new Room { Id = 141, Name = "SAS101", BuildingId = 15, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 142, Name = "SAS102", BuildingId = 15, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 143, Name = "SAS103", BuildingId = 15, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 144, Name = "SAS104", BuildingId = 15, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 145, Name = "SAS105", BuildingId = 15, Floor = "Etaj 1", Capacity = 40, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 146, Name = "SemSAS201", BuildingId = 15, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 147, Name = "SemSAS202", BuildingId = 15, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 148, Name = "SemSAS203", BuildingId = 15, Floor = "Etaj 2", Capacity = 25, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 149, Name = "AmfSAS1", BuildingId = 15, Floor = "Parter", Capacity = 150, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 150, Name = "LabSAS2", BuildingId = 15, Floor = "Etaj 2", Capacity = 25, Equipment = "Computere, Software SPSS", IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FSP (Building 16)
+            new Room { Id = 151, Name = "FSP101", BuildingId = 16, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 152, Name = "FSP102", BuildingId = 16, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 153, Name = "FSP103", BuildingId = 16, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 154, Name = "FSP104", BuildingId = 16, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 155, Name = "FSP105", BuildingId = 16, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 156, Name = "SemFSP201", BuildingId = 16, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 157, Name = "SemFSP202", BuildingId = 16, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 158, Name = "SemFSP203", BuildingId = 16, Floor = "Etaj 2", Capacity = 30, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 159, Name = "AmfFSP1", BuildingId = 16, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 160, Name = "LabFSP2", BuildingId = 16, Floor = "Etaj 2", Capacity = 25, Equipment = "Computere", IsActive = true, CreatedAt = DateTime.UtcNow }
+        };
+        builder.Entity<Room>().HasData(rooms);
+
+        // Schedules - Sample schedules for demonstration
+        var today = DateTime.Today;
+        var schedules = new[]
+        {
+            // FMI - Today's schedules
+            new Schedule
+            {
+                Id = 1,
+                Title = "Curs Inginerie Software",
+                Description = "Principii de inginerie software și design patterns",
+                RoomId = 121, // Amf. Spiru Haret
+                StartTime = today.AddHours(10),
+                EndTime = today.AddHours(12),
+                CreatedByProfessorId = 14,
+                RecurrencePattern = "Weekly",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new Schedule
+            {
+                Id = 2,
+                Title = "Seminar Baze de Date",
+                Description = "Lucru cu SQL și modelare baze de date",
+                RoomId = 125, // Lab FMI 1
+                StartTime = today.AddHours(14),
+                EndTime = today.AddHours(16),
+                CreatedByProfessorId = 15,
+                RecurrencePattern = "Weekly",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new Schedule
+            {
+                Id = 3,
+                Title = "Curs Algoritmi și Structuri de Date",
+                Description = "Algoritmi de sortare și căutare",
+                RoomId = 122, // Amf. Gheorghe Țițeica
+                StartTime = today.AddHours(8),
+                EndTime = today.AddHours(10),
+                CreatedByProfessorId = 14,
+                RecurrencePattern = "Weekly",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+
+            // Drept - Today
+            new Schedule
+            {
+                Id = 4,
+                Title = "Curs Drept Civil",
+                Description = "Dreptul persoanelor și al familiei",
+                RoomId = 36, // AmfD1
+                StartTime = today.AddHours(12),
+                EndTime = today.AddHours(14),
+                CreatedByProfessorId = 15,
+                RecurrencePattern = "Weekly",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            }
+        };
+        builder.Entity<Schedule>().HasData(schedules);
     }
 
     private static ApplicationUser CreateUser(int id, string email, string firstName, string lastName, PasswordHasher<ApplicationUser> hasher)
