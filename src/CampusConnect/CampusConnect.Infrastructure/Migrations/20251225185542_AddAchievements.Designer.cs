@@ -4,6 +4,7 @@ using CampusConnect.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251225185542_AddAchievements")]
+    partial class AddAchievements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(6799),
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 41, 44, DateTimeKind.Utc).AddTicks(6161),
                             Description = "Complete your first task",
                             Icon = "🎯",
                             IsActive = true,
@@ -68,7 +71,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7242),
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 41, 44, DateTimeKind.Utc).AddTicks(6578),
                             Description = "Complete 5 tasks",
                             Icon = "⭐",
                             IsActive = true,
@@ -77,7 +80,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7245),
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 41, 44, DateTimeKind.Utc).AddTicks(6582),
                             Description = "Complete 10 tasks",
                             Icon = "🏆",
                             IsActive = true,
@@ -86,7 +89,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7248),
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 41, 44, DateTimeKind.Utc).AddTicks(6585),
                             Description = "Join your first group",
                             Icon = "👥",
                             IsActive = true,
@@ -95,7 +98,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7251),
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 41, 44, DateTimeKind.Utc).AddTicks(6588),
                             Description = "Attend your first event",
                             Icon = "🦋",
                             IsActive = true,
@@ -237,8 +240,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 10,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "50876560-b32e-44e1-b871-4dbdb24cadd1",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 151, DateTimeKind.Utc).AddTicks(9063),
+                            ConcurrencyStamp = "6b802377-06cd-4fbc-bf7b-726a86779e68",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 233, DateTimeKind.Utc).AddTicks(3044),
                             Email = "admin1@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Andrei",
@@ -246,9 +249,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@UNIBUC.RO",
                             NormalizedUserName = "ADMIN1@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJyUKqZjwFP/BGkMntr/IVsTU9cg+zv+mAIINwWe/ISOQHzo61FeVV39bBTwD3leAg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED1/UGe7ueVpdsp2tlGvG5DQO+1qm7kqONzNcXjYNmH6lmH+0Eku0X9u6aO2o/aG5A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "154ecdea-a427-43b6-9885-a1a609442487",
+                            SecurityStamp = "c8242a8b-f022-479a-9a2a-3625861c496e",
                             TwoFactorEnabled = false,
                             UserName = "admin1@unibuc.ro"
                         },
@@ -256,8 +259,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 11,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a6be3746-6c6b-4b8d-9022-cbab4a1a789e",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 260, DateTimeKind.Utc).AddTicks(951),
+                            ConcurrencyStamp = "fe617332-c469-4c84-8666-c6fd8ae5e370",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 363, DateTimeKind.Utc).AddTicks(3431),
                             Email = "admin2@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Maria",
@@ -265,9 +268,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN2@UNIBUC.RO",
                             NormalizedUserName = "ADMIN2@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOwVU+2EDAiua0IbOeQIba1rxHAqQdOZEnIbXZ5miDDD9PZ5394KdzZcNy5hNtBwTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB8NAzs05YJbG58A9jUJreHRyhMI17gDCzVttwWOZe9gywTzF0Y/d2wffwF64K8jiw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1f5a9809-5d10-4d40-aee5-0a9c8c5a659d",
+                            SecurityStamp = "ace32022-f8d5-4c4b-b247-13efa557b2da",
                             TwoFactorEnabled = false,
                             UserName = "admin2@unibuc.ro"
                         },
@@ -275,8 +278,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 12,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0431e87d-6262-4390-a458-2729d67df6a3",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 359, DateTimeKind.Utc).AddTicks(2987),
+                            ConcurrencyStamp = "c31b7d10-73c9-468b-b902-570ddd2ca4a1",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 498, DateTimeKind.Utc).AddTicks(8199),
                             Email = "student1@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Ion",
@@ -284,9 +287,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT1@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT1@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPc+Q0azoVQ0WTle2qO+Js+OXEEKW7a0BfpUymqBtrIhdI0u/ymIYEdGHlxPislUZw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBPf+2F5VlbkH678gS+sr6nsTclUvaA+HOVAdHk+XMb8232EIHTjONHx/UaLC0aLoA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c28125ac-f984-4a3e-9009-7393953cc4dd",
+                            SecurityStamp = "dab0fc1e-e305-4747-a9d9-08b293f52059",
                             TwoFactorEnabled = false,
                             UserName = "student1@s.unibuc.ro"
                         },
@@ -294,8 +297,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 13,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b3f317ed-8816-4700-8e19-bda79afc9d00",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 465, DateTimeKind.Utc).AddTicks(6501),
+                            ConcurrencyStamp = "ba900d4a-4b60-4e62-b0bb-cf4e33396c9c",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 623, DateTimeKind.Utc).AddTicks(4497),
                             Email = "student2@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Elena",
@@ -303,9 +306,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT2@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT2@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFHZhWHUiStx0fgDUxwU8/QCFZRzGCqziUgQlhkWxzTJlmFMULq47RwRp0dPD2eGfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM7c+ByjtZOlIeY3Dq/me2MScifrXicSyYFQWpTMErCWW+OPqX4nBX9lbSVqdnvUhw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "caaa7f94-bfd9-4ee7-9a8b-8c62f2e2a6fa",
+                            SecurityStamp = "ec2aa4a7-3d05-4a65-ba2a-dce4074d12e1",
                             TwoFactorEnabled = false,
                             UserName = "student2@s.unibuc.ro"
                         },
@@ -313,8 +316,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 14,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "395bc6d2-f7f3-4ec1-9335-88dd4193fbae",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 582, DateTimeKind.Utc).AddTicks(7050),
+                            ConcurrencyStamp = "0b0de819-1826-440a-a76a-bc0bb6b9382a",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 769, DateTimeKind.Utc).AddTicks(7442),
                             Email = "anastasia.ispas@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Anastasia",
@@ -322,9 +325,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ANASTASIA.ISPAS@S.UNIBUC.RO",
                             NormalizedUserName = "ANASTASIA.ISPAS@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3AStRsw7a6UftbHZ3Yjs+Agpt7Vf00j2Pdf5mBYw9UWml8n1CQa++uYrI4fuXD7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEvn/9SBXCofM6kxO9KZk0x3MF2gYXYmoS0HPPU/e9gm69YhtkNBX29s5vIoSwlZng==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aac0ce58-5d9c-4803-b8f2-147de926f18d",
+                            SecurityStamp = "97463517-a034-4831-98c5-c36c0df93810",
                             TwoFactorEnabled = false,
                             UserName = "anastasia.ispas@s.unibuc.ro"
                         },
@@ -332,8 +335,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 15,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3b7ac85a-24cd-4acd-9ce4-6f3a1d1df026",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 698, DateTimeKind.Utc).AddTicks(2059),
+                            ConcurrencyStamp = "2f42a02b-af32-4d02-891e-43c6a1884c2e",
+                            CreatedAt = new DateTime(2025, 12, 25, 18, 55, 40, 917, DateTimeKind.Utc).AddTicks(8419),
                             Email = "irina-maria.istrate@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Irina-Maria",
@@ -341,9 +344,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
                             NormalizedUserName = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOPbadbhi3PtrEHeJrqgqwzquRQzJw1H2eXxktW0SbE2xNCOaqL82D9bBUhST82Pog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFymbuj+TqyMzQldA5JMP9RhhfFp0+fBs4AYOLP5yRmiW1uep0rNBHidXIUXUrsuDA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e77ba52e-95b2-4687-9191-9d2fa9917959",
+                            SecurityStamp = "d89147e6-f119-4a20-94be-1259b700e33f",
                             TwoFactorEnabled = false,
                             UserName = "irina-maria.istrate@s.unibuc.ro"
                         });
@@ -666,48 +669,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("UserAchievements");
                 });
 
-            modelBuilder.Entity("CampusConnect.Domain.Entities.UserActivity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ActivityType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("EntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EntityName")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId", "CreatedAt");
-
-                    b.ToTable("UserActivities");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -741,21 +702,21 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "e73db867-ffff-4771-b365-16a7b015eace",
+                            ConcurrencyStamp = "4a442bf9-5441-4d08-8fad-0090f31aa1f9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "62990cce-cdf6-4973-805d-5c92b7051e85",
+                            ConcurrencyStamp = "b8dadc22-6ad2-4c0a-8e16-af8b72400180",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "cd223ba6-9a1d-4c19-a640-ea9a36d41edc",
+                            ConcurrencyStamp = "cdec7c6a-625d-45d1-aac2-3d604adbfa3e",
                             Name = "Professor",
                             NormalizedName = "PROFESSOR"
                         });
@@ -1046,17 +1007,6 @@ namespace CampusConnect.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Achievement");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.UserActivity", b =>
-                {
-                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

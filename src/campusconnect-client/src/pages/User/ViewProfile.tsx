@@ -16,14 +16,17 @@ import {
   Shield,
   LogOut,
   ArrowRight,
-  Check,        
-  Inbox        
+  Check,
+  Inbox,
+  Trophy
 } from 'lucide-react';
 import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar, AvatarFallback } from '../../components/ui/Avatar';
+import { AchievementCard } from '../../components/AchievementCard';
+import achievementApi, { type UserAchievement } from '../../services/achievementApi';
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
@@ -66,9 +69,10 @@ function ProfileView() {
   const [savedAnnouncements, setSavedAnnouncements] = useState<Announcement[]>([]);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [participatingEvents, setParticipatingEvents] = useState<Event[]>([]);
-  
-  const [notifications, setNotifications] = useState<Notification[]>([]); 
-  const [mySubscriptions, setMySubscriptions] = useState<string[]>([]);  
+
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [mySubscriptions, setMySubscriptions] = useState<string[]>([]);
+  const [myAchievements, setMyAchievements] = useState<UserAchievement[]>([]);  
   
   const [availableCategories] = useState(["General", "Exams", "Events", "Administrative", "Fun", "Hackathons"]);
 
@@ -82,10 +86,10 @@ function ProfileView() {
       setLoading(true);
       try {
         const [
-            resSavedAnn, 
-            resSavedEvt, 
-            resMyEvt,  
-            resNotif, 
+            resSavedAnn,
+            resSavedEvt,
+            resMyEvt,
+            resNotif,
             resSubs
         ] = await Promise.all([
           fetch(`${API_BASE_URL}/announcements/saved`, { headers: { Authorization: `Bearer ${token}` } }),
@@ -100,6 +104,9 @@ function ProfileView() {
         if (resMyEvt.ok) setParticipatingEvents(await resMyEvt.json());
         if (resNotif.ok) setNotifications(await resNotif.json());
         if (resSubs.ok) setMySubscriptions(await resSubs.json());
+
+        const achievements = await achievementApi.getMyAchievements();
+        setMyAchievements(achievements);
 
       } catch (err) {
         console.error('Error loading profile data', err);
@@ -294,7 +301,7 @@ function ProfileView() {
         )}
 
         {/* STATS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card>
             <CardContent className="pt-6 flex items-center gap-4">
                <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/20"><Megaphone className="h-6 w-6 text-blue-600" /></div>
@@ -313,7 +320,53 @@ function ProfileView() {
                <div><p className="text-sm text-muted-foreground">Participating</p><p className="text-2xl font-bold">{participatingEvents.length}</p></div>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="pt-6 flex items-center gap-4">
+               <div className="p-3 rounded-xl bg-yellow-100 dark:bg-yellow-900/20"><Trophy className="h-6 w-6 text-yellow-600" /></div>
+               <div><p className="text-sm text-muted-foreground">Achievements</p><p className="text-2xl font-bold">{myAchievements.length}</p></div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* ACHIEVEMENTS SECTION */}
+        {myAchievements.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-yellow-500" />
+                    My Achievements
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/achievements')}
+                  >
+                    View All
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {myAchievements.slice(0, 4).map((achievement) => (
+                    <AchievementCard
+                      key={achievement.id}
+                      achievement={achievement}
+                      unlocked={true}
+                      unlockedAt={achievement.unlockedAt}
+                    />
+                  ))}
+                </div>
+                {myAchievements.length > 4 && (
+                  <div className="mt-4 text-center text-sm text-muted-foreground">
+                    And {myAchievements.length - 4} more achievements...
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* SUBSCRIPTIONS MANAGEMENT (NEW SECTION) */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>

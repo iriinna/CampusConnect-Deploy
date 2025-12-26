@@ -29,12 +29,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Building> Buildings { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<Achievement> Achievements { get; set; }
+    public DbSet<UserAchievement> UserAchievements { get; set; }
+    public DbSet<UserActivity> UserActivities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        // Configurări custom pentru ApplicationUser
         builder.Entity<ApplicationUser>(entity =>
         {
             entity.Property(e => e.FirstName)
@@ -581,6 +583,111 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             }
         };
         builder.Entity<Schedule>().HasData(schedules);
+        // 16. Configurare Achievement
+        builder.Entity<Achievement>(entity =>
+        {
+            entity.Property(a => a.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(a => a.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(a => a.Icon)
+                .IsRequired()
+                .HasMaxLength(100);
+        });
+
+        // 17. Configurare UserAchievement
+        builder.Entity<UserAchievement>(entity =>
+        {
+            entity.HasIndex(ua => new { ua.UserId, ua.AchievementId }).IsUnique();
+
+            entity.HasOne(ua => ua.User)
+                .WithMany(u => u.UserAchievements)
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(ua => ua.Achievement)
+                .WithMany(a => a.UserAchievements)
+                .HasForeignKey(ua => ua.AchievementId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // 18. Configurare UserActivity
+        builder.Entity<UserActivity>(entity =>
+        {
+            entity.Property(a => a.ActivityType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityType)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityName)
+                .HasMaxLength(300);
+
+            entity.Property(a => a.Description)
+                .HasMaxLength(500);
+
+            entity.HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(a => new { a.UserId, a.CreatedAt });
+        });
+
+        // 19. Seed Achievements
+        builder.Entity<Achievement>().HasData(
+            new Achievement
+            {
+                Id = 1,
+                Title = "First Steps",
+                Description = "Complete your first task",
+                Icon = "🎯",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            },
+            new Achievement
+            {
+                Id = 2,
+                Title = "Task Master",
+                Description = "Complete 5 tasks",
+                Icon = "⭐",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            },
+            new Achievement
+            {
+                Id = 3,
+                Title = "Task Legend",
+                Description = "Complete 10 tasks",
+                Icon = "🏆",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            },
+            new Achievement
+            {
+                Id = 4,
+                Title = "Team Player",
+                Description = "Join your first group",
+                Icon = "👥",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            },
+            new Achievement
+            {
+                Id = 5,
+                Title = "Social Butterfly",
+                Description = "Attend your first event",
+                Icon = "🦋",
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            }
+        );
     }
 
     private static ApplicationUser CreateUser(int id, string email, string firstName, string lastName, PasswordHasher<ApplicationUser> hasher)

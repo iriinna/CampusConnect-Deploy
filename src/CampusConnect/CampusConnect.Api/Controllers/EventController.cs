@@ -1,3 +1,4 @@
+using CampusConnect.Application.Interfaces;
 using CampusConnect.Domain.Entities;
 using CampusConnect.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,14 @@ namespace CampusConnect.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAchievementService _achievementService;
+        private readonly IActivityLoggerService _activityLogger;
 
-        public EventController(ApplicationDbContext context)
+        public EventController(ApplicationDbContext context, IAchievementService achievementService, IActivityLoggerService activityLogger)
         {
             _context = context;
+            _achievementService = achievementService;
+            _activityLogger = activityLogger;
         }
         private int? GetCurrentUserId()
         {
@@ -79,7 +84,7 @@ namespace CampusConnect.Api.Controllers
 
             _context.Events.Add(eventItem);
             await _context.SaveChangesAsync();
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Create", "Event", eventItem.Id, eventItem.Title, "Created a new event");
             return CreatedAtAction(nameof(GetById), new { id = eventItem.Id }, eventItem);
         }
 
@@ -104,7 +109,7 @@ namespace CampusConnect.Api.Controllers
             existingEvent.Category = updatedEvent.Category;
             
             await _context.SaveChangesAsync();
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Update", "Event", existingEvent.Id, existingEvent.Title, "Updated an event");
             return NoContent();
         }
 
@@ -125,7 +130,7 @@ namespace CampusConnect.Api.Controllers
 
             _context.Events.Remove(eventItem);
             await _context.SaveChangesAsync();
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Delete", "Event", eventItem.Id, eventItem.Title, "Deleted an event");
             return NoContent();
         }
 
@@ -141,7 +146,7 @@ namespace CampusConnect.Api.Controllers
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (eventItem == null) return NotFound();
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Participate", "Event", eventItem.Id, eventItem.Title, "Participated in an event");
             if (eventItem.Participants.Any(p => p.UserId == userId.Value))
             {
                 return BadRequest("You are already participating in this event");
@@ -156,6 +161,8 @@ namespace CampusConnect.Api.Controllers
 
             _context.EventParticipants.Add(participation);
             await _context.SaveChangesAsync();
+
+            await _achievementService.CheckAndGrantEventAchievementAsync(userId.Value);
 
             return Ok();
         }
@@ -181,7 +188,7 @@ namespace CampusConnect.Api.Controllers
 
             _context.EventParticipants.Remove(participation);
             await _context.SaveChangesAsync();
-
+            await _activityLogger.LogActivityAsync(userId.Value, "Withdraw", "Event", eventItem.Id, eventItem.Title, "Withdrew from an event");
             return Ok();
         }
 
