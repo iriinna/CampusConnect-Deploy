@@ -4,6 +4,7 @@ using CampusConnect.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251226141357_AddLibrary")]
+    partial class AddLibrary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 577, DateTimeKind.Utc).AddTicks(789),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 426, DateTimeKind.Utc).AddTicks(4523),
                             Description = "Complete your first task",
                             Icon = "🎯",
                             IsActive = true,
@@ -68,7 +71,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 577, DateTimeKind.Utc).AddTicks(1055),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 426, DateTimeKind.Utc).AddTicks(4769),
                             Description = "Complete 5 tasks",
                             Icon = "⭐",
                             IsActive = true,
@@ -77,7 +80,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 577, DateTimeKind.Utc).AddTicks(1057),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 426, DateTimeKind.Utc).AddTicks(4771),
                             Description = "Complete 10 tasks",
                             Icon = "🏆",
                             IsActive = true,
@@ -86,7 +89,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 577, DateTimeKind.Utc).AddTicks(1059),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 426, DateTimeKind.Utc).AddTicks(4773),
                             Description = "Join your first group",
                             Icon = "👥",
                             IsActive = true,
@@ -95,7 +98,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 577, DateTimeKind.Utc).AddTicks(1061),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 426, DateTimeKind.Utc).AddTicks(4775),
                             Description = "Attend your first event",
                             Icon = "🦋",
                             IsActive = true,
@@ -237,8 +240,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 10,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d133da4e-2193-40aa-92b6-5e2450984af3",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 176, DateTimeKind.Utc).AddTicks(2958),
+                            ConcurrencyStamp = "3442258d-f26e-44e3-ae9e-2cab55eff884",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 55, 977, DateTimeKind.Utc).AddTicks(6447),
                             Email = "admin1@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Andrei",
@@ -246,9 +249,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@UNIBUC.RO",
                             NormalizedUserName = "ADMIN1@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHjbr8qLMYYLcVlbzdCvgb8+efvt1HSJTCPz4he3dXSAqEhwp7RQZLk+NcFfz6gevw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELcps5mN1Ti/uyO4FZ39J1fXYaeVB4deghEhwK1m0U+aps4V4lT4dJ8ivRefd31tCA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "de583ffb-a460-4339-90fc-fead9f9a7adf",
+                            SecurityStamp = "52fd4fae-a94b-463f-bbe4-dc348d4019e7",
                             TwoFactorEnabled = false,
                             UserName = "admin1@unibuc.ro"
                         },
@@ -256,8 +259,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 11,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53a32df4-8aac-4d42-82ba-48075bde2c17",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 242, DateTimeKind.Utc).AddTicks(8084),
+                            ConcurrencyStamp = "167259e3-f703-44ab-b6db-b917520556fd",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 50, DateTimeKind.Utc).AddTicks(7209),
                             Email = "admin2@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Maria",
@@ -265,9 +268,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN2@UNIBUC.RO",
                             NormalizedUserName = "ADMIN2@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG40hnzrjx4uvY2Tp/sBOE/jHLESkpd7sp0HBeeEjQbskuGB1Q9wXjzgEVUGtOrsJw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGwUlcYITNJbdi0H3CPnfg8UJMDn+Fn0GMccyu+Jj9HSiux0lBLv+CiQAaBySD0HrA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f1c90404-c19a-4c08-a04a-dfd6ba22172d",
+                            SecurityStamp = "2c614640-c661-4f0f-9aad-b072da1eee2a",
                             TwoFactorEnabled = false,
                             UserName = "admin2@unibuc.ro"
                         },
@@ -275,8 +278,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 12,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d34b5481-24c7-4593-b012-1404846f4397",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 304, DateTimeKind.Utc).AddTicks(4000),
+                            ConcurrencyStamp = "643a2758-6682-48a5-baa0-0eb485e00e1b",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 118, DateTimeKind.Utc).AddTicks(6406),
                             Email = "student1@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Ion",
@@ -284,9 +287,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT1@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT1@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMKbw6StZ1k9SZdOqTvFqwqBHQjbO73eO4ZKfuVW/ks+jogdDKzHZjYGFVgqVb4z6w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFvYkJF/E9aJbTti3cC79CwabvUZb7rgu0aMR1EZgHjC49I0QSKAKMNJKi3fG8oPiA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "537f5d56-f04b-464e-b9e7-38da891d289c",
+                            SecurityStamp = "cb2232d2-db8b-4498-b19b-fa94f8e41016",
                             TwoFactorEnabled = false,
                             UserName = "student1@s.unibuc.ro"
                         },
@@ -294,8 +297,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 13,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "08ea3468-8dac-4367-a9b9-462b6d3689d0",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 367, DateTimeKind.Utc).AddTicks(9191),
+                            ConcurrencyStamp = "bad999f0-f674-46f3-b574-f849115ab3b0",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 193, DateTimeKind.Utc).AddTicks(4837),
                             Email = "student2@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Elena",
@@ -303,9 +306,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT2@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT2@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEI4oBaqY76C5GXXhJe6e4BybKoqpMo1DAd7dsP5+NCD1aUzg2RBBscT+xqnBwvHApg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELttq5mSzJ6lNFbkNXwpaQnFAJbNhmniRRuqVh8UFHjXmu6fWvGFrK2Rdi575gxX0g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "29f8ed7b-1077-4c60-870b-17c1e01f8849",
+                            SecurityStamp = "e37f9dd9-504e-4b65-bcb1-a6ff1a241c7c",
                             TwoFactorEnabled = false,
                             UserName = "student2@s.unibuc.ro"
                         },
@@ -313,8 +316,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 14,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1255cbae-103e-4986-b769-5e6ce06d01d8",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 429, DateTimeKind.Utc).AddTicks(9108),
+                            ConcurrencyStamp = "ebafc9c2-4488-4fda-9dc8-9c460c31c585",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 263, DateTimeKind.Utc).AddTicks(1328),
                             Email = "anastasia.ispas@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Anastasia",
@@ -322,9 +325,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ANASTASIA.ISPAS@S.UNIBUC.RO",
                             NormalizedUserName = "ANASTASIA.ISPAS@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJR39ZxmeXS/1W0rXZZVhKjun4icHnz6l5ItamavpfMD87UxfyThb1MvjRqqEH4msA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGKOlUA+37EjpVQPLsWw8uZGj/5R6XOvBpr5CYyArVjbz2UAc6dBbr8c9q/pcsF89g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3bfaea12-38a2-45e4-84fb-50eea5b0728a",
+                            SecurityStamp = "76405e34-f499-4e07-9b04-8957b27ddf13",
                             TwoFactorEnabled = false,
                             UserName = "anastasia.ispas@s.unibuc.ro"
                         },
@@ -332,8 +335,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 15,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "60d61aaa-62e7-479b-b3a8-c6bb932d2a49",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 489, DateTimeKind.Utc).AddTicks(1401),
+                            ConcurrencyStamp = "fe933e3d-18c7-47ef-adc0-a281ea451909",
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 330, DateTimeKind.Utc).AddTicks(4401),
                             Email = "irina-maria.istrate@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Irina-Maria",
@@ -341,9 +344,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
                             NormalizedUserName = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBAFzwHXiiKuJcOioNa417V4akMHqWMDGLRPB27l1thq/ZeViVELECIlit7aJuBKDw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPFj1d3Yinf22DOpGBAKUiYg+F7Il4MAH9b2dveGPNK10Pp5leA+/77URc0ixfyPrQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b6d29395-4ed6-4dfe-9ac2-a8fc89c50882",
+                            SecurityStamp = "9e7d8415-4b46-4bb7-b8fc-c9ea1bdd81b8",
                             TwoFactorEnabled = false,
                             UserName = "irina-maria.istrate@s.unibuc.ro"
                         });
@@ -397,7 +400,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 1,
                             Address = "B-dul Regina Elisabeta nr. 4-12, etaj 1, sector 3, București",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 570, DateTimeKind.Utc).AddTicks(9808),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(558),
                             Description = "FAA - Sediu în clădirea Chimiei",
                             IsActive = true,
                             Latitude = 44.434719999999999,
@@ -408,7 +411,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 2,
                             Address = "Splaiul Independenței nr. 91-95, sector 5, București, 050095",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(84),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(699),
                             Description = "Facultatea de Biologie",
                             IsActive = true,
                             Latitude = 44.435299999999998,
@@ -419,7 +422,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 3,
                             Address = "Bd. Regina Elisabeta nr. 4-12, sector 3, București, 030018",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(86),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(701),
                             Description = "Facultatea de Chimie",
                             IsActive = true,
                             Latitude = 44.434719999999999,
@@ -430,7 +433,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 4,
                             Address = "Bd. Mihail Kogălniceanu nr. 36-46, sector 5, București, 050107",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(89),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(703),
                             Description = "Facultatea de Drept",
                             IsActive = true,
                             Latitude = 44.435240999999998,
@@ -441,7 +444,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 5,
                             Address = "Splaiul Independenței nr. 204, sector 6, București, 060024",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(91),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(705),
                             Description = "Facultatea de Filosofie",
                             IsActive = true,
                             Latitude = 44.434710000000003,
@@ -452,7 +455,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 6,
                             Address = "Str. Atomiștilor nr. 405, Măgurele, Ilfov, 077125",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(94),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(708),
                             Description = "Facultatea de Fizică - Campus Măgurele",
                             IsActive = true,
                             Latitude = 44.34834,
@@ -463,7 +466,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 7,
                             Address = "Bd. Nicolae Bălcescu nr. 1, sector 1, București, 010041",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(96),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(710),
                             Description = "Facultatea de Geografie",
                             IsActive = true,
                             Latitude = 44.436540000000001,
@@ -474,7 +477,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 8,
                             Address = "Str. Traian Vuia nr. 6, sector 2, București, 020956",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(99),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(712),
                             Description = "Facultatea de Geologie și Geofizică",
                             IsActive = true,
                             Latitude = 44.45167,
@@ -485,7 +488,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 9,
                             Address = "Str. Academiei nr. 14, București",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(101),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(714),
                             Description = "Facultatea de Istorie",
                             IsActive = true,
                             Latitude = 44.435839999999999,
@@ -496,7 +499,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 10,
                             Address = "Bd. Iuliu Maniu nr. 1-3, Complex Leu, Corp A, etaj 6, sector 6, București",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(103),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(716),
                             Description = "FJSC - Complex Leu",
                             IsActive = true,
                             Latitude = 44.43891,
@@ -507,7 +510,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 11,
                             Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(106),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(718),
                             Description = "FLLS",
                             IsActive = true,
                             Latitude = 44.435830000000003,
@@ -518,7 +521,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 12,
                             Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(108),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(733),
                             Description = "Facultatea de Litere",
                             IsActive = true,
                             Latitude = 44.435830000000003,
@@ -529,7 +532,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 13,
                             Address = "Str. Academiei nr. 14, sector 1, București, 010014",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(110),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(735),
                             Description = "FMI",
                             IsActive = true,
                             Latitude = 44.435839999999999,
@@ -540,7 +543,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 14,
                             Address = "Șos. Panduri nr. 90-91, București",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(113),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(744),
                             Description = "FPSE",
                             IsActive = true,
                             Latitude = 44.432209999999998,
@@ -551,7 +554,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 15,
                             Address = "Bd. Schitu Măgureanu nr. 9, București",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(118),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(746),
                             Description = "SAS",
                             IsActive = true,
                             Latitude = 44.433419999999998,
@@ -562,7 +565,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 16,
                             Address = "Calea Plevnei nr. 59, București, 010223",
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(137),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(748),
                             Description = "FSP",
                             IsActive = true,
                             Latitude = 44.445210000000003,
@@ -589,59 +592,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CategorySubscriptions");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.CourseMaterial", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UploadedByProfessorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("UploadedByProfessorId");
-
-                    b.ToTable("CourseMaterials");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Event", b =>
@@ -736,37 +686,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("CampusConnect.Domain.Entities.GroupAnnouncement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnnouncementId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ForwardedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ForwardedByProfessorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnnouncementId");
-
-                    b.HasIndex("ForwardedByProfessorId");
-
-                    b.HasIndex("GroupId", "AnnouncementId");
-
-                    b.ToTable("GroupAnnouncements");
-                });
-
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupMember", b =>
                 {
                     b.Property<int>("Id")
@@ -830,69 +749,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("GroupTasks");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryFolder", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LibraryFolders");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ContentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedByUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("FolderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("OriginalFileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("SizeBytes")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("StoredFileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FolderId");
-
-                    b.ToTable("LibraryItems");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Notification", b =>
@@ -972,7 +828,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 1,
                             BuildingId = 1,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(2870),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2430),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "A101"
@@ -982,7 +838,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 2,
                             BuildingId = 1,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3031),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2532),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "A102"
@@ -992,7 +848,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 3,
                             BuildingId = 1,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3034),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2535),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "A103"
@@ -1002,7 +858,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 4,
                             BuildingId = 1,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3036),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2537),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "A104"
@@ -1012,7 +868,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 5,
                             BuildingId = 1,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3038),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2539),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "A105"
@@ -1022,7 +878,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 6,
                             BuildingId = 1,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3040),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2541),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "S201"
@@ -1032,7 +888,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 7,
                             BuildingId = 1,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3043),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2543),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "S202"
@@ -1042,7 +898,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 8,
                             BuildingId = 1,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3045),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2545),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "S203"
@@ -1052,7 +908,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 9,
                             BuildingId = 1,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3191),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2649),
                             Equipment = "Computere",
                             Floor = "Etaj 3",
                             IsActive = true,
@@ -1063,7 +919,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 10,
                             BuildingId = 1,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3194),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2665),
                             Equipment = "Computere",
                             Floor = "Etaj 3",
                             IsActive = true,
@@ -1074,7 +930,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 11,
                             BuildingId = 2,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3197),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2667),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Bio101"
@@ -1084,7 +940,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 12,
                             BuildingId = 2,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3200),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2670),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Bio102"
@@ -1094,7 +950,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 13,
                             BuildingId = 2,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3202),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2672),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Bio103"
@@ -1104,7 +960,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 14,
                             BuildingId = 2,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3226),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2674),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Bio104"
@@ -1114,7 +970,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 15,
                             BuildingId = 2,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3229),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2676),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Bio105"
@@ -1124,7 +980,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 16,
                             BuildingId = 2,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3232),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2679),
                             Equipment = "Echipament laborator",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1135,7 +991,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 17,
                             BuildingId = 2,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3234),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2681),
                             Equipment = "Echipament laborator",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1146,7 +1002,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 18,
                             BuildingId = 2,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3237),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2683),
                             Equipment = "Echipament laborator",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1157,7 +1013,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 19,
                             BuildingId = 2,
                             Capacity = 200,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3239),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2685),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1168,7 +1024,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 20,
                             BuildingId = 2,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3242),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2687),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1179,7 +1035,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 21,
                             BuildingId = 3,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3244),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2689),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ch101"
@@ -1189,7 +1045,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 22,
                             BuildingId = 3,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3247),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2691),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ch102"
@@ -1199,7 +1055,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 23,
                             BuildingId = 3,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3250),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2693),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ch103"
@@ -1209,7 +1065,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 24,
                             BuildingId = 3,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3252),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2706),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ch104"
@@ -1219,7 +1075,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 25,
                             BuildingId = 3,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3256),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2708),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ch105"
@@ -1229,7 +1085,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 26,
                             BuildingId = 3,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3258),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2710),
                             Equipment = "Echipament chimie",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1240,7 +1096,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 27,
                             BuildingId = 3,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3261),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2712),
                             Equipment = "Echipament chimie",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1251,7 +1107,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 28,
                             BuildingId = 3,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3277),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2715),
                             Equipment = "Echipament chimie",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1262,7 +1118,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 29,
                             BuildingId = 3,
                             Capacity = 180,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3280),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2717),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1273,7 +1129,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 30,
                             BuildingId = 3,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3282),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2719),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1284,7 +1140,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 31,
                             BuildingId = 4,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3284),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2721),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "D101"
@@ -1294,7 +1150,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 32,
                             BuildingId = 4,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3287),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2723),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "D102"
@@ -1304,7 +1160,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 33,
                             BuildingId = 4,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3289),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2725),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "D103"
@@ -1314,7 +1170,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 34,
                             BuildingId = 4,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3292),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2727),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "D104"
@@ -1324,7 +1180,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 35,
                             BuildingId = 4,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3294),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2729),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "D105"
@@ -1334,7 +1190,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 36,
                             BuildingId = 4,
                             Capacity = 300,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3297),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2731),
                             Equipment = "Sistem audio-video complet",
                             Floor = "Parter",
                             IsActive = true,
@@ -1345,7 +1201,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 37,
                             BuildingId = 4,
                             Capacity = 250,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3300),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2733),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1356,7 +1212,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 38,
                             BuildingId = 4,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3302),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2735),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemD201"
@@ -1366,7 +1222,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 39,
                             BuildingId = 4,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3304),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2748),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemD202"
@@ -1376,7 +1232,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 40,
                             BuildingId = 4,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3306),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2750),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemD203"
@@ -1386,7 +1242,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 41,
                             BuildingId = 5,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3309),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2752),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Filo101"
@@ -1396,7 +1252,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 42,
                             BuildingId = 5,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3321),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2754),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Filo102"
@@ -1406,7 +1262,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 43,
                             BuildingId = 5,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3324),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2756),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Filo103"
@@ -1416,7 +1272,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 44,
                             BuildingId = 5,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3326),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2758),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Filo104"
@@ -1426,7 +1282,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 45,
                             BuildingId = 5,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3328),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2760),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Filo105"
@@ -1436,7 +1292,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 46,
                             BuildingId = 5,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3330),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2762),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1447,7 +1303,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 47,
                             BuildingId = 5,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3333),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2764),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1458,7 +1314,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 48,
                             BuildingId = 5,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3335),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2766),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFilo201"
@@ -1468,7 +1324,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 49,
                             BuildingId = 5,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3337),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2768),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFilo202"
@@ -1478,7 +1334,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 50,
                             BuildingId = 5,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3339),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2770),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFilo203"
@@ -1488,7 +1344,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 51,
                             BuildingId = 6,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3342),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2772),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Fiz101"
@@ -1498,7 +1354,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 52,
                             BuildingId = 6,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3344),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2774),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Fiz102"
@@ -1508,7 +1364,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 53,
                             BuildingId = 6,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3346),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2785),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Fiz103"
@@ -1518,7 +1374,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 54,
                             BuildingId = 6,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3348),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2810),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Fiz104"
@@ -1528,7 +1384,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 55,
                             BuildingId = 6,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3351),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2812),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Fiz105"
@@ -1538,7 +1394,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 56,
                             BuildingId = 6,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3353),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2814),
                             Equipment = "Echipament fizică",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1549,7 +1405,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 57,
                             BuildingId = 6,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3384),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2817),
                             Equipment = "Echipament fizică",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1560,7 +1416,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 58,
                             BuildingId = 6,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3388),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2819),
                             Equipment = "Echipament fizică",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1571,7 +1427,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 59,
                             BuildingId = 6,
                             Capacity = 200,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3390),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2821),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1582,7 +1438,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 60,
                             BuildingId = 6,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3393),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2823),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1593,7 +1449,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 61,
                             BuildingId = 7,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3395),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2825),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Geo101"
@@ -1603,7 +1459,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 62,
                             BuildingId = 7,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3397),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2827),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Geo102"
@@ -1613,7 +1469,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 63,
                             BuildingId = 7,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3400),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2829),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Geo103"
@@ -1623,7 +1479,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 64,
                             BuildingId = 7,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3402),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2831),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Geo104"
@@ -1633,7 +1489,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 65,
                             BuildingId = 7,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3405),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2833),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Geo105"
@@ -1643,7 +1499,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 66,
                             BuildingId = 7,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3407),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2835),
                             Equipment = "Hărți, Computere GIS",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1654,7 +1510,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 67,
                             BuildingId = 7,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3410),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2838),
                             Equipment = "Computere GIS",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1665,7 +1521,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 68,
                             BuildingId = 7,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3412),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2850),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemGeo203"
@@ -1675,7 +1531,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 69,
                             BuildingId = 7,
                             Capacity = 180,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3415),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2852),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1686,7 +1542,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 70,
                             BuildingId = 7,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3417),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2855),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1697,7 +1553,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 71,
                             BuildingId = 8,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3432),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2857),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "GG101"
@@ -1707,7 +1563,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 72,
                             BuildingId = 8,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3434),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2859),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "GG102"
@@ -1717,7 +1573,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 73,
                             BuildingId = 8,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3437),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2861),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "GG103"
@@ -1727,7 +1583,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 74,
                             BuildingId = 8,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3439),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2863),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "GG104"
@@ -1737,7 +1593,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 75,
                             BuildingId = 8,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3441),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2865),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "GG105"
@@ -1747,7 +1603,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 76,
                             BuildingId = 8,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3444),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2867),
                             Equipment = "Echipament geologic",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1758,7 +1614,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 77,
                             BuildingId = 8,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3446),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2869),
                             Equipment = "Echipament geofizic",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -1769,7 +1625,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 78,
                             BuildingId = 8,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3449),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2871),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemGG203"
@@ -1779,7 +1635,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 79,
                             BuildingId = 8,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3451),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2873),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1790,7 +1646,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 80,
                             BuildingId = 8,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3454),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2875),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1801,7 +1657,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 81,
                             BuildingId = 9,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3456),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2877),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ist101"
@@ -1811,7 +1667,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 82,
                             BuildingId = 9,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3458),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2890),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ist102"
@@ -1821,7 +1677,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 83,
                             BuildingId = 9,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3461),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2892),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ist103"
@@ -1831,7 +1687,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 84,
                             BuildingId = 9,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3463),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2894),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ist104"
@@ -1841,7 +1697,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 85,
                             BuildingId = 9,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3465),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2896),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Ist105"
@@ -1851,7 +1707,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 86,
                             BuildingId = 9,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3481),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2898),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemIst201"
@@ -1861,7 +1717,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 87,
                             BuildingId = 9,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3484),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2900),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemIst202"
@@ -1871,7 +1727,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 88,
                             BuildingId = 9,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3486),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2902),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemIst203"
@@ -1881,7 +1737,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 89,
                             BuildingId = 9,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3489),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2904),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -1892,7 +1748,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 90,
                             BuildingId = 9,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3491),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2906),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -1903,7 +1759,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 91,
                             BuildingId = 10,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3494),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2908),
                             Floor = "Etaj 6",
                             IsActive = true,
                             Name = "J101"
@@ -1913,7 +1769,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 92,
                             BuildingId = 10,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3496),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2910),
                             Floor = "Etaj 6",
                             IsActive = true,
                             Name = "J102"
@@ -1923,7 +1779,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 93,
                             BuildingId = 10,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3498),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2912),
                             Floor = "Etaj 6",
                             IsActive = true,
                             Name = "J103"
@@ -1933,7 +1789,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 94,
                             BuildingId = 10,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3501),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2914),
                             Floor = "Etaj 6",
                             IsActive = true,
                             Name = "J104"
@@ -1943,7 +1799,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 95,
                             BuildingId = 10,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3503),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2917),
                             Floor = "Etaj 6",
                             IsActive = true,
                             Name = "J105"
@@ -1953,7 +1809,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 96,
                             BuildingId = 10,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3506),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2919),
                             Equipment = "Camere, Echipament video",
                             Floor = "Etaj 7",
                             IsActive = true,
@@ -1964,7 +1820,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 97,
                             BuildingId = 10,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3508),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2932),
                             Equipment = "Echipament audio",
                             Floor = "Etaj 7",
                             IsActive = true,
@@ -1975,7 +1831,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 98,
                             BuildingId = 10,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3511),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2934),
                             Floor = "Etaj 7",
                             IsActive = true,
                             Name = "SemPR203"
@@ -1985,7 +1841,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 99,
                             BuildingId = 10,
                             Capacity = 100,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3513),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2936),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Etaj 6",
                             IsActive = true,
@@ -1996,7 +1852,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 100,
                             BuildingId = 10,
                             Capacity = 20,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3527),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2938),
                             Equipment = "Studio TV/Radio",
                             Floor = "Etaj 7",
                             IsActive = true,
@@ -2007,7 +1863,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 101,
                             BuildingId = 11,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3529),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2941),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "LLS101"
@@ -2017,7 +1873,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 102,
                             BuildingId = 11,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3531),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2943),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "LLS102"
@@ -2027,7 +1883,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 103,
                             BuildingId = 11,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3534),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2945),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "LLS103"
@@ -2037,7 +1893,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 104,
                             BuildingId = 11,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3536),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2947),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "LLS104"
@@ -2047,7 +1903,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 105,
                             BuildingId = 11,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3538),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2949),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "LLS105"
@@ -2057,7 +1913,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 106,
                             BuildingId = 11,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3541),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2951),
                             Equipment = "Echipament limbi străine",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2068,7 +1924,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 107,
                             BuildingId = 11,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3543),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2953),
                             Equipment = "Computere, Software lingvistic",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2079,7 +1935,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 108,
                             BuildingId = 11,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3546),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2955),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemLLS203"
@@ -2089,7 +1945,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 109,
                             BuildingId = 11,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3548),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2957),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2100,7 +1956,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 110,
                             BuildingId = 11,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3551),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2959),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -2111,7 +1967,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 111,
                             BuildingId = 12,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3554),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2972),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Lit101"
@@ -2121,7 +1977,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 112,
                             BuildingId = 12,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3556),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2974),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Lit102"
@@ -2131,7 +1987,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 113,
                             BuildingId = 12,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3559),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2976),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Lit103"
@@ -2141,7 +1997,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 114,
                             BuildingId = 12,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3561),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2978),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Lit104"
@@ -2151,7 +2007,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 115,
                             BuildingId = 12,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3577),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2980),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Lit105"
@@ -2161,7 +2017,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 116,
                             BuildingId = 12,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3579),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2982),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemLit201"
@@ -2171,7 +2027,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 117,
                             BuildingId = 12,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3581),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2984),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemLit202"
@@ -2181,7 +2037,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 118,
                             BuildingId = 12,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3584),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2986),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemLit203"
@@ -2191,7 +2047,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 119,
                             BuildingId = 12,
                             Capacity = 200,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3586),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(2989),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2202,7 +2058,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 120,
                             BuildingId = 12,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3589),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3074),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -2213,7 +2069,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 121,
                             BuildingId = 13,
                             Capacity = 300,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3592),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3077),
                             Equipment = "Proiector, Sistem audio premium",
                             Floor = "Parter",
                             IsActive = true,
@@ -2224,7 +2080,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 122,
                             BuildingId = 13,
                             Capacity = 250,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3594),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3079),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2235,7 +2091,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 123,
                             BuildingId = 13,
                             Capacity = 200,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3596),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3081),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2246,7 +2102,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 124,
                             BuildingId = 13,
                             Capacity = 180,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3599),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3083),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2257,7 +2113,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 125,
                             BuildingId = 13,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3601),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3096),
                             Equipment = "30 Computere, Proiector",
                             Floor = "Etaj 1",
                             IsActive = true,
@@ -2268,7 +2124,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 126,
                             BuildingId = 13,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3616),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3099),
                             Equipment = "30 Computere, Proiector",
                             Floor = "Etaj 1",
                             IsActive = true,
@@ -2279,7 +2135,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 127,
                             BuildingId = 13,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3618),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3101),
                             Equipment = "30 Computere, Proiector",
                             Floor = "Etaj 1",
                             IsActive = true,
@@ -2290,7 +2146,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 128,
                             BuildingId = 13,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3620),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3103),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "S101"
@@ -2300,7 +2156,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 129,
                             BuildingId = 13,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3641),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3105),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "S102"
@@ -2310,7 +2166,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 130,
                             BuildingId = 13,
                             Capacity = 50,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3646),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3107),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "S103"
@@ -2320,7 +2176,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 131,
                             BuildingId = 14,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3648),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3109),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Psi101"
@@ -2330,7 +2186,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 132,
                             BuildingId = 14,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3650),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3111),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Psi102"
@@ -2340,7 +2196,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 133,
                             BuildingId = 14,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3651),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3113),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Psi103"
@@ -2350,7 +2206,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 134,
                             BuildingId = 14,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3661),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3115),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Psi104"
@@ -2360,7 +2216,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 135,
                             BuildingId = 14,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3690),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3117),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "Psi105"
@@ -2370,7 +2226,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 136,
                             BuildingId = 14,
                             Capacity = 20,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3692),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3119),
                             Equipment = "Echipament psihologie",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2381,7 +2237,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 137,
                             BuildingId = 14,
                             Capacity = 20,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3695),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3121),
                             Equipment = "Computere, Software psiho",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2392,7 +2248,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 138,
                             BuildingId = 14,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3705),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3123),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemEdu203"
@@ -2402,7 +2258,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 139,
                             BuildingId = 14,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3728),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3135),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2413,7 +2269,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 140,
                             BuildingId = 14,
                             Capacity = 120,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3730),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3137),
                             Equipment = "Proiector",
                             Floor = "Parter",
                             IsActive = true,
@@ -2424,7 +2280,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 141,
                             BuildingId = 15,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3732),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3139),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "SAS101"
@@ -2434,7 +2290,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 142,
                             BuildingId = 15,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3734),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3141),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "SAS102"
@@ -2444,7 +2300,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 143,
                             BuildingId = 15,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3846),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3143),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "SAS103"
@@ -2454,7 +2310,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 144,
                             BuildingId = 15,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3854),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3145),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "SAS104"
@@ -2464,7 +2320,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 145,
                             BuildingId = 15,
                             Capacity = 40,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3856),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3147),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "SAS105"
@@ -2474,7 +2330,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 146,
                             BuildingId = 15,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3858),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3149),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemSAS201"
@@ -2484,7 +2340,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 147,
                             BuildingId = 15,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3861),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3151),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemSAS202"
@@ -2494,7 +2350,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 148,
                             BuildingId = 15,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3865),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3153),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemSAS203"
@@ -2504,7 +2360,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 149,
                             BuildingId = 15,
                             Capacity = 150,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3882),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3155),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2515,7 +2371,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 150,
                             BuildingId = 15,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3884),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3158),
                             Equipment = "Computere, Software SPSS",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2526,7 +2382,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 151,
                             BuildingId = 16,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3886),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3160),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "FSP101"
@@ -2536,7 +2392,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 152,
                             BuildingId = 16,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3908),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3162),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "FSP102"
@@ -2546,7 +2402,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 153,
                             BuildingId = 16,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3910),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3164),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "FSP103"
@@ -2556,7 +2412,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 154,
                             BuildingId = 16,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3912),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3175),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "FSP104"
@@ -2566,7 +2422,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 155,
                             BuildingId = 16,
                             Capacity = 45,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3914),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3177),
                             Floor = "Etaj 1",
                             IsActive = true,
                             Name = "FSP105"
@@ -2576,7 +2432,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 156,
                             BuildingId = 16,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3916),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3179),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFSP201"
@@ -2586,7 +2442,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 157,
                             BuildingId = 16,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3927),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3181),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFSP202"
@@ -2596,7 +2452,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 158,
                             BuildingId = 16,
                             Capacity = 30,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3942),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3183),
                             Floor = "Etaj 2",
                             IsActive = true,
                             Name = "SemFSP203"
@@ -2606,7 +2462,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 159,
                             BuildingId = 16,
                             Capacity = 180,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3945),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3186),
                             Equipment = "Proiector, Sistem audio",
                             Floor = "Parter",
                             IsActive = true,
@@ -2617,7 +2473,7 @@ namespace CampusConnect.Infrastructure.Migrations
                             Id = 160,
                             BuildingId = 16,
                             Capacity = 25,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 571, DateTimeKind.Utc).AddTicks(3947),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 421, DateTimeKind.Utc).AddTicks(3188),
                             Equipment = "Computere",
                             Floor = "Etaj 2",
                             IsActive = true,
@@ -2760,53 +2616,53 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 574, DateTimeKind.Utc).AddTicks(2830),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 423, DateTimeKind.Utc).AddTicks(3394),
                             CreatedByProfessorId = 14,
                             Description = "Principii de inginerie software și design patterns",
-                            EndTime = new DateTime(2025, 12, 27, 12, 0, 0, 0, DateTimeKind.Local),
+                            EndTime = new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             RecurrencePattern = "Weekly",
                             RoomId = 121,
-                            StartTime = new DateTime(2025, 12, 27, 10, 0, 0, 0, DateTimeKind.Local),
+                            StartTime = new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local),
                             Title = "Curs Inginerie Software"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 574, DateTimeKind.Utc).AddTicks(2940),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 423, DateTimeKind.Utc).AddTicks(3503),
                             CreatedByProfessorId = 15,
                             Description = "Lucru cu SQL și modelare baze de date",
-                            EndTime = new DateTime(2025, 12, 27, 16, 0, 0, 0, DateTimeKind.Local),
+                            EndTime = new DateTime(2025, 12, 26, 16, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             RecurrencePattern = "Weekly",
                             RoomId = 125,
-                            StartTime = new DateTime(2025, 12, 27, 14, 0, 0, 0, DateTimeKind.Local),
+                            StartTime = new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local),
                             Title = "Seminar Baze de Date"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 574, DateTimeKind.Utc).AddTicks(2944),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 423, DateTimeKind.Utc).AddTicks(3506),
                             CreatedByProfessorId = 14,
                             Description = "Algoritmi de sortare și căutare",
-                            EndTime = new DateTime(2025, 12, 27, 10, 0, 0, 0, DateTimeKind.Local),
+                            EndTime = new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             RecurrencePattern = "Weekly",
                             RoomId = 122,
-                            StartTime = new DateTime(2025, 12, 27, 8, 0, 0, 0, DateTimeKind.Local),
+                            StartTime = new DateTime(2025, 12, 26, 8, 0, 0, 0, DateTimeKind.Local),
                             Title = "Curs Algoritmi și Structuri de Date"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 12, 27, 20, 22, 45, 574, DateTimeKind.Utc).AddTicks(2947),
+                            CreatedAt = new DateTime(2025, 12, 26, 14, 13, 56, 423, DateTimeKind.Utc).AddTicks(3509),
                             CreatedByProfessorId = 15,
                             Description = "Dreptul persoanelor și al familiei",
-                            EndTime = new DateTime(2025, 12, 27, 14, 0, 0, 0, DateTimeKind.Local),
+                            EndTime = new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local),
                             IsActive = true,
                             RecurrencePattern = "Weekly",
                             RoomId = 36,
-                            StartTime = new DateTime(2025, 12, 27, 12, 0, 0, 0, DateTimeKind.Local),
+                            StartTime = new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local),
                             Title = "Curs Drept Civil"
                         });
                 });
@@ -2913,21 +2769,21 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "7eb134a5-31ec-483a-b68a-7565cc625248",
+                            ConcurrencyStamp = "8e9f0fbe-12e1-4f5a-9c55-37d5b43a9cfa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "72d01fc3-4507-484a-91c0-0e9b1f29afe9",
+                            ConcurrencyStamp = "55627825-da4c-467b-92fa-edf4a9d867e0",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "52322d54-a0d7-4d99-99cf-11463733e931",
+                            ConcurrencyStamp = "11db084f-a75f-44da-b5e0-64c025737c59",
                             Name = "Professor",
                             NormalizedName = "PROFESSOR"
                         });
@@ -3068,25 +2924,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CampusConnect.Domain.Entities.CourseMaterial", b =>
-                {
-                    b.HasOne("CampusConnect.Domain.Entities.Group", "Group")
-                        .WithMany("CourseMaterials")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "UploadedByProfessor")
-                        .WithMany()
-                        .HasForeignKey("UploadedByProfessorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("UploadedByProfessor");
-                });
-
             modelBuilder.Entity("CampusConnect.Domain.Entities.Event", b =>
                 {
                     b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "Organizer")
@@ -3127,33 +2964,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("Professor");
                 });
 
-            modelBuilder.Entity("CampusConnect.Domain.Entities.GroupAnnouncement", b =>
-                {
-                    b.HasOne("CampusConnect.Domain.Entities.Announcement", "Announcement")
-                        .WithMany()
-                        .HasForeignKey("AnnouncementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "ForwardedByProfessor")
-                        .WithMany()
-                        .HasForeignKey("ForwardedByProfessorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CampusConnect.Domain.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Announcement");
-
-                    b.Navigation("ForwardedByProfessor");
-
-                    b.Navigation("Group");
-                });
-
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupMember", b =>
                 {
                     b.HasOne("CampusConnect.Domain.Entities.Group", "Group")
@@ -3190,17 +3000,6 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("CreatedByProfessor");
 
                     b.Navigation("Group");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryItem", b =>
-                {
-                    b.HasOne("CampusConnect.Domain.Entities.LibraryFolder", "Folder")
-                        .WithMany("Items")
-                        .HasForeignKey("FolderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Folder");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>
@@ -3395,8 +3194,6 @@ namespace CampusConnect.Infrastructure.Migrations
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Group", b =>
                 {
-                    b.Navigation("CourseMaterials");
-
                     b.Navigation("Members");
 
                     b.Navigation("Tasks");
@@ -3405,11 +3202,6 @@ namespace CampusConnect.Infrastructure.Migrations
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupTask", b =>
                 {
                     b.Navigation("SavedByUsers");
-                });
-
-            modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryFolder", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>

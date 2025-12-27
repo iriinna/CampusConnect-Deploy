@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Clock,
   UserCog,
+  BookOpen,
   Trophy
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
@@ -139,6 +140,15 @@ function Home() {
       gradient: 'from-emerald-500 via-green-500 to-teal-500',
       badge: dashboardStats ? `${dashboardStats.activeGroups} active` : '0 active',
     },
+    {
+      title: 'Library',
+      description: 'Folders + materials (files & links)',
+      icon: BookOpen,
+      link: '/library',
+      gradient: 'from-indigo-500 via-purple-500 to-pink-500',
+      badge: 'New',
+    },
+
     {
       title: 'My Tasks',
       description: 'Track assignments and deadlines',

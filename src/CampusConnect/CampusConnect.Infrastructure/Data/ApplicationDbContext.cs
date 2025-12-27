@@ -34,6 +34,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<UserActivity> UserActivities { get; set; }
+    public DbSet<LibraryFolder> LibraryFolders { get; set; } 
+    public DbSet<LibraryItem> LibraryItems { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
