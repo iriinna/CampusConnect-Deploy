@@ -21,6 +21,9 @@ import CampusMap from './pages/CampusMap/CampusMap';
 import AllAchievements from './pages/Achievements/AllAchievements';
 import ManageAchievements from './pages/Achievements/ManageAchievements';
 import ActivityHistory from './pages/ActivityHistory';
+import BookingRequests from './pages/BookingRequests/BookingRequests';
+import MyBookingRequests from './pages/MyBookingRequests/MyBookingRequests';
+import Notifications from './pages/Notifications';
 import Library from './pages/Library/Library';
 
 
@@ -51,6 +54,9 @@ function App() {
           <Route path="/achievements" element={<AllAchievements />} />
           <Route path="/manage-achievements" element={<ManageAchievements />} />
           <Route path="/activity-history" element={<ActivityHistory />} />
+          <Route path="/booking-requests" element={<BookingRequests />} />
+          <Route path="/my-booking-requests" element={<MyBookingRequests />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/library" element={<Library />} />
         </Routes>
       </BrowserRouter>

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, Clock, User } from 'lucide-react';
+import { X, Clock, User, CalendarPlus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { campusMapApi } from '../../services/campusMapApi';
 import type { RoomDetails, Schedule } from '../../services/campusMapApi';
+import { RequestBookingDialog } from './RequestBookingDialog';
 
 interface Props {
   roomId: number;
@@ -16,6 +17,19 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
   const [room, setRoom] = useState<RoomDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [showRequestDialog, setShowRequestDialog] = useState(false);
+
+  const getUserRole = () => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
+    try {
+      const user = JSON.parse(userStr);
+      return user.role;
+    } catch {
+      return null;
+    }
+  };
+  const userRole = getUserRole();
 
   useEffect(() => {
     loadRoomDetails();
@@ -89,20 +103,20 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
           <CardContent>
             {loading ? (
-              <div className="text-center py-8">Se încarcă...</div>
+              <div className="text-center py-8">Loading...</div>
             ) : room ? (
               <div className="space-y-6">
                 {/* Room Info */}
                 <div className="grid grid-cols-2 gap-4">
                   {room.capacity && (
                     <div>
-                      <span className="text-sm text-muted-foreground">Capacitate</span>
-                      <p className="font-semibold">{room.capacity} locuri</p>
+                      <span className="text-sm text-muted-foreground">Capacity</span>
+                      <p className="font-semibold">{room.capacity} seats</p>
                     </div>
                   )}
                   {room.floor && (
                     <div>
-                      <span className="text-sm text-muted-foreground">Etaj</span>
+                      <span className="text-sm text-muted-foreground">Floor</span>
                       <p className="font-semibold">{room.floor}</p>
                     </div>
                   )}
@@ -110,17 +124,31 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
                 {room.equipment && (
                   <div>
-                    <span className="text-sm text-muted-foreground">Echipament</span>
+                    <span className="text-sm text-muted-foreground">Equipment</span>
                     <p className="text-sm mt-1">{room.equipment}</p>
                   </div>
                 )}
 
                 {/* Status Badge */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Status Curent:</span>
-                  <Badge className={getStatusColor(room.currentStatus)}>
-                    {getStatusText(room.currentStatus)}
-                  </Badge>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Current Status:</span>
+                    <Badge className={getStatusColor(room.currentStatus)}>
+                      {getStatusText(room.currentStatus)}
+                    </Badge>
+                  </div>
+
+                  {/* Request Booking Button - Only for Users */}
+                  {userRole === 'User' && (
+                    <Button
+                      onClick={() => setShowRequestDialog(true)}
+                      className="gap-2"
+                      size="sm"
+                    >
+                      <CalendarPlus className="h-4 w-4" />
+                      Request Reservation
+                    </Button>
+                  )}
                 </div>
 
                 {/* Today's Schedule */}
@@ -132,7 +160,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                   </h3>
                   {room.todaySchedules.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">
-                      Nu există activități programate
+                        No schedule ativities for this date.
                     </p>
                   ) : (
                     <div className="space-y-2">
@@ -145,7 +173,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
                 {/* Date Selector - Available for everyone */}
                 <div>
-                  <h3 className="font-semibold mb-3">Vizualizare Program pentru Altă Dată</h3>
+                  <h3 className="font-semibold mb-3">View Schedule for Another Date</h3>
                   <input
                     type="date"
                     value={`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`}
@@ -160,11 +188,25 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                 </div>
               </div>
             ) : (
-              <p className="text-center text-muted-foreground">Sala nu a fost găsită</p>
+              <p className="text-center text-muted-foreground">Room not found</p>
             )}
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Request Booking Dialog */}
+      {showRequestDialog && room && (
+        <RequestBookingDialog
+          roomId={roomId}
+          roomName={room.name}
+          buildingName={room.buildingName}
+          onClose={() => setShowRequestDialog(false)}
+          onSuccess={() => {
+            setShowRequestDialog(false);
+            loadRoomDetails();
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -193,7 +235,7 @@ const ScheduleItem = ({ schedule }: { schedule: Schedule }) => (
         </div>
       </div>
       {schedule.isCurrentlyActive && (
-        <Badge className="bg-green-500 text-white text-xs">În Desfășurare</Badge>
+        <Badge className="bg-green-500 text-white text-xs">In Progress</Badge>
       )}
     </div>
   </div>
