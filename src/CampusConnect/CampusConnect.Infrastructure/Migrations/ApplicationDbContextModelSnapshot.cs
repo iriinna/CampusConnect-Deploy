@@ -59,7 +59,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(6799),
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(2340),
                             Description = "Complete your first task",
                             Icon = "🎯",
                             IsActive = true,
@@ -68,7 +68,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7242),
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3347),
                             Description = "Complete 5 tasks",
                             Icon = "⭐",
                             IsActive = true,
@@ -77,7 +77,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7245),
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3351),
                             Description = "Complete 10 tasks",
                             Icon = "🏆",
                             IsActive = true,
@@ -86,7 +86,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7248),
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3353),
                             Description = "Join your first group",
                             Icon = "👥",
                             IsActive = true,
@@ -95,7 +95,7 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 818, DateTimeKind.Utc).AddTicks(7251),
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3356),
                             Description = "Attend your first event",
                             Icon = "🦋",
                             IsActive = true,
@@ -237,8 +237,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 10,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "50876560-b32e-44e1-b871-4dbdb24cadd1",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 151, DateTimeKind.Utc).AddTicks(9063),
+                            ConcurrencyStamp = "2ebda6f2-cb17-44c2-b3b6-7c170e66b2a1",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 45, 521, DateTimeKind.Utc).AddTicks(3208),
                             Email = "admin1@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Andrei",
@@ -246,9 +246,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN1@UNIBUC.RO",
                             NormalizedUserName = "ADMIN1@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJyUKqZjwFP/BGkMntr/IVsTU9cg+zv+mAIINwWe/ISOQHzo61FeVV39bBTwD3leAg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELRGVcdyMYzzE7Vy+sawUTDCRcZzYPL4UxrU1LPRoYn0O/5j5nQ2UelOQtNU59yhwg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "154ecdea-a427-43b6-9885-a1a609442487",
+                            SecurityStamp = "3c3b2990-6f80-42d0-8050-0cb490260585",
                             TwoFactorEnabled = false,
                             UserName = "admin1@unibuc.ro"
                         },
@@ -256,8 +256,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 11,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a6be3746-6c6b-4b8d-9022-cbab4a1a789e",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 260, DateTimeKind.Utc).AddTicks(951),
+                            ConcurrencyStamp = "869a3aed-3ca0-4a13-aeab-068299293049",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 45, 634, DateTimeKind.Utc).AddTicks(60),
                             Email = "admin2@unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Maria",
@@ -265,9 +265,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN2@UNIBUC.RO",
                             NormalizedUserName = "ADMIN2@UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOwVU+2EDAiua0IbOeQIba1rxHAqQdOZEnIbXZ5miDDD9PZ5394KdzZcNy5hNtBwTw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBuyr3Ls2h9iiwi8LHUfAtTFYAWvBWdT7Zw+Qh35m5LMMQFp392iDS8jW2YXSHEvpw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1f5a9809-5d10-4d40-aee5-0a9c8c5a659d",
+                            SecurityStamp = "67e3d467-715b-4a36-b59c-6f3805dc6f90",
                             TwoFactorEnabled = false,
                             UserName = "admin2@unibuc.ro"
                         },
@@ -275,8 +275,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 12,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0431e87d-6262-4390-a458-2729d67df6a3",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 359, DateTimeKind.Utc).AddTicks(2987),
+                            ConcurrencyStamp = "3427a7e4-93a8-451e-8d35-bfdc51349cbf",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 45, 753, DateTimeKind.Utc).AddTicks(1938),
                             Email = "student1@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Ion",
@@ -284,9 +284,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT1@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT1@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPc+Q0azoVQ0WTle2qO+Js+OXEEKW7a0BfpUymqBtrIhdI0u/ymIYEdGHlxPislUZw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGbz9Mez3Mfkm0Th/CZiR+t1lFFFgVPyzE1iC5G35fHEtKkCrmGVfNASZK5Ep+ypsw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c28125ac-f984-4a3e-9009-7393953cc4dd",
+                            SecurityStamp = "ec42f9d1-d707-4e9e-a1c0-391663e81661",
                             TwoFactorEnabled = false,
                             UserName = "student1@s.unibuc.ro"
                         },
@@ -294,8 +294,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 13,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b3f317ed-8816-4700-8e19-bda79afc9d00",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 465, DateTimeKind.Utc).AddTicks(6501),
+                            ConcurrencyStamp = "8c314594-26a2-4c94-be2d-778120f35b7f",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 45, 870, DateTimeKind.Utc).AddTicks(868),
                             Email = "student2@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Elena",
@@ -303,9 +303,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "STUDENT2@S.UNIBUC.RO",
                             NormalizedUserName = "STUDENT2@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFHZhWHUiStx0fgDUxwU8/QCFZRzGCqziUgQlhkWxzTJlmFMULq47RwRp0dPD2eGfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBAQ+Qn1JYKx9BtrLLDSRrEo2teilUPs0xWv4kFS/isHtRi0uvnkuDyEgyZUgz8H9g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "caaa7f94-bfd9-4ee7-9a8b-8c62f2e2a6fa",
+                            SecurityStamp = "da2e24ed-5da8-418e-a906-b22f897d8cad",
                             TwoFactorEnabled = false,
                             UserName = "student2@s.unibuc.ro"
                         },
@@ -313,8 +313,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 14,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "395bc6d2-f7f3-4ec1-9335-88dd4193fbae",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 582, DateTimeKind.Utc).AddTicks(7050),
+                            ConcurrencyStamp = "b56685db-cd02-4edf-b77a-66e91f484877",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 45, 979, DateTimeKind.Utc).AddTicks(7826),
                             Email = "anastasia.ispas@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Anastasia",
@@ -322,9 +322,9 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ANASTASIA.ISPAS@S.UNIBUC.RO",
                             NormalizedUserName = "ANASTASIA.ISPAS@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3AStRsw7a6UftbHZ3Yjs+Agpt7Vf00j2Pdf5mBYw9UWml8n1CQa++uYrI4fuXD7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGBDLr934Np/UDRj/Axnjb7ZDBQcaucgHuXr7HzIaL+/457Q4GVhhIHX5TaGo1ZDoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aac0ce58-5d9c-4803-b8f2-147de926f18d",
+                            SecurityStamp = "afe917f3-1d0e-4581-ad3f-b834efad95a7",
                             TwoFactorEnabled = false,
                             UserName = "anastasia.ispas@s.unibuc.ro"
                         },
@@ -332,8 +332,8 @@ namespace CampusConnect.Infrastructure.Migrations
                         {
                             Id = 15,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3b7ac85a-24cd-4acd-9ce4-6f3a1d1df026",
-                            CreatedAt = new DateTime(2025, 12, 25, 19, 43, 29, 698, DateTimeKind.Utc).AddTicks(2059),
+                            ConcurrencyStamp = "f1d42db5-d067-4941-a9da-cc1569c1bd19",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 91, DateTimeKind.Utc).AddTicks(7126),
                             Email = "irina-maria.istrate@s.unibuc.ro",
                             EmailConfirmed = true,
                             FirstName = "Irina-Maria",
@@ -341,11 +341,233 @@ namespace CampusConnect.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
                             NormalizedUserName = "IRINA-MARIA.ISTRATE@S.UNIBUC.RO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOPbadbhi3PtrEHeJrqgqwzquRQzJw1H2eXxktW0SbE2xNCOaqL82D9bBUhST82Pog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJk7ruoupOHxROkpy4jVniJ8uWS93aqqylZ+Chw6TY5xSxfPWlgXyADK5wsY1Elijw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e77ba52e-95b2-4687-9191-9d2fa9917959",
+                            SecurityStamp = "dfe2da06-2483-4d08-afd4-4d8d6c4af291",
                             TwoFactorEnabled = false,
                             UserName = "irina-maria.istrate@s.unibuc.ro"
+                        });
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Building", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("GeoJsonPolygon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Buildings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "B-dul Regina Elisabeta nr. 4-12, etaj 1, sector 3, București",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7260),
+                            Description = "FAA - Sediu în clădirea Chimiei",
+                            IsActive = true,
+                            Latitude = 44.434719999999999,
+                            Longitude = 26.100719999999999,
+                            Name = "Facultatea de Administrație și Afaceri"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Splaiul Independenței nr. 91-95, sector 5, București, 050095",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7734),
+                            Description = "Facultatea de Biologie",
+                            IsActive = true,
+                            Latitude = 44.435299999999998,
+                            Longitude = 26.06326,
+                            Name = "Facultatea de Biologie"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Bd. Regina Elisabeta nr. 4-12, sector 3, București, 030018",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7738),
+                            Description = "Facultatea de Chimie",
+                            IsActive = true,
+                            Latitude = 44.434719999999999,
+                            Longitude = 26.100719999999999,
+                            Name = "Facultatea de Chimie"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Bd. Mihail Kogălniceanu nr. 36-46, sector 5, București, 050107",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7741),
+                            Description = "Facultatea de Drept",
+                            IsActive = true,
+                            Latitude = 44.435240999999998,
+                            Longitude = 26.082077000000002,
+                            Name = "Facultatea de Drept"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Address = "Splaiul Independenței nr. 204, sector 6, București, 060024",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7744),
+                            Description = "Facultatea de Filosofie",
+                            IsActive = true,
+                            Latitude = 44.434710000000003,
+                            Longitude = 26.04824,
+                            Name = "Facultatea de Filosofie"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Address = "Str. Atomiștilor nr. 405, Măgurele, Ilfov, 077125",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7746),
+                            Description = "Facultatea de Fizică - Campus Măgurele",
+                            IsActive = true,
+                            Latitude = 44.34834,
+                            Longitude = 26.031279999999999,
+                            Name = "Facultatea de Fizică"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Address = "Bd. Nicolae Bălcescu nr. 1, sector 1, București, 010041",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7749),
+                            Description = "Facultatea de Geografie",
+                            IsActive = true,
+                            Latitude = 44.436540000000001,
+                            Longitude = 26.101890000000001,
+                            Name = "Facultatea de Geografie"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Address = "Str. Traian Vuia nr. 6, sector 2, București, 020956",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7751),
+                            Description = "Facultatea de Geologie și Geofizică",
+                            IsActive = true,
+                            Latitude = 44.45167,
+                            Longitude = 26.07901,
+                            Name = "Facultatea de Geologie și Geofizică"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Address = "Str. Academiei nr. 14, București",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7754),
+                            Description = "Facultatea de Istorie",
+                            IsActive = true,
+                            Latitude = 44.435839999999999,
+                            Longitude = 26.096830000000001,
+                            Name = "Facultatea de Istorie"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Address = "Bd. Iuliu Maniu nr. 1-3, Complex Leu, Corp A, etaj 6, sector 6, București",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7758),
+                            Description = "FJSC - Complex Leu",
+                            IsActive = true,
+                            Latitude = 44.43891,
+                            Longitude = 26.043209999999998,
+                            Name = "Facultatea de Jurnalism și Științele Comunicării"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7761),
+                            Description = "FLLS",
+                            IsActive = true,
+                            Latitude = 44.435830000000003,
+                            Longitude = 26.100809999999999,
+                            Name = "Facultatea de Limbi și Literaturi Străine"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Address = "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7777),
+                            Description = "Facultatea de Litere",
+                            IsActive = true,
+                            Latitude = 44.435830000000003,
+                            Longitude = 26.100809999999999,
+                            Name = "Facultatea de Litere"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Address = "Str. Academiei nr. 14, sector 1, București, 010014",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7779),
+                            Description = "FMI",
+                            IsActive = true,
+                            Latitude = 44.435839999999999,
+                            Longitude = 26.096830000000001,
+                            Name = "Facultatea de Matematică și Informatică"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Address = "Șos. Panduri nr. 90-91, București",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7851),
+                            Description = "FPSE",
+                            IsActive = true,
+                            Latitude = 44.432209999999998,
+                            Longitude = 26.068919999999999,
+                            Name = "Facultatea de Psihologie și Științele Educației"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Address = "Bd. Schitu Măgureanu nr. 9, București",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7856),
+                            Description = "SAS",
+                            IsActive = true,
+                            Latitude = 44.433419999999998,
+                            Longitude = 26.09421,
+                            Name = "Facultatea de Sociologie și Asistență Socială"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Address = "Calea Plevnei nr. 59, București, 010223",
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7858),
+                            Description = "FSP",
+                            IsActive = true,
+                            Latitude = 44.445210000000003,
+                            Longitude = 26.083919999999999,
+                            Name = "Facultatea de Științe Politice"
                         });
                 });
 
@@ -558,6 +780,1772 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BuildingId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Equipment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Floor")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuildingId", "Name");
+
+                    b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BuildingId = 1,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 258, DateTimeKind.Utc).AddTicks(9798),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "A101"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BuildingId = 1,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1081),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "A102"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BuildingId = 1,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1092),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "A103"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BuildingId = 1,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1101),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "A104"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BuildingId = 1,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1108),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "A105"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BuildingId = 1,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1116),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "S201"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BuildingId = 1,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1124),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "S202"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BuildingId = 1,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1131),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "S203"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BuildingId = 1,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2373),
+                            Equipment = "Computere",
+                            Floor = "Etaj 3",
+                            IsActive = true,
+                            Name = "Lab301"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BuildingId = 1,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2403),
+                            Equipment = "Computere",
+                            Floor = "Etaj 3",
+                            IsActive = true,
+                            Name = "Lab302"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BuildingId = 2,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2413),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Bio101"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BuildingId = 2,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2421),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Bio102"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BuildingId = 2,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2626),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Bio103"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BuildingId = 2,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2634),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Bio104"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BuildingId = 2,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2642),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Bio105"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BuildingId = 2,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2650),
+                            Equipment = "Echipament laborator",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabBio201"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            BuildingId = 2,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2658),
+                            Equipment = "Echipament laborator",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabBio202"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            BuildingId = 2,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2666),
+                            Equipment = "Echipament laborator",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabBio203"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BuildingId = 2,
+                            Capacity = 200,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2675),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfBio1"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            BuildingId = 2,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2683),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfBio2"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            BuildingId = 3,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2690),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ch101"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            BuildingId = 3,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2698),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ch102"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BuildingId = 3,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2705),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ch103"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            BuildingId = 3,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2713),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ch104"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            BuildingId = 3,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2720),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ch105"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            BuildingId = 3,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2728),
+                            Equipment = "Echipament chimie",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabCh201"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            BuildingId = 3,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2802),
+                            Equipment = "Echipament chimie",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabCh202"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            BuildingId = 3,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2811),
+                            Equipment = "Echipament chimie",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabCh203"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            BuildingId = 3,
+                            Capacity = 180,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2819),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfCh1"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            BuildingId = 3,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2827),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfCh2"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            BuildingId = 4,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2834),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "D101"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            BuildingId = 4,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2842),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "D102"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            BuildingId = 4,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2850),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "D103"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            BuildingId = 4,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2858),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "D104"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            BuildingId = 4,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2865),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "D105"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            BuildingId = 4,
+                            Capacity = 300,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2873),
+                            Equipment = "Sistem audio-video complet",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfD1"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            BuildingId = 4,
+                            Capacity = 250,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2882),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfD2"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            BuildingId = 4,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2890),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemD201"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            BuildingId = 4,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2897),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemD202"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            BuildingId = 4,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2905),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemD203"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            BuildingId = 5,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2967),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Filo101"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            BuildingId = 5,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2975),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Filo102"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            BuildingId = 5,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2982),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Filo103"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            BuildingId = 5,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2990),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Filo104"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            BuildingId = 5,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2998),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Filo105"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            BuildingId = 5,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3006),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfFilo1"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            BuildingId = 5,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3014),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfFilo2"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            BuildingId = 5,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3022),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFilo201"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            BuildingId = 5,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3029),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFilo202"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            BuildingId = 5,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3037),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFilo203"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            BuildingId = 6,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3045),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Fiz101"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            BuildingId = 6,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3053),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Fiz102"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            BuildingId = 6,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3061),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Fiz103"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            BuildingId = 6,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3069),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Fiz104"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            BuildingId = 6,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3076),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Fiz105"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            BuildingId = 6,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3135),
+                            Equipment = "Echipament fizică",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabFiz201"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            BuildingId = 6,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3144),
+                            Equipment = "Echipament fizică",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabFiz202"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            BuildingId = 6,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3152),
+                            Equipment = "Echipament fizică",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabFiz203"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            BuildingId = 6,
+                            Capacity = 200,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3160),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfFiz1"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            BuildingId = 6,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3169),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfFiz2"
+                        },
+                        new
+                        {
+                            Id = 61,
+                            BuildingId = 7,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3177),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Geo101"
+                        },
+                        new
+                        {
+                            Id = 62,
+                            BuildingId = 7,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3185),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Geo102"
+                        },
+                        new
+                        {
+                            Id = 63,
+                            BuildingId = 7,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3193),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Geo103"
+                        },
+                        new
+                        {
+                            Id = 64,
+                            BuildingId = 7,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3201),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Geo104"
+                        },
+                        new
+                        {
+                            Id = 65,
+                            BuildingId = 7,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3208),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Geo105"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            BuildingId = 7,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3216),
+                            Equipment = "Hărți, Computere GIS",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabGeo201"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            BuildingId = 7,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3224),
+                            Equipment = "Computere GIS",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabGeo202"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            BuildingId = 7,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3308),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemGeo203"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            BuildingId = 7,
+                            Capacity = 180,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3317),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfGeo1"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            BuildingId = 7,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3382),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfGeo2"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            BuildingId = 8,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3391),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "GG101"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            BuildingId = 8,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3399),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "GG102"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            BuildingId = 8,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3407),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "GG103"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            BuildingId = 8,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3414),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "GG104"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            BuildingId = 8,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3422),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "GG105"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            BuildingId = 8,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3430),
+                            Equipment = "Echipament geologic",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabGG201"
+                        },
+                        new
+                        {
+                            Id = 77,
+                            BuildingId = 8,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3438),
+                            Equipment = "Echipament geofizic",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabGG202"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            BuildingId = 8,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3447),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemGG203"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            BuildingId = 8,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3455),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfGG1"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            BuildingId = 8,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3463),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfGG2"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            BuildingId = 9,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3471),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ist101"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            BuildingId = 9,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3479),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ist102"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            BuildingId = 9,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3487),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ist103"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            BuildingId = 9,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3494),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ist104"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            BuildingId = 9,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3552),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Ist105"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            BuildingId = 9,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3560),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemIst201"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            BuildingId = 9,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3568),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemIst202"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            BuildingId = 9,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3576),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemIst203"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            BuildingId = 9,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3584),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfIst1"
+                        },
+                        new
+                        {
+                            Id = 90,
+                            BuildingId = 9,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3592),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfIst2"
+                        },
+                        new
+                        {
+                            Id = 91,
+                            BuildingId = 10,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3600),
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "J101"
+                        },
+                        new
+                        {
+                            Id = 92,
+                            BuildingId = 10,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3607),
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "J102"
+                        },
+                        new
+                        {
+                            Id = 93,
+                            BuildingId = 10,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3615),
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "J103"
+                        },
+                        new
+                        {
+                            Id = 94,
+                            BuildingId = 10,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3623),
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "J104"
+                        },
+                        new
+                        {
+                            Id = 95,
+                            BuildingId = 10,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3630),
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "J105"
+                        },
+                        new
+                        {
+                            Id = 96,
+                            BuildingId = 10,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3638),
+                            Equipment = "Camere, Echipament video",
+                            Floor = "Etaj 7",
+                            IsActive = true,
+                            Name = "LabMedia201"
+                        },
+                        new
+                        {
+                            Id = 97,
+                            BuildingId = 10,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3647),
+                            Equipment = "Echipament audio",
+                            Floor = "Etaj 7",
+                            IsActive = true,
+                            Name = "LabMedia202"
+                        },
+                        new
+                        {
+                            Id = 98,
+                            BuildingId = 10,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3655),
+                            Floor = "Etaj 7",
+                            IsActive = true,
+                            Name = "SemPR203"
+                        },
+                        new
+                        {
+                            Id = 99,
+                            BuildingId = 10,
+                            Capacity = 100,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3712),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Etaj 6",
+                            IsActive = true,
+                            Name = "AmfJ1"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            BuildingId = 10,
+                            Capacity = 20,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3720),
+                            Equipment = "Studio TV/Radio",
+                            Floor = "Etaj 7",
+                            IsActive = true,
+                            Name = "StudioJ2"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            BuildingId = 11,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3728),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "LLS101"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            BuildingId = 11,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3736),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "LLS102"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            BuildingId = 11,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3743),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "LLS103"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            BuildingId = 11,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3751),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "LLS104"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            BuildingId = 11,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3759),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "LLS105"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            BuildingId = 11,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3767),
+                            Equipment = "Echipament limbi străine",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabLingv201"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            BuildingId = 11,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3776),
+                            Equipment = "Computere, Software lingvistic",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabLingv202"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            BuildingId = 11,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3783),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemLLS203"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            BuildingId = 11,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3792),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfLLS1"
+                        },
+                        new
+                        {
+                            Id = 110,
+                            BuildingId = 11,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3800),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfLLS2"
+                        },
+                        new
+                        {
+                            Id = 111,
+                            BuildingId = 12,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3807),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lit101"
+                        },
+                        new
+                        {
+                            Id = 112,
+                            BuildingId = 12,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3815),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lit102"
+                        },
+                        new
+                        {
+                            Id = 113,
+                            BuildingId = 12,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3876),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lit103"
+                        },
+                        new
+                        {
+                            Id = 114,
+                            BuildingId = 12,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3884),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lit104"
+                        },
+                        new
+                        {
+                            Id = 115,
+                            BuildingId = 12,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3892),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lit105"
+                        },
+                        new
+                        {
+                            Id = 116,
+                            BuildingId = 12,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3901),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemLit201"
+                        },
+                        new
+                        {
+                            Id = 117,
+                            BuildingId = 12,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3909),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemLit202"
+                        },
+                        new
+                        {
+                            Id = 118,
+                            BuildingId = 12,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3916),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemLit203"
+                        },
+                        new
+                        {
+                            Id = 119,
+                            BuildingId = 12,
+                            Capacity = 200,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3925),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfLit1"
+                        },
+                        new
+                        {
+                            Id = 120,
+                            BuildingId = 12,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3932),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfLit2"
+                        },
+                        new
+                        {
+                            Id = 121,
+                            BuildingId = 13,
+                            Capacity = 300,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3940),
+                            Equipment = "Proiector, Sistem audio premium",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "Amf. Spiru Haret"
+                        },
+                        new
+                        {
+                            Id = 122,
+                            BuildingId = 13,
+                            Capacity = 250,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3949),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "Amf. Gheorghe Țițeica"
+                        },
+                        new
+                        {
+                            Id = 123,
+                            BuildingId = 13,
+                            Capacity = 200,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3957),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "Amf. Simion Stoilow"
+                        },
+                        new
+                        {
+                            Id = 124,
+                            BuildingId = 13,
+                            Capacity = 180,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3966),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "Amf. Dimitrie Pompeiu"
+                        },
+                        new
+                        {
+                            Id = 125,
+                            BuildingId = 13,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3975),
+                            Equipment = "30 Computere, Proiector",
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lab FMI 1"
+                        },
+                        new
+                        {
+                            Id = 126,
+                            BuildingId = 13,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3984),
+                            Equipment = "30 Computere, Proiector",
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lab FMI 2"
+                        },
+                        new
+                        {
+                            Id = 127,
+                            BuildingId = 13,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4595),
+                            Equipment = "30 Computere, Proiector",
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Lab FMI 3"
+                        },
+                        new
+                        {
+                            Id = 128,
+                            BuildingId = 13,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4622),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "S101"
+                        },
+                        new
+                        {
+                            Id = 129,
+                            BuildingId = 13,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4630),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "S102"
+                        },
+                        new
+                        {
+                            Id = 130,
+                            BuildingId = 13,
+                            Capacity = 50,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4638),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "S103"
+                        },
+                        new
+                        {
+                            Id = 131,
+                            BuildingId = 14,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4646),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Psi101"
+                        },
+                        new
+                        {
+                            Id = 132,
+                            BuildingId = 14,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4654),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Psi102"
+                        },
+                        new
+                        {
+                            Id = 133,
+                            BuildingId = 14,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4661),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Psi103"
+                        },
+                        new
+                        {
+                            Id = 134,
+                            BuildingId = 14,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4669),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Psi104"
+                        },
+                        new
+                        {
+                            Id = 135,
+                            BuildingId = 14,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4677),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "Psi105"
+                        },
+                        new
+                        {
+                            Id = 136,
+                            BuildingId = 14,
+                            Capacity = 20,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4739),
+                            Equipment = "Echipament psihologie",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabPsi201"
+                        },
+                        new
+                        {
+                            Id = 137,
+                            BuildingId = 14,
+                            Capacity = 20,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4746),
+                            Equipment = "Computere, Software psiho",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabPsi202"
+                        },
+                        new
+                        {
+                            Id = 138,
+                            BuildingId = 14,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4754),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemEdu203"
+                        },
+                        new
+                        {
+                            Id = 139,
+                            BuildingId = 14,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4762),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfPsi1"
+                        },
+                        new
+                        {
+                            Id = 140,
+                            BuildingId = 14,
+                            Capacity = 120,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4770),
+                            Equipment = "Proiector",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfPsi2"
+                        },
+                        new
+                        {
+                            Id = 141,
+                            BuildingId = 15,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4777),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "SAS101"
+                        },
+                        new
+                        {
+                            Id = 142,
+                            BuildingId = 15,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4849),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "SAS102"
+                        },
+                        new
+                        {
+                            Id = 143,
+                            BuildingId = 15,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4858),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "SAS103"
+                        },
+                        new
+                        {
+                            Id = 144,
+                            BuildingId = 15,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4864),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "SAS104"
+                        },
+                        new
+                        {
+                            Id = 145,
+                            BuildingId = 15,
+                            Capacity = 40,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4872),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "SAS105"
+                        },
+                        new
+                        {
+                            Id = 146,
+                            BuildingId = 15,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4880),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemSAS201"
+                        },
+                        new
+                        {
+                            Id = 147,
+                            BuildingId = 15,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4887),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemSAS202"
+                        },
+                        new
+                        {
+                            Id = 148,
+                            BuildingId = 15,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4895),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemSAS203"
+                        },
+                        new
+                        {
+                            Id = 149,
+                            BuildingId = 15,
+                            Capacity = 150,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4903),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfSAS1"
+                        },
+                        new
+                        {
+                            Id = 150,
+                            BuildingId = 15,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4911),
+                            Equipment = "Computere, Software SPSS",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabSAS2"
+                        },
+                        new
+                        {
+                            Id = 151,
+                            BuildingId = 16,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4918),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "FSP101"
+                        },
+                        new
+                        {
+                            Id = 152,
+                            BuildingId = 16,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4926),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "FSP102"
+                        },
+                        new
+                        {
+                            Id = 153,
+                            BuildingId = 16,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4933),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "FSP103"
+                        },
+                        new
+                        {
+                            Id = 154,
+                            BuildingId = 16,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4941),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "FSP104"
+                        },
+                        new
+                        {
+                            Id = 155,
+                            BuildingId = 16,
+                            Capacity = 45,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4948),
+                            Floor = "Etaj 1",
+                            IsActive = true,
+                            Name = "FSP105"
+                        },
+                        new
+                        {
+                            Id = 156,
+                            BuildingId = 16,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4956),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFSP201"
+                        },
+                        new
+                        {
+                            Id = 157,
+                            BuildingId = 16,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5014),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFSP202"
+                        },
+                        new
+                        {
+                            Id = 158,
+                            BuildingId = 16,
+                            Capacity = 30,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5021),
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "SemFSP203"
+                        },
+                        new
+                        {
+                            Id = 159,
+                            BuildingId = 16,
+                            Capacity = 180,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5029),
+                            Equipment = "Proiector, Sistem audio",
+                            Floor = "Parter",
+                            IsActive = true,
+                            Name = "AmfFSP1"
+                        },
+                        new
+                        {
+                            Id = 160,
+                            BuildingId = 16,
+                            Capacity = 25,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5038),
+                            Equipment = "Computere",
+                            Floor = "Etaj 2",
+                            IsActive = true,
+                            Name = "LabFSP2"
+                        });
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.RoomBookingRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RecurrenceEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecurrencePattern")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("RequestedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ReviewedByAdminId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedByUserId");
+
+                    b.HasIndex("ReviewedByAdminId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("RoomId", "StartTime", "EndTime");
+
+                    b.ToTable("RoomBookingRequests");
+                });
+
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
                 {
                     b.Property<int>("Id")
@@ -637,6 +2625,111 @@ namespace CampusConnect.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("SavedTasks");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedByProfessorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RecurrenceEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RecurrencePattern")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByProfessorId");
+
+                    b.HasIndex("RoomId", "StartTime", "EndTime");
+
+                    b.ToTable("Schedules");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(2661),
+                            CreatedByProfessorId = 14,
+                            Description = "Principii de inginerie software și design patterns",
+                            EndTime = new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            RecurrencePattern = "Weekly",
+                            RoomId = 121,
+                            StartTime = new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local),
+                            Title = "Curs Inginerie Software"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3177),
+                            CreatedByProfessorId = 15,
+                            Description = "Lucru cu SQL și modelare baze de date",
+                            EndTime = new DateTime(2025, 12, 26, 16, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            RecurrencePattern = "Weekly",
+                            RoomId = 125,
+                            StartTime = new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local),
+                            Title = "Seminar Baze de Date"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3182),
+                            CreatedByProfessorId = 14,
+                            Description = "Algoritmi de sortare și căutare",
+                            EndTime = new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            RecurrencePattern = "Weekly",
+                            RoomId = 122,
+                            StartTime = new DateTime(2025, 12, 26, 8, 0, 0, 0, DateTimeKind.Local),
+                            Title = "Curs Algoritmi și Structuri de Date"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3185),
+                            CreatedByProfessorId = 15,
+                            Description = "Dreptul persoanelor și al familiei",
+                            EndTime = new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local),
+                            IsActive = true,
+                            RecurrencePattern = "Weekly",
+                            RoomId = 36,
+                            StartTime = new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local),
+                            Title = "Curs Drept Civil"
+                        });
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.UserAchievement", b =>
@@ -741,21 +2834,21 @@ namespace CampusConnect.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "e73db867-ffff-4771-b365-16a7b015eace",
+                            ConcurrencyStamp = "b891f806-034a-406d-b6e2-6378892d6ef0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "62990cce-cdf6-4973-805d-5c92b7051e85",
+                            ConcurrencyStamp = "f14ad3bf-c7c5-4ac9-8acf-e2188b787b30",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "cd223ba6-9a1d-4c19-a640-ea9a36d41edc",
+                            ConcurrencyStamp = "13b14d11-aec1-4f94-8e16-aa38dee9570a",
                             Name = "Professor",
                             NormalizedName = "PROFESSOR"
                         });
@@ -974,6 +3067,43 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>
+                {
+                    b.HasOne("CampusConnect.Domain.Entities.Building", "Building")
+                        .WithMany("Rooms")
+                        .HasForeignKey("BuildingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Building");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.RoomBookingRequest", b =>
+                {
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "RequestedByUser")
+                        .WithMany()
+                        .HasForeignKey("RequestedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "ReviewedByAdmin")
+                        .WithMany()
+                        .HasForeignKey("ReviewedByAdminId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CampusConnect.Domain.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("RequestedByUser");
+
+                    b.Navigation("ReviewedByAdmin");
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
                 {
                     b.HasOne("CampusConnect.Domain.Entities.Announcement", "Announcement")
@@ -1029,6 +3159,25 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("Task");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Schedule", b =>
+                {
+                    b.HasOne("CampusConnect.Domain.Entities.ApplicationUser", "CreatedByProfessor")
+                        .WithMany()
+                        .HasForeignKey("CreatedByProfessorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CampusConnect.Domain.Entities.Room", "Room")
+                        .WithMany("Schedules")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByProfessor");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.UserAchievement", b =>
@@ -1124,6 +3273,11 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.Navigation("UserAchievements");
                 });
 
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Building", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
             modelBuilder.Entity("CampusConnect.Domain.Entities.Event", b =>
                 {
                     b.Navigation("Participants");
@@ -1139,6 +3293,11 @@ namespace CampusConnect.Infrastructure.Migrations
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupTask", b =>
                 {
                     b.Navigation("SavedByUsers");
+                });
+
+            modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

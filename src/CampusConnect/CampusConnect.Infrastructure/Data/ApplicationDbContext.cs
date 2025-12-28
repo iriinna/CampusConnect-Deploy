@@ -29,6 +29,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Building> Buildings { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<RoomBookingRequest> RoomBookingRequests { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<UserActivity> UserActivities { get; set; }
@@ -291,7 +292,35 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(s => new { s.RoomId, s.StartTime, s.EndTime });
         });
 
-        // 15. Seed Campus Map Data (UniBuc)
+        // 15. Configurare RoomBookingRequest
+        builder.Entity<RoomBookingRequest>(entity =>
+        {
+            entity.Property(r => r.Title).IsRequired().HasMaxLength(200);
+            entity.Property(r => r.Description).HasMaxLength(1000);
+            entity.Property(r => r.RecurrencePattern).HasMaxLength(50);
+            entity.Property(r => r.RejectionReason).HasMaxLength(500);
+
+            entity.HasOne(r => r.Room)
+                .WithMany()
+                .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.RequestedByUser)
+                .WithMany()
+                .HasForeignKey(r => r.RequestedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.ReviewedByAdmin)
+                .WithMany()
+                .HasForeignKey(r => r.ReviewedByAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => new { r.RoomId, r.StartTime, r.EndTime });
+            entity.HasIndex(r => r.RequestedByUserId);
+            entity.HasIndex(r => r.Status);
+        });
+
+        // 16. Seed Campus Map Data (UniBuc)
         SeedCampusMapData(builder);
     }
 
@@ -583,7 +612,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             }
         };
         builder.Entity<Schedule>().HasData(schedules);
-        // 16. Configurare Achievement
+        // 17. Configurare Achievement
         builder.Entity<Achievement>(entity =>
         {
             entity.Property(a => a.Title)
@@ -599,7 +628,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .HasMaxLength(100);
         });
 
-        // 17. Configurare UserAchievement
+        // 18. Configurare UserAchievement
         builder.Entity<UserAchievement>(entity =>
         {
             entity.HasIndex(ua => new { ua.UserId, ua.AchievementId }).IsUnique();
@@ -615,7 +644,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // 18. Configurare UserActivity
+        // 19. Configurare UserActivity
         builder.Entity<UserActivity>(entity =>
         {
             entity.Property(a => a.ActivityType)
@@ -640,7 +669,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(a => new { a.UserId, a.CreatedAt });
         });
 
-        // 19. Seed Achievements
+        // 20. Seed Achievements
         builder.Entity<Achievement>().HasData(
             new Achievement
             {

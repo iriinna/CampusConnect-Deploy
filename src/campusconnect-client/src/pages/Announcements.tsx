@@ -213,7 +213,7 @@ const Announcements = () => {
                 </div>
               </div>
             </div>
-            { (isAdmin && isProfessor) && (
+            { (isAdmin || isProfessor) && (
               <Link to="/create-announcement">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button className="bg-white text-blue-600 hover:bg-white/90 shadow-lg">
