@@ -439,4 +439,148 @@ public async Task<bool> DeleteTaskAsync(int taskId, int userId)
             IsCompleted = savedTask?.IsCompleted ?? false
         };
     }
-}
+
+    // ============= Course Materials Methods =============
+    
+    public async Task<CourseMaterialDto> UploadCourseMaterialAsync(CreateCourseMaterialRequest request)
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null)
+            throw new UnauthorizedAccessException("User not authenticated");
+
+        var user = await _userManager.FindByIdAsync(userId.ToString()!);
+        var roles = await _userManager.GetRolesAsync(user!);
+        
+        if (!roles.Contains("Professor") && !roles.Contains("Admin"))
+            throw new UnauthorizedAccessException("Only professors can upload course materials");
+
+        var group = await _context.Groups.FindAsync(request.GroupId);
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        if (group.ProfessorId != userId.Value)
+            throw new UnauthorizedAccessException("Only the professor who created the group can upload materials");
+
+        // Validare fișier
+        if (request.File == null || request.File.Length == 0)
+            throw new InvalidOperationException("File is required");
+
+        // Salvare fișier (în producție ar fi într-un cloud storage)
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "course-materials");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var uniqueFileName = $"{Guid.NewGuid()}_{request.File.FileName}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await request.File.CopyToAsync(stream);
+        }
+
+        var fileUrl = $"/uploads/course-materials/{uniqueFileName}";
+        var fileExtension = Path.GetExtension(request.File.FileName).TrimStart('.');
+
+        var material = new CourseMaterial
+        {
+            Title = request.Title,
+            Description = request.Description,
+            FileName = request.File.FileName,
+            FileUrl = fileUrl,
+            FileType = fileExtension,
+            FileSize = request.File.Length,
+            GroupId = request.GroupId,
+            UploadedByProfessorId = userId.Value,
+            UploadedAt = DateTime.UtcNow
+        };
+
+        _context.CourseMaterials.Add(material);
+        await _context.SaveChangesAsync();
+
+        var professor = await _context.Users.FindAsync(userId.Value);
+        
+        return new CourseMaterialDto
+        {
+            Id = material.Id,
+            Title = material.Title,
+            Description = material.Description,
+            FileName = material.FileName,
+            FileUrl = material.FileUrl,
+            FileType = material.FileType,
+            FileSize = material.FileSize,
+            GroupId = material.GroupId,
+            UploadedByProfessorId = material.UploadedByProfessorId,
+            UploadedByProfessorName = $"{professor!.FirstName} {professor.LastName}",
+            UploadedAt = material.UploadedAt
+        };
+    }
+
+    public async Task<IEnumerable<CourseMaterialDto>> GetGroupMaterialsAsync(int groupId)
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null)
+            throw new UnauthorizedAccessException("User not authenticated");
+
+        var group = await _context.Groups
+            .Include(g => g.Members)
+            .FirstOrDefaultAsync(g => g.Id == groupId);
+
+        if (group == null)
+            throw new InvalidOperationException("Group not found");
+
+        // Verifică dacă userul este membru sau profesor al grupului
+        var isMember = group.Members.Any(m => m.UserId == userId.Value);
+        var isProfessor = group.ProfessorId == userId.Value;
+
+        if (!isMember && !isProfessor)
+            throw new UnauthorizedAccessException("You must be a member of this group to view materials");
+
+        var materials = await _context.CourseMaterials
+            .Include(cm => cm.UploadedByProfessor)
+            .Where(cm => cm.GroupId == groupId)
+            .OrderByDescending(cm => cm.UploadedAt)
+            .ToListAsync();
+
+        return materials.Select(m => new CourseMaterialDto
+        {
+            Id = m.Id,
+            Title = m.Title,
+            Description = m.Description,
+            FileName = m.FileName,
+            FileUrl = m.FileUrl,
+            FileType = m.FileType,
+            FileSize = m.FileSize,
+            GroupId = m.GroupId,
+            UploadedByProfessorId = m.UploadedByProfessorId,
+            UploadedByProfessorName = $"{m.UploadedByProfessor.FirstName} {m.UploadedByProfessor.LastName}",
+            UploadedAt = m.UploadedAt
+        });
+    }
+
+    public async Task<bool> DeleteCourseMaterialAsync(int materialId)
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null)
+            throw new UnauthorizedAccessException("User not authenticated");
+
+        var material = await _context.CourseMaterials
+            .Include(cm => cm.Group)
+            .FirstOrDefaultAsync(cm => cm.Id == materialId);
+
+        if (material == null)
+            throw new InvalidOperationException("Course material not found");
+
+        if (material.UploadedByProfessorId != userId.Value)
+            throw new UnauthorizedAccessException("Only the professor who uploaded this material can delete it");
+
+        // Șterge fișierul fizic
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", material.FileUrl.TrimStart('/'));
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        _context.CourseMaterials.Remove(material);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }}

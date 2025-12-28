@@ -10,7 +10,8 @@ import {
   LogOut,
   Menu,
   X,
-  MapPin
+  MapPin,
+  BookOpen
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
@@ -51,6 +52,7 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Groups', path: '/groups', icon: Users },
     { name: 'My Tasks', path: '/my-tasks', icon: CheckSquare },
     { name: 'Campus Map', path: '/campus-map', icon: MapPin },
+    { name: 'Library', path: '/library', icon: BookOpen },
   ];
 
   const isActive = (path: string) => location.pathname === path;

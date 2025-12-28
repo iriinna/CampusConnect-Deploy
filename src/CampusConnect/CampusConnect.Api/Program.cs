@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using CampusConnect.Application.Interfaces;
 using CampusConnect.Application.Services;
 using CampusConnect.Domain.Entities;
@@ -9,50 +10,46 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 const string CorsPolicy = "Frontends";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(CorsPolicy, policy =>
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:5174")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            );
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
-// Database
+// ✅ DB (o singură dată) + migrations assembly
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("CampusConnect.Infrastructure")
+    ));
 
 // Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>(options =>
 {
-    // Password settings
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
 
-    // Email confirmation required
     options.SignIn.RequireConfirmedEmail = true;
-
-    // User settings
     options.User.RequireUniqueEmail = true;
 
-    // Lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
     options.Lockout.MaxFailedAccessAttempts = 5;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// JWT Authentication
+// JWT
 var jwtSecret = builder.Configuration["JwtSettings:Secret"]!;
 var jwtIssuer = builder.Configuration["JwtSettings:Issuer"]!;
 var jwtAudience = builder.Configuration["JwtSettings:Audience"]!;
@@ -76,14 +73,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//migratiile in .Infrastructure
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("CampusConnect.Infrastructure") // aici specifici proiectul Infrastructure
-    ));
-
-
 // Services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -102,25 +91,57 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
+
+// ✅ Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "CampusConnect API", Version = "v1" });
+
+    // (optional) but very useful: authorize in swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token like: Bearer {token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
 var app = builder.Build();
 
-// app.UseHttpsRedirection();
-app.UseCors(CorsPolicy);  
+// Swagger 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+//wwwroot
+app.UseStaticFiles();
+
+app.UseCors(CorsPolicy);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.Run();
-
-static async Task SeedRolesAsync(RoleManager<IdentityRole<int>> roleManager)
-{
-    string[] roleNames = { "Admin", "User" };
-
-    foreach (var roleName in roleNames)
-    {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-        }
-    }
-}

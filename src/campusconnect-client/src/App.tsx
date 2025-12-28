@@ -24,6 +24,8 @@ import ActivityHistory from './pages/ActivityHistory';
 import BookingRequests from './pages/BookingRequests/BookingRequests';
 import MyBookingRequests from './pages/MyBookingRequests/MyBookingRequests';
 import Notifications from './pages/Notifications';
+import Library from './pages/Library/Library';
+
 
 function App() {
   return (
@@ -55,6 +57,7 @@ function App() {
           <Route path="/booking-requests" element={<BookingRequests />} />
           <Route path="/my-booking-requests" element={<MyBookingRequests />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/library" element={<Library />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

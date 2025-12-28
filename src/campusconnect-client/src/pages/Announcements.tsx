@@ -13,13 +13,15 @@ import {
   BookmarkPlus,
   BookmarkCheck,
   Sparkles,
+  Forward,
+  X,
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import '../index.css';
 
 const API_BASE_URL = 'http://localhost:5099/api';
@@ -55,11 +57,14 @@ const Announcements = () => {
   const [savedIds, setSavedIds] = useState<number[]>([]);
   const [category, setCategory] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [forwardModalOpen, setForwardModalOpen] = useState(false);
+  const [selectedAnnouncementId, setSelectedAnnouncementId] = useState<number | null>(null);
+  const [professorGroups, setProfessorGroups] = useState<any[]>([]);
+  const [forwardingToGroup, setForwardingToGroup] = useState<number | null>(null);
   
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
       const userString = localStorage.getItem('user');
@@ -169,6 +174,62 @@ const Announcements = () => {
       }
     } catch (err) {
       console.error('Delete error:', err);
+    }
+  };
+
+  const handleOpenForwardModal = async (announcementId: number) => {
+    setSelectedAnnouncementId(announcementId);
+    
+    // Fetch professor's groups (groups created by the professor)
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`${API_BASE_URL}/group/created-by-me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const groups = await response.json();
+        setProfessorGroups(groups);
+        setForwardModalOpen(true);
+      } else {
+        console.error('Failed to fetch groups:', response.status);
+        setForwardModalOpen(true); // Still open modal to show empty state
+      }
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+      setForwardModalOpen(true); // Still open modal to show empty state
+    }
+  };
+
+  const handleForwardToGroup = async (groupId: number) => {
+    if (!selectedAnnouncementId) return;
+    
+    setForwardingToGroup(groupId);
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/group/${groupId}/forward-announcement/${selectedAnnouncementId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        alert('Announcement forwarded successfully!');
+        setForwardModalOpen(false);
+        setSelectedAnnouncementId(null);
+      } else {
+        alert('Failed to forward announcement');
+      }
+    } catch (error) {
+      console.error('Error forwarding announcement:', error);
+      alert('Error forwarding announcement');
+    } finally {
+      setForwardingToGroup(null);
     }
   };
 
@@ -326,6 +387,18 @@ const Announcements = () => {
                           </Badge>
 
                           <div className="flex items-center gap-2">
+                            {isProfessor && (
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => handleOpenForwardModal(announcement.id)}
+                                className="p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/20 transition-colors"
+                                title="Forward to group"
+                              >
+                                <Forward className="h-5 w-5 text-blue-500" />
+                              </motion.button>
+                            )}
+                            
                             <motion.button
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
@@ -382,6 +455,75 @@ const Announcements = () => {
             </AnimatePresence>
           </div>
         )}
+
+        {/* Forward Modal */}
+        <AnimatePresence>
+          {forwardModalOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+              onClick={() => setForwardModalOpen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-background rounded-xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-hidden"
+              >
+                <div className="p-6 border-b flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Forward to Group</h2>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setForwardModalOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto max-h-[60vh]">
+                  {professorGroups.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">
+                      You don't have any groups yet
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {professorGroups.map((group) => (
+                        <motion.div
+                          key={group.id}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Card 
+                            className="cursor-pointer hover:border-primary transition-colors"
+                            onClick={() => handleForwardToGroup(group.id)}
+                          >
+                            <CardContent className="pt-6">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <h3 className="font-semibold">{group.name}</h3>
+                                  <p className="text-sm text-muted-foreground">{group.subject}</p>
+                                </div>
+                                {forwardingToGroup === group.id ? (
+                                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                                ) : (
+                                  <Forward className="h-5 w-5 text-primary" />
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </Layout>
   );

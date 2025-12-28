@@ -45,6 +45,7 @@ const Navbar = () => {
           <option value="events">Events</option>
           <option value="announcements">Announcements</option>
           <option value="users">Users</option>
+          <option value="library">Library</option>
         </select>
         
         <input 

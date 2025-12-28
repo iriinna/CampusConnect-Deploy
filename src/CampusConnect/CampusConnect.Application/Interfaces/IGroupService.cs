@@ -28,4 +28,9 @@ public interface IGroupService
     Task<bool> MarkTaskAsCompletedAsync(int taskId);
     Task<bool> MarkTaskAsIncompletedAsync(int taskId);
     Task<IEnumerable<SavedTaskResponse>> GetMySavedTasksAsync();
+    
+    // Course Materials (doar profesorul care a creat grupul poate urca materiale)
+    Task<CourseMaterialDto> UploadCourseMaterialAsync(CreateCourseMaterialRequest request);
+    Task<IEnumerable<CourseMaterialDto>> GetGroupMaterialsAsync(int groupId);
+    Task<bool> DeleteCourseMaterialAsync(int materialId);
 }
