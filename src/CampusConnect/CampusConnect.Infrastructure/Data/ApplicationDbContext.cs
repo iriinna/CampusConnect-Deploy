@@ -34,6 +34,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<UserActivity> UserActivities { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Grade> Grades { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -100,8 +102,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
         var admin1 = CreateUser(10, "admin1@unibuc.ro", "Andrei", "Popescu", hasher);
         var admin2 = CreateUser(11, "admin2@unibuc.ro", "Maria", "Ionescu", hasher);
-        var user1 = CreateUser(12, "student1@s.unibuc.ro", "Ion", "Vasilescu", hasher);
-        var user2 = CreateUser(13, "student2@s.unibuc.ro", "Elena", "Georgescu", hasher);
+        var user1 = CreateStudent(12, "student1@s.unibuc.ro", "Ion", "Vasilescu", "STD2024001", hasher);
+        var user2 = CreateStudent(13, "student2@s.unibuc.ro", "Elena", "Georgescu", "STD2024002", hasher);
         var professor1 = CreateUser(14, "anastasia.ispas@s.unibuc.ro", "Anastasia", "Ispas", hasher);
         var professor2 = CreateUser(15, "irina-maria.istrate@s.unibuc.ro", "Irina-Maria", "Istrate", hasher);
 
@@ -744,6 +746,45 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 IsActive = true
             }
         );
+
+        // 20. Configure Subject
+        builder.Entity<Subject>(entity =>
+        {
+            entity.Property(s => s.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(s => s.Description)
+                .HasMaxLength(1000);
+
+            entity.HasOne(s => s.Professor)
+                .WithMany()
+                .HasForeignKey(s => s.ProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // 21. Configure Grade
+        builder.Entity<Grade>(entity =>
+        {
+            entity.Property(g => g.Value)
+                .IsRequired()
+                .HasPrecision(5, 2);
+
+            entity.Property(g => g.Comments)
+                .HasMaxLength(500);
+
+            entity.HasOne(g => g.Subject)
+                .WithMany(s => s.Grades)
+                .HasForeignKey(g => g.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(g => g.Student)
+                .WithMany()
+                .HasForeignKey(g => g.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(g => new { g.SubjectId, g.StudentId });
+        });
     }
 
     private static ApplicationUser CreateUser(int id, string email, string firstName, string lastName, PasswordHasher<ApplicationUser> hasher)
@@ -757,6 +798,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             NormalizedEmail = email.ToUpper(),
             FirstName = firstName,
             LastName = lastName,
+            EmailConfirmed = true,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            ConcurrencyStamp = Guid.NewGuid().ToString(),
+            CreatedAt = DateTime.UtcNow
+        };
+        user.PasswordHash = hasher.HashPassword(user, "Parola@123");
+        return user;
+    }
+
+    private static ApplicationUser CreateStudent(int id, string email, string firstName, string lastName, string studentId, PasswordHasher<ApplicationUser> hasher)
+    {
+        var user = new ApplicationUser
+        {
+            Id = id,
+            UserName = email,
+            NormalizedUserName = email.ToUpper(),
+            Email = email,
+            NormalizedEmail = email.ToUpper(),
+            FirstName = firstName,
+            LastName = lastName,
+            StudentId = studentId,
             EmailConfirmed = true,
             SecurityStamp = Guid.NewGuid().ToString(),
             ConcurrencyStamp = Guid.NewGuid().ToString(),

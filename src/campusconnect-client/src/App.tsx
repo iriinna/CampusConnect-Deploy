@@ -21,6 +21,9 @@ import CampusMap from './pages/CampusMap/CampusMap';
 import AllAchievements from './pages/Achievements/AllAchievements';
 import ManageAchievements from './pages/Achievements/ManageAchievements';
 import ActivityHistory from './pages/ActivityHistory';
+import MySubjects from './pages/Subjects/MySubjects';
+import SubjectDetails from './pages/Subjects/SubjectDetails';
+import MyGrades from './pages/Grades/MyGrades';
 
 function App() {
   return (
@@ -49,6 +52,9 @@ function App() {
           <Route path="/achievements" element={<AllAchievements />} />
           <Route path="/manage-achievements" element={<ManageAchievements />} />
           <Route path="/activity-history" element={<ActivityHistory />} />
+          <Route path="/subjects" element={<MySubjects />} />
+          <Route path="/subjects/:id" element={<SubjectDetails />} />
+          <Route path="/my-grades" element={<MyGrades />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
