@@ -533,15 +533,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
             // FMI (Building 13)
             new Room { Id = 121, Name = "Amf. Spiru Haret", BuildingId = 13, Floor = "Parter", Capacity = 300, Equipment = "Proiector, Sistem audio premium", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 122, Name = "Amf. Gheorghe Țițeica", BuildingId = 13, Floor = "Parter", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 123, Name = "Amf. Simion Stoilow", BuildingId = 13, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 124, Name = "Amf. Dimitrie Pompeiu", BuildingId = 13, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 122, Name = "Amf. Gheorghe Țițeica", BuildingId = 13, Floor = "Etaj 3", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 123, Name = "Amf. Simion Stoilow", BuildingId = 13, Floor = "Etaj 1", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 124, Name = "Amf. Dimitrie Pompeiu", BuildingId = 13, Floor = "Etaj 2", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 125, Name = "Lab FMI 1", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 126, Name = "Lab FMI 2", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 127, Name = "Lab FMI 3", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 128, Name = "S101", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 129, Name = "S102", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 130, Name = "S103", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 161, Name = "S1", BuildingId = 13, Floor = "Parter", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 162, Name = "S3", BuildingId = 13, Floor = "Parter", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 163, Name = "S201", BuildingId = 13, Floor = "Etaj 2", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
 
             // FPSE (Building 14)
             new Room { Id = 131, Name = "Psi101", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },

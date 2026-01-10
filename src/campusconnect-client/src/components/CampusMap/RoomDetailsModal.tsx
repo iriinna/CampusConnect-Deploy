@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { X, Clock, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
@@ -6,6 +6,13 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { campusMapApi } from '../../services/campusMapApi';
 import type { RoomDetails, Schedule } from '../../services/campusMapApi';
+
+// ✅ path corect (RoomDetailsModal.tsx e în src/components/CampusMap/)
+import { FloorPlanViewer } from './FloorPlans/FloorPlanViewer';
+import { FMI_PARTER } from '../../data/floorplans/fmi/parter';
+import { FMI_ETAJ1 } from "../../data/floorplans/fmi/etaj1";
+
+type SimpleRoom = { name: string; currentStatus: string };
 
 interface Props {
   roomId: number;
@@ -17,12 +24,46 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+  // ✅ rooms din clădire, pentru colorare în schiță
+  const [buildingRooms, setBuildingRooms] = useState<SimpleRoom[]>([]);
+  const [loadingBuildingRooms, setLoadingBuildingRooms] = useState(false);
+
   useEffect(() => {
     loadRoomDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
+
+  // ✅ când avem room, încărcăm rooms din aceeași clădire
+  useEffect(() => {
+    if (!room) return;
+
+    const loadBuildingRooms = async () => {
+      // dacă nu ai buildingId în RoomDetails, vezi fallback-ul de mai jos
+      const buildingId = (room as any).buildingId as number | undefined;
+      if (!buildingId) return;
+
+      try {
+        setLoadingBuildingRooms(true);
+        const data = await campusMapApi.getRoomsByBuilding(buildingId);
+
+        // data are probabil tip Room[] cu name + currentStatus
+        setBuildingRooms(
+          data.map((r: any) => ({ name: r.name, currentStatus: r.currentStatus }))
+        );
+      } catch (e) {
+        console.error('Error loading building rooms:', e);
+        setBuildingRooms([]);
+      } finally {
+        setLoadingBuildingRooms(false);
+      }
+    };
+
+    loadBuildingRooms();
+  }, [room]);
 
   const loadRoomDetails = async () => {
     try {
+      setLoading(true);
       const data = await campusMapApi.getRoomDetails(roomId);
       setRoom(data);
     } catch (error) {
@@ -35,13 +76,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
   const loadSchedulesForDate = async (date: Date | string) => {
     if (!room) return;
     try {
-      console.log('Loading schedules for date:', typeof date === 'string' ? date : date.toISOString());
       const schedules = await campusMapApi.getRoomSchedules(roomId, date);
-      console.log('Loaded schedules:', schedules);
-      console.log('Number of schedules:', schedules.length);
-      schedules.forEach(s => {
-        console.log(`- ${s.title} (ID: ${s.id}, ${new Date(s.startTime).toLocaleString()} - ${new Date(s.endTime).toLocaleString()})`);
-      });
       setRoom({ ...room, todaySchedules: schedules });
     } catch (error) {
       console.error('Error loading schedules:', error);
@@ -65,6 +100,10 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
       default: return 'Necunoscut';
     }
   };
+
+  // ✅ afișează schița doar pentru FMI (BuildingId 13) + Parter
+  const buildingId = (room as any)?.buildingId as number | undefined;
+  const showFmiParterPlan = !!room && buildingId === 13 && room.floor === 'Parter';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -123,6 +162,47 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                   </Badge>
                 </div>
 
+                {/* ✅ Floorplan FMI - Parter */}
+                {showFmiParterPlan && (
+                  <div className="space-y-2">
+                    <h3 className="font-semibold">Hartă (FMI - Parter)</h3>
+
+                    {loadingBuildingRooms ? (
+                      <div className="text-sm text-muted-foreground">Se încarcă harta...</div>
+                    ) : (
+                      <FloorPlanViewer
+                        config={FMI_PARTER}
+                        rooms={buildingRooms}
+                        selectedRoomName={room.name}
+                      />
+                    )}
+
+                    <p className="text-xs text-muted-foreground">
+                      Sala selectată este evidențiată cu mov. Culorile reflectă statusul (liber/ocupat/în curând).
+                    </p>
+                  </div>
+                )}
+
+                {/* Floorplan FMI - Etaj 1 */}
+                  {room.floor === "Etaj 1" && (
+                    <div className="space-y-2">
+                      <h3 className="font-semibold">Hartă (Etaj 1)</h3>
+
+                      <div className="rounded-lg border overflow-hidden">
+                        <FloorPlanViewer
+                          config={FMI_ETAJ1}
+                          rooms={buildingRooms}
+                          selectedRoomName={room.name}
+                        />
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        Sala selectată este evidențiată pe plan.
+                      </p>
+                    </div>
+                  )}
+
+
                 {/* Today's Schedule */}
                 <div>
                   <h3 className="font-semibold mb-3">
@@ -143,17 +223,17 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                   )}
                 </div>
 
-                {/* Date Selector - Available for everyone */}
+                {/* Date Selector */}
                 <div>
                   <h3 className="font-semibold mb-3">Vizualizare Program pentru Altă Dată</h3>
                   <input
                     type="date"
                     value={`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`}
                     onChange={(e) => {
-                      const dateString = e.target.value; // YYYY-MM-DD format
+                      const dateString = e.target.value; // YYYY-MM-DD
                       const date = new Date(dateString + 'T00:00:00');
                       setSelectedDate(date);
-                      loadSchedulesForDate(dateString); // Pass string directly to avoid timezone conversion
+                      loadSchedulesForDate(dateString);
                     }}
                     className="w-full px-3 py-2 border border-input rounded-md bg-background"
                   />
@@ -170,9 +250,11 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 };
 
 const ScheduleItem = ({ schedule }: { schedule: Schedule }) => (
-  <div className={`p-3 rounded-lg border-2 ${
-    schedule.isCurrentlyActive ? 'border-primary bg-primary/10' : 'border-border'
-  }`}>
+  <div
+    className={`p-3 rounded-lg border-2 ${
+      schedule.isCurrentlyActive ? 'border-primary bg-primary/10' : 'border-border'
+    }`}
+  >
     <div className="flex items-start justify-between">
       <div className="flex-1">
         <h4 className="font-semibold text-sm">{schedule.title}</h4>
