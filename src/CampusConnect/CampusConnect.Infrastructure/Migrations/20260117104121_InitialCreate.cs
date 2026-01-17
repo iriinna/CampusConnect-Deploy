@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CampusConnect.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrationComplete : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,6 +79,19 @@ namespace CampusConnect.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CategorySubscriptions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LibraryFolders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LibraryFolders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,6 +183,33 @@ namespace CampusConnect.Infrastructure.Migrations
                         principalTable: "Buildings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LibraryItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StoredFileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OriginalFileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SizeBytes = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedByUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LibraryItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LibraryItems_LibraryFolders_FolderId",
+                        column: x => x.FolderId,
+                        principalTable: "LibraryFolders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -533,6 +573,73 @@ namespace CampusConnect.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CourseMaterials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FileUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    UploadedByProfessorId = table.Column<int>(type: "int", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseMaterials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CourseMaterials_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseMaterials_Users_UploadedByProfessorId",
+                        column: x => x.UploadedByProfessorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupAnnouncements",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    AnnouncementId = table.Column<int>(type: "int", nullable: false),
+                    ForwardedByProfessorId = table.Column<int>(type: "int", nullable: false),
+                    ForwardedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupAnnouncements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupAnnouncements_Announcements_AnnouncementId",
+                        column: x => x.AnnouncementId,
+                        principalTable: "Announcements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupAnnouncements_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupAnnouncements_Users_ForwardedByProfessorId",
+                        column: x => x.ForwardedByProfessorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GroupMembers",
                 columns: table => new
                 {
@@ -622,11 +729,11 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "Icon", "IsActive", "Title" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(2340), "Complete your first task", "🎯", true, "First Steps" },
-                    { 2, new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3347), "Complete 5 tasks", "⭐", true, "Task Master" },
-                    { 3, new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3351), "Complete 10 tasks", "🏆", true, "Task Legend" },
-                    { 4, new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3353), "Join your first group", "👥", true, "Team Player" },
-                    { 5, new DateTime(2025, 12, 26, 11, 42, 46, 275, DateTimeKind.Utc).AddTicks(3356), "Attend your first event", "🦋", true, "Social Butterfly" }
+                    { 1, new DateTime(2026, 1, 17, 10, 41, 20, 702, DateTimeKind.Utc).AddTicks(9323), "Complete your first task", "🎯", true, "First Steps" },
+                    { 2, new DateTime(2026, 1, 17, 10, 41, 20, 702, DateTimeKind.Utc).AddTicks(9572), "Complete 5 tasks", "⭐", true, "Task Master" },
+                    { 3, new DateTime(2026, 1, 17, 10, 41, 20, 702, DateTimeKind.Utc).AddTicks(9575), "Complete 10 tasks", "🏆", true, "Task Legend" },
+                    { 4, new DateTime(2026, 1, 17, 10, 41, 20, 702, DateTimeKind.Utc).AddTicks(9577), "Join your first group", "👥", true, "Team Player" },
+                    { 5, new DateTime(2026, 1, 17, 10, 41, 20, 702, DateTimeKind.Utc).AddTicks(9578), "Attend your first event", "🦋", true, "Social Butterfly" }
                 });
 
             migrationBuilder.InsertData(
@@ -634,22 +741,22 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "Address", "CreatedAt", "Description", "GeoJsonPolygon", "IsActive", "Latitude", "Longitude", "Name" },
                 values: new object[,]
                 {
-                    { 1, "B-dul Regina Elisabeta nr. 4-12, etaj 1, sector 3, București", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7260), "FAA - Sediu în clădirea Chimiei", null, true, 44.434719999999999, 26.100719999999999, "Facultatea de Administrație și Afaceri" },
-                    { 2, "Splaiul Independenței nr. 91-95, sector 5, București, 050095", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7734), "Facultatea de Biologie", null, true, 44.435299999999998, 26.06326, "Facultatea de Biologie" },
-                    { 3, "Bd. Regina Elisabeta nr. 4-12, sector 3, București, 030018", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7738), "Facultatea de Chimie", null, true, 44.434719999999999, 26.100719999999999, "Facultatea de Chimie" },
-                    { 4, "Bd. Mihail Kogălniceanu nr. 36-46, sector 5, București, 050107", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7741), "Facultatea de Drept", null, true, 44.435240999999998, 26.082077000000002, "Facultatea de Drept" },
-                    { 5, "Splaiul Independenței nr. 204, sector 6, București, 060024", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7744), "Facultatea de Filosofie", null, true, 44.434710000000003, 26.04824, "Facultatea de Filosofie" },
-                    { 6, "Str. Atomiștilor nr. 405, Măgurele, Ilfov, 077125", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7746), "Facultatea de Fizică - Campus Măgurele", null, true, 44.34834, 26.031279999999999, "Facultatea de Fizică" },
-                    { 7, "Bd. Nicolae Bălcescu nr. 1, sector 1, București, 010041", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7749), "Facultatea de Geografie", null, true, 44.436540000000001, 26.101890000000001, "Facultatea de Geografie" },
-                    { 8, "Str. Traian Vuia nr. 6, sector 2, București, 020956", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7751), "Facultatea de Geologie și Geofizică", null, true, 44.45167, 26.07901, "Facultatea de Geologie și Geofizică" },
-                    { 9, "Str. Academiei nr. 14, București", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7754), "Facultatea de Istorie", null, true, 44.435839999999999, 26.096830000000001, "Facultatea de Istorie" },
-                    { 10, "Bd. Iuliu Maniu nr. 1-3, Complex Leu, Corp A, etaj 6, sector 6, București", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7758), "FJSC - Complex Leu", null, true, 44.43891, 26.043209999999998, "Facultatea de Jurnalism și Științele Comunicării" },
-                    { 11, "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7761), "FLLS", null, true, 44.435830000000003, 26.100809999999999, "Facultatea de Limbi și Literaturi Străine" },
-                    { 12, "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7777), "Facultatea de Litere", null, true, 44.435830000000003, 26.100809999999999, "Facultatea de Litere" },
-                    { 13, "Str. Academiei nr. 14, sector 1, București, 010014", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7779), "FMI", null, true, 44.435839999999999, 26.096830000000001, "Facultatea de Matematică și Informatică" },
-                    { 14, "Șos. Panduri nr. 90-91, București", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7851), "FPSE", null, true, 44.432209999999998, 26.068919999999999, "Facultatea de Psihologie și Științele Educației" },
-                    { 15, "Bd. Schitu Măgureanu nr. 9, București", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7856), "SAS", null, true, 44.433419999999998, 26.09421, "Facultatea de Sociologie și Asistență Socială" },
-                    { 16, "Calea Plevnei nr. 59, București, 010223", new DateTime(2025, 12, 26, 11, 42, 46, 257, DateTimeKind.Utc).AddTicks(7858), "FSP", null, true, 44.445210000000003, 26.083919999999999, "Facultatea de Științe Politice" }
+                    { 1, "B-dul Regina Elisabeta nr. 4-12, etaj 1, sector 3, București", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3251), "FAA - Sediu în clădirea Chimiei", null, true, 44.434719999999999, 26.100719999999999, "Facultatea de Administrație și Afaceri" },
+                    { 2, "Splaiul Independenței nr. 91-95, sector 5, București, 050095", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3565), "Facultatea de Biologie", null, true, 44.435299999999998, 26.06326, "Facultatea de Biologie" },
+                    { 3, "Bd. Regina Elisabeta nr. 4-12, sector 3, București, 030018", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3569), "Facultatea de Chimie", null, true, 44.434719999999999, 26.100719999999999, "Facultatea de Chimie" },
+                    { 4, "Bd. Mihail Kogălniceanu nr. 36-46, sector 5, București, 050107", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3571), "Facultatea de Drept", null, true, 44.435240999999998, 26.082077000000002, "Facultatea de Drept" },
+                    { 5, "Splaiul Independenței nr. 204, sector 6, București, 060024", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3573), "Facultatea de Filosofie", null, true, 44.434710000000003, 26.04824, "Facultatea de Filosofie" },
+                    { 6, "Str. Atomiștilor nr. 405, Măgurele, Ilfov, 077125", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3576), "Facultatea de Fizică - Campus Măgurele", null, true, 44.34834, 26.031279999999999, "Facultatea de Fizică" },
+                    { 7, "Bd. Nicolae Bălcescu nr. 1, sector 1, București, 010041", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3578), "Facultatea de Geografie", null, true, 44.436540000000001, 26.101890000000001, "Facultatea de Geografie" },
+                    { 8, "Str. Traian Vuia nr. 6, sector 2, București, 020956", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3580), "Facultatea de Geologie și Geofizică", null, true, 44.45167, 26.07901, "Facultatea de Geologie și Geofizică" },
+                    { 9, "Str. Academiei nr. 14, București", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3582), "Facultatea de Istorie", null, true, 44.435839999999999, 26.096830000000001, "Facultatea de Istorie" },
+                    { 10, "Bd. Iuliu Maniu nr. 1-3, Complex Leu, Corp A, etaj 6, sector 6, București", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3584), "FJSC - Complex Leu", null, true, 44.43891, 26.043209999999998, "Facultatea de Jurnalism și Științele Comunicării" },
+                    { 11, "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3585), "FLLS", null, true, 44.435830000000003, 26.100809999999999, "Facultatea de Limbi și Literaturi Străine" },
+                    { 12, "Str. Edgar Quinet nr. 5-7, sector 1, București, 010017", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3587), "Facultatea de Litere", null, true, 44.435830000000003, 26.100809999999999, "Facultatea de Litere" },
+                    { 13, "Str. Academiei nr. 14, sector 1, București, 010014", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3619), "FMI", null, true, 44.435839999999999, 26.096830000000001, "Facultatea de Matematică și Informatică" },
+                    { 14, "Șos. Panduri nr. 90-91, București", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3621), "FPSE", null, true, 44.432209999999998, 26.068919999999999, "Facultatea de Psihologie și Științele Educației" },
+                    { 15, "Bd. Schitu Măgureanu nr. 9, București", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3638), "SAS", null, true, 44.433419999999998, 26.09421, "Facultatea de Sociologie și Asistență Socială" },
+                    { 16, "Calea Plevnei nr. 59, București, 010223", new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(3640), "FSP", null, true, 44.445210000000003, 26.083919999999999, "Facultatea de Științe Politice" }
                 });
 
             migrationBuilder.InsertData(
@@ -657,9 +764,9 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "b891f806-034a-406d-b6e2-6378892d6ef0", "Admin", "ADMIN" },
-                    { 2, "f14ad3bf-c7c5-4ac9-8acf-e2188b787b30", "User", "USER" },
-                    { 3, "13b14d11-aec1-4f94-8e16-aa38dee9570a", "Professor", "PROFESSOR" }
+                    { 1, "d088f62d-365c-451a-a988-2b79bd48fd72", "Admin", "ADMIN" },
+                    { 2, "9433128e-0e72-4f8b-923c-403773fe467b", "User", "USER" },
+                    { 3, "d05db648-3e33-4df8-85fd-70eb32a84418", "Professor", "PROFESSOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -667,12 +774,12 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastLoginAt", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePictureUrl", "SecurityStamp", "StudentId", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 10, 0, "2ebda6f2-cb17-44c2-b3b6-7c170e66b2a1", new DateTime(2025, 12, 26, 11, 42, 45, 521, DateTimeKind.Utc).AddTicks(3208), null, "admin1@unibuc.ro", true, "Andrei", null, "Popescu", false, null, "ADMIN1@UNIBUC.RO", "ADMIN1@UNIBUC.RO", "AQAAAAIAAYagAAAAELRGVcdyMYzzE7Vy+sawUTDCRcZzYPL4UxrU1LPRoYn0O/5j5nQ2UelOQtNU59yhwg==", null, false, null, "3c3b2990-6f80-42d0-8050-0cb490260585", null, false, "admin1@unibuc.ro" },
-                    { 11, 0, "869a3aed-3ca0-4a13-aeab-068299293049", new DateTime(2025, 12, 26, 11, 42, 45, 634, DateTimeKind.Utc).AddTicks(60), null, "admin2@unibuc.ro", true, "Maria", null, "Ionescu", false, null, "ADMIN2@UNIBUC.RO", "ADMIN2@UNIBUC.RO", "AQAAAAIAAYagAAAAEBuyr3Ls2h9iiwi8LHUfAtTFYAWvBWdT7Zw+Qh35m5LMMQFp392iDS8jW2YXSHEvpw==", null, false, null, "67e3d467-715b-4a36-b59c-6f3805dc6f90", null, false, "admin2@unibuc.ro" },
-                    { 12, 0, "3427a7e4-93a8-451e-8d35-bfdc51349cbf", new DateTime(2025, 12, 26, 11, 42, 45, 753, DateTimeKind.Utc).AddTicks(1938), null, "student1@s.unibuc.ro", true, "Ion", null, "Vasilescu", false, null, "STUDENT1@S.UNIBUC.RO", "STUDENT1@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEGbz9Mez3Mfkm0Th/CZiR+t1lFFFgVPyzE1iC5G35fHEtKkCrmGVfNASZK5Ep+ypsw==", null, false, null, "ec42f9d1-d707-4e9e-a1c0-391663e81661", null, false, "student1@s.unibuc.ro" },
-                    { 13, 0, "8c314594-26a2-4c94-be2d-778120f35b7f", new DateTime(2025, 12, 26, 11, 42, 45, 870, DateTimeKind.Utc).AddTicks(868), null, "student2@s.unibuc.ro", true, "Elena", null, "Georgescu", false, null, "STUDENT2@S.UNIBUC.RO", "STUDENT2@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEBAQ+Qn1JYKx9BtrLLDSRrEo2teilUPs0xWv4kFS/isHtRi0uvnkuDyEgyZUgz8H9g==", null, false, null, "da2e24ed-5da8-418e-a906-b22f897d8cad", null, false, "student2@s.unibuc.ro" },
-                    { 14, 0, "b56685db-cd02-4edf-b77a-66e91f484877", new DateTime(2025, 12, 26, 11, 42, 45, 979, DateTimeKind.Utc).AddTicks(7826), null, "anastasia.ispas@s.unibuc.ro", true, "Anastasia", null, "Ispas", false, null, "ANASTASIA.ISPAS@S.UNIBUC.RO", "ANASTASIA.ISPAS@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEGBDLr934Np/UDRj/Axnjb7ZDBQcaucgHuXr7HzIaL+/457Q4GVhhIHX5TaGo1ZDoQ==", null, false, null, "afe917f3-1d0e-4581-ad3f-b834efad95a7", null, false, "anastasia.ispas@s.unibuc.ro" },
-                    { 15, 0, "f1d42db5-d067-4941-a9da-cc1569c1bd19", new DateTime(2025, 12, 26, 11, 42, 46, 91, DateTimeKind.Utc).AddTicks(7126), null, "irina-maria.istrate@s.unibuc.ro", true, "Irina-Maria", null, "Istrate", false, null, "IRINA-MARIA.ISTRATE@S.UNIBUC.RO", "IRINA-MARIA.ISTRATE@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEJk7ruoupOHxROkpy4jVniJ8uWS93aqqylZ+Chw6TY5xSxfPWlgXyADK5wsY1Elijw==", null, false, null, "dfe2da06-2483-4d08-afd4-4d8d6c4af291", null, false, "irina-maria.istrate@s.unibuc.ro" }
+                    { 10, 0, "ae275cb8-1251-4b20-8071-8df20f9b0c47", new DateTime(2026, 1, 17, 10, 41, 20, 384, DateTimeKind.Utc).AddTicks(8578), null, "admin1@unibuc.ro", true, "Andrei", null, "Popescu", false, null, "ADMIN1@UNIBUC.RO", "ADMIN1@UNIBUC.RO", "AQAAAAIAAYagAAAAEO3iK7oax/2VOioJuLWKRnDboHsUYT/nmug2UG45yfcT3fVj9C0aTP+JaHN5YoO0oA==", null, false, null, "9a3562e1-6cdd-4d0a-af87-c6162613c228", null, false, "admin1@unibuc.ro" },
+                    { 11, 0, "1a685c9d-5ed8-4728-bdc3-874df61e0bac", new DateTime(2026, 1, 17, 10, 41, 20, 430, DateTimeKind.Utc).AddTicks(9052), null, "admin2@unibuc.ro", true, "Maria", null, "Ionescu", false, null, "ADMIN2@UNIBUC.RO", "ADMIN2@UNIBUC.RO", "AQAAAAIAAYagAAAAENx0++n5a25/eJZhmOsKtUQ97m1IbP7MxXUqyi0VbUo0e1S1Crtupa2y4b0c5D+ouA==", null, false, null, "42dcfd94-a0bc-4282-9ee6-c04dde7e9532", null, false, "admin2@unibuc.ro" },
+                    { 12, 0, "0cd7fbb4-9d3c-4849-bb5a-75aaf638eba8", new DateTime(2026, 1, 17, 10, 41, 20, 473, DateTimeKind.Utc).AddTicks(3510), null, "student1@s.unibuc.ro", true, "Ion", null, "Vasilescu", false, null, "STUDENT1@S.UNIBUC.RO", "STUDENT1@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEKVKt7O4ZCLn3HCclPAKDeqhr6QzIKgwUwiXkxOO52/LZQfSPkoTEpP6GW7i+pPFdw==", null, false, null, "78daef8f-8031-4ec6-93c1-de312f64d4a8", null, false, "student1@s.unibuc.ro" },
+                    { 13, 0, "088fd7a6-44b5-4c45-b823-78bbf26e9eb1", new DateTime(2026, 1, 17, 10, 41, 20, 517, DateTimeKind.Utc).AddTicks(4158), null, "student2@s.unibuc.ro", true, "Elena", null, "Georgescu", false, null, "STUDENT2@S.UNIBUC.RO", "STUDENT2@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEAyA0tsgnVGLBn01SyTl1IgVBdgOAgWeKtC4+zEkG+5Mb24gR7sfUKDdzgatmTp7aQ==", null, false, null, "fb951b74-ed80-4557-83d9-7d5829c69e4d", null, false, "student2@s.unibuc.ro" },
+                    { 14, 0, "9e95a3ad-fdb0-4ea6-988a-0e45facf9849", new DateTime(2026, 1, 17, 10, 41, 20, 559, DateTimeKind.Utc).AddTicks(9241), null, "anastasia.ispas@s.unibuc.ro", true, "Anastasia", null, "Ispas", false, null, "ANASTASIA.ISPAS@S.UNIBUC.RO", "ANASTASIA.ISPAS@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEK+6sp/YfbdzpWUxMgpJVju5KWpn8dAQpncrqtH7iUonTmVMvmqrW5NSBBT6mMMAXA==", null, false, null, "b8630321-21f7-497a-bbf9-2830c06972bc", null, false, "anastasia.ispas@s.unibuc.ro" },
+                    { 15, 0, "a5897460-9779-4f46-a4a3-53f7355d72c9", new DateTime(2026, 1, 17, 10, 41, 20, 604, DateTimeKind.Utc).AddTicks(1310), null, "irina-maria.istrate@s.unibuc.ro", true, "Irina-Maria", null, "Istrate", false, null, "IRINA-MARIA.ISTRATE@S.UNIBUC.RO", "IRINA-MARIA.ISTRATE@S.UNIBUC.RO", "AQAAAAIAAYagAAAAEJS9d2QNPkPGDAAdUod+eRyCax2a0h4S5PXHrZ/RZuXEeHuMqut8ktTxQAGuRKqgCQ==", null, false, null, "d4de69f7-5418-42b1-8cb7-3e5b56ecb445", null, false, "irina-maria.istrate@s.unibuc.ro" }
                 });
 
             migrationBuilder.InsertData(
@@ -680,166 +787,166 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "BuildingId", "Capacity", "CreatedAt", "Equipment", "Floor", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, 1, 40, new DateTime(2025, 12, 26, 11, 42, 46, 258, DateTimeKind.Utc).AddTicks(9798), null, "Etaj 1", true, "A101" },
-                    { 2, 1, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1081), null, "Etaj 1", true, "A102" },
-                    { 3, 1, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1092), null, "Etaj 1", true, "A103" },
-                    { 4, 1, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1101), null, "Etaj 1", true, "A104" },
-                    { 5, 1, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1108), null, "Etaj 1", true, "A105" },
-                    { 6, 1, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1116), null, "Etaj 2", true, "S201" },
-                    { 7, 1, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1124), null, "Etaj 2", true, "S202" },
-                    { 8, 1, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(1131), null, "Etaj 2", true, "S203" },
-                    { 9, 1, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2373), "Computere", "Etaj 3", true, "Lab301" },
-                    { 10, 1, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2403), "Computere", "Etaj 3", true, "Lab302" },
-                    { 11, 2, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2413), null, "Etaj 1", true, "Bio101" },
-                    { 12, 2, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2421), null, "Etaj 1", true, "Bio102" },
-                    { 13, 2, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2626), null, "Etaj 1", true, "Bio103" },
-                    { 14, 2, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2634), null, "Etaj 1", true, "Bio104" },
-                    { 15, 2, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2642), null, "Etaj 1", true, "Bio105" },
-                    { 16, 2, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2650), "Echipament laborator", "Etaj 2", true, "LabBio201" },
-                    { 17, 2, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2658), "Echipament laborator", "Etaj 2", true, "LabBio202" },
-                    { 18, 2, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2666), "Echipament laborator", "Etaj 2", true, "LabBio203" },
-                    { 19, 2, 200, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2675), "Proiector, Sistem audio", "Parter", true, "AmfBio1" },
-                    { 20, 2, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2683), "Proiector", "Parter", true, "AmfBio2" },
-                    { 21, 3, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2690), null, "Etaj 1", true, "Ch101" },
-                    { 22, 3, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2698), null, "Etaj 1", true, "Ch102" },
-                    { 23, 3, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2705), null, "Etaj 1", true, "Ch103" },
-                    { 24, 3, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2713), null, "Etaj 1", true, "Ch104" },
-                    { 25, 3, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2720), null, "Etaj 1", true, "Ch105" },
-                    { 26, 3, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2728), "Echipament chimie", "Etaj 2", true, "LabCh201" },
-                    { 27, 3, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2802), "Echipament chimie", "Etaj 2", true, "LabCh202" },
-                    { 28, 3, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2811), "Echipament chimie", "Etaj 2", true, "LabCh203" },
-                    { 29, 3, 180, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2819), "Proiector, Sistem audio", "Parter", true, "AmfCh1" },
-                    { 30, 3, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2827), "Proiector", "Parter", true, "AmfCh2" },
-                    { 31, 4, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2834), null, "Etaj 1", true, "D101" },
-                    { 32, 4, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2842), null, "Etaj 1", true, "D102" },
-                    { 33, 4, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2850), null, "Etaj 1", true, "D103" },
-                    { 34, 4, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2858), null, "Etaj 1", true, "D104" },
-                    { 35, 4, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2865), null, "Etaj 1", true, "D105" },
-                    { 36, 4, 300, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2873), "Sistem audio-video complet", "Parter", true, "AmfD1" },
-                    { 37, 4, 250, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2882), "Proiector, Sistem audio", "Parter", true, "AmfD2" },
-                    { 38, 4, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2890), null, "Etaj 2", true, "SemD201" },
-                    { 39, 4, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2897), null, "Etaj 2", true, "SemD202" },
-                    { 40, 4, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2905), null, "Etaj 2", true, "SemD203" },
-                    { 41, 5, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2967), null, "Etaj 1", true, "Filo101" },
-                    { 42, 5, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2975), null, "Etaj 1", true, "Filo102" },
-                    { 43, 5, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2982), null, "Etaj 1", true, "Filo103" },
-                    { 44, 5, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2990), null, "Etaj 1", true, "Filo104" },
-                    { 45, 5, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(2998), null, "Etaj 1", true, "Filo105" },
-                    { 46, 5, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3006), "Proiector, Sistem audio", "Parter", true, "AmfFilo1" },
-                    { 47, 5, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3014), "Proiector", "Parter", true, "AmfFilo2" },
-                    { 48, 5, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3022), null, "Etaj 2", true, "SemFilo201" },
-                    { 49, 5, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3029), null, "Etaj 2", true, "SemFilo202" },
-                    { 50, 5, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3037), null, "Etaj 2", true, "SemFilo203" },
-                    { 51, 6, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3045), null, "Etaj 1", true, "Fiz101" },
-                    { 52, 6, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3053), null, "Etaj 1", true, "Fiz102" },
-                    { 53, 6, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3061), null, "Etaj 1", true, "Fiz103" },
-                    { 54, 6, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3069), null, "Etaj 1", true, "Fiz104" },
-                    { 55, 6, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3076), null, "Etaj 1", true, "Fiz105" },
-                    { 56, 6, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3135), "Echipament fizică", "Etaj 2", true, "LabFiz201" },
-                    { 57, 6, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3144), "Echipament fizică", "Etaj 2", true, "LabFiz202" },
-                    { 58, 6, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3152), "Echipament fizică", "Etaj 2", true, "LabFiz203" },
-                    { 59, 6, 200, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3160), "Proiector, Sistem audio", "Parter", true, "AmfFiz1" },
-                    { 60, 6, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3169), "Proiector", "Parter", true, "AmfFiz2" },
-                    { 61, 7, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3177), null, "Etaj 1", true, "Geo101" },
-                    { 62, 7, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3185), null, "Etaj 1", true, "Geo102" },
-                    { 63, 7, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3193), null, "Etaj 1", true, "Geo103" },
-                    { 64, 7, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3201), null, "Etaj 1", true, "Geo104" },
-                    { 65, 7, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3208), null, "Etaj 1", true, "Geo105" },
-                    { 66, 7, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3216), "Hărți, Computere GIS", "Etaj 2", true, "LabGeo201" },
-                    { 67, 7, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3224), "Computere GIS", "Etaj 2", true, "LabGeo202" },
-                    { 68, 7, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3308), null, "Etaj 2", true, "SemGeo203" },
-                    { 69, 7, 180, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3317), "Proiector, Sistem audio", "Parter", true, "AmfGeo1" },
-                    { 70, 7, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3382), "Proiector", "Parter", true, "AmfGeo2" },
-                    { 71, 8, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3391), null, "Etaj 1", true, "GG101" },
-                    { 72, 8, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3399), null, "Etaj 1", true, "GG102" },
-                    { 73, 8, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3407), null, "Etaj 1", true, "GG103" },
-                    { 74, 8, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3414), null, "Etaj 1", true, "GG104" },
-                    { 75, 8, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3422), null, "Etaj 1", true, "GG105" },
-                    { 76, 8, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3430), "Echipament geologic", "Etaj 2", true, "LabGG201" },
-                    { 77, 8, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3438), "Echipament geofizic", "Etaj 2", true, "LabGG202" },
-                    { 78, 8, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3447), null, "Etaj 2", true, "SemGG203" },
-                    { 79, 8, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3455), "Proiector, Sistem audio", "Parter", true, "AmfGG1" },
-                    { 80, 8, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3463), "Proiector", "Parter", true, "AmfGG2" },
-                    { 81, 9, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3471), null, "Etaj 1", true, "Ist101" },
-                    { 82, 9, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3479), null, "Etaj 1", true, "Ist102" },
-                    { 83, 9, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3487), null, "Etaj 1", true, "Ist103" },
-                    { 84, 9, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3494), null, "Etaj 1", true, "Ist104" },
-                    { 85, 9, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3552), null, "Etaj 1", true, "Ist105" },
-                    { 86, 9, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3560), null, "Etaj 2", true, "SemIst201" },
-                    { 87, 9, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3568), null, "Etaj 2", true, "SemIst202" },
-                    { 88, 9, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3576), null, "Etaj 2", true, "SemIst203" },
-                    { 89, 9, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3584), "Proiector, Sistem audio", "Parter", true, "AmfIst1" },
-                    { 90, 9, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3592), "Proiector", "Parter", true, "AmfIst2" },
-                    { 91, 10, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3600), null, "Etaj 6", true, "J101" },
-                    { 92, 10, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3607), null, "Etaj 6", true, "J102" },
-                    { 93, 10, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3615), null, "Etaj 6", true, "J103" },
-                    { 94, 10, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3623), null, "Etaj 6", true, "J104" },
-                    { 95, 10, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3630), null, "Etaj 6", true, "J105" },
-                    { 96, 10, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3638), "Camere, Echipament video", "Etaj 7", true, "LabMedia201" },
-                    { 97, 10, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3647), "Echipament audio", "Etaj 7", true, "LabMedia202" },
-                    { 98, 10, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3655), null, "Etaj 7", true, "SemPR203" },
-                    { 99, 10, 100, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3712), "Proiector, Sistem audio", "Etaj 6", true, "AmfJ1" },
-                    { 100, 10, 20, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3720), "Studio TV/Radio", "Etaj 7", true, "StudioJ2" },
-                    { 101, 11, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3728), null, "Etaj 1", true, "LLS101" },
-                    { 102, 11, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3736), null, "Etaj 1", true, "LLS102" },
-                    { 103, 11, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3743), null, "Etaj 1", true, "LLS103" },
-                    { 104, 11, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3751), null, "Etaj 1", true, "LLS104" },
-                    { 105, 11, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3759), null, "Etaj 1", true, "LLS105" },
-                    { 106, 11, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3767), "Echipament limbi străine", "Etaj 2", true, "LabLingv201" },
-                    { 107, 11, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3776), "Computere, Software lingvistic", "Etaj 2", true, "LabLingv202" },
-                    { 108, 11, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3783), null, "Etaj 2", true, "SemLLS203" },
-                    { 109, 11, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3792), "Proiector, Sistem audio", "Parter", true, "AmfLLS1" },
-                    { 110, 11, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3800), "Proiector", "Parter", true, "AmfLLS2" },
-                    { 111, 12, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3807), null, "Etaj 1", true, "Lit101" },
-                    { 112, 12, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3815), null, "Etaj 1", true, "Lit102" },
-                    { 113, 12, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3876), null, "Etaj 1", true, "Lit103" },
-                    { 114, 12, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3884), null, "Etaj 1", true, "Lit104" },
-                    { 115, 12, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3892), null, "Etaj 1", true, "Lit105" },
-                    { 116, 12, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3901), null, "Etaj 2", true, "SemLit201" },
-                    { 117, 12, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3909), null, "Etaj 2", true, "SemLit202" },
-                    { 118, 12, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3916), null, "Etaj 2", true, "SemLit203" },
-                    { 119, 12, 200, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3925), "Proiector, Sistem audio", "Parter", true, "AmfLit1" },
-                    { 120, 12, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3932), "Proiector", "Parter", true, "AmfLit2" },
-                    { 121, 13, 300, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3940), "Proiector, Sistem audio premium", "Parter", true, "Amf. Spiru Haret" },
-                    { 122, 13, 250, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3949), "Proiector, Sistem audio", "Parter", true, "Amf. Gheorghe Țițeica" },
-                    { 123, 13, 200, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3957), "Proiector, Sistem audio", "Parter", true, "Amf. Simion Stoilow" },
-                    { 124, 13, 180, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3966), "Proiector, Sistem audio", "Parter", true, "Amf. Dimitrie Pompeiu" },
-                    { 125, 13, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3975), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 1" },
-                    { 126, 13, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(3984), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 2" },
-                    { 127, 13, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4595), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 3" },
-                    { 128, 13, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4622), null, "Etaj 1", true, "S101" },
-                    { 129, 13, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4630), null, "Etaj 1", true, "S102" },
-                    { 130, 13, 50, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4638), null, "Etaj 1", true, "S103" },
-                    { 131, 14, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4646), null, "Etaj 1", true, "Psi101" },
-                    { 132, 14, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4654), null, "Etaj 1", true, "Psi102" },
-                    { 133, 14, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4661), null, "Etaj 1", true, "Psi103" },
-                    { 134, 14, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4669), null, "Etaj 1", true, "Psi104" },
-                    { 135, 14, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4677), null, "Etaj 1", true, "Psi105" },
-                    { 136, 14, 20, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4739), "Echipament psihologie", "Etaj 2", true, "LabPsi201" },
-                    { 137, 14, 20, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4746), "Computere, Software psiho", "Etaj 2", true, "LabPsi202" },
-                    { 138, 14, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4754), null, "Etaj 2", true, "SemEdu203" },
-                    { 139, 14, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4762), "Proiector, Sistem audio", "Parter", true, "AmfPsi1" },
-                    { 140, 14, 120, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4770), "Proiector", "Parter", true, "AmfPsi2" },
-                    { 141, 15, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4777), null, "Etaj 1", true, "SAS101" },
-                    { 142, 15, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4849), null, "Etaj 1", true, "SAS102" },
-                    { 143, 15, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4858), null, "Etaj 1", true, "SAS103" },
-                    { 144, 15, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4864), null, "Etaj 1", true, "SAS104" },
-                    { 145, 15, 40, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4872), null, "Etaj 1", true, "SAS105" },
-                    { 146, 15, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4880), null, "Etaj 2", true, "SemSAS201" },
-                    { 147, 15, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4887), null, "Etaj 2", true, "SemSAS202" },
-                    { 148, 15, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4895), null, "Etaj 2", true, "SemSAS203" },
-                    { 149, 15, 150, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4903), "Proiector, Sistem audio", "Parter", true, "AmfSAS1" },
-                    { 150, 15, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4911), "Computere, Software SPSS", "Etaj 2", true, "LabSAS2" },
-                    { 151, 16, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4918), null, "Etaj 1", true, "FSP101" },
-                    { 152, 16, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4926), null, "Etaj 1", true, "FSP102" },
-                    { 153, 16, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4933), null, "Etaj 1", true, "FSP103" },
-                    { 154, 16, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4941), null, "Etaj 1", true, "FSP104" },
-                    { 155, 16, 45, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4948), null, "Etaj 1", true, "FSP105" },
-                    { 156, 16, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(4956), null, "Etaj 2", true, "SemFSP201" },
-                    { 157, 16, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5014), null, "Etaj 2", true, "SemFSP202" },
-                    { 158, 16, 30, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5021), null, "Etaj 2", true, "SemFSP203" },
-                    { 159, 16, 180, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5029), "Proiector, Sistem audio", "Parter", true, "AmfFSP1" },
-                    { 160, 16, 25, new DateTime(2025, 12, 26, 11, 42, 46, 259, DateTimeKind.Utc).AddTicks(5038), "Computere", "Etaj 2", true, "LabFSP2" }
+                    { 1, 1, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(7895), null, "Etaj 1", true, "A101" },
+                    { 2, 1, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8115), null, "Etaj 1", true, "A102" },
+                    { 3, 1, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8119), null, "Etaj 1", true, "A103" },
+                    { 4, 1, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8121), null, "Etaj 1", true, "A104" },
+                    { 5, 1, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8123), null, "Etaj 1", true, "A105" },
+                    { 6, 1, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8125), null, "Etaj 2", true, "S201" },
+                    { 7, 1, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8127), null, "Etaj 2", true, "S202" },
+                    { 8, 1, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8129), null, "Etaj 2", true, "S203" },
+                    { 9, 1, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8328), "Computere", "Etaj 3", true, "Lab301" },
+                    { 10, 1, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8331), "Computere", "Etaj 3", true, "Lab302" },
+                    { 11, 2, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8357), null, "Etaj 1", true, "Bio101" },
+                    { 12, 2, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8360), null, "Etaj 1", true, "Bio102" },
+                    { 13, 2, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8362), null, "Etaj 1", true, "Bio103" },
+                    { 14, 2, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8364), null, "Etaj 1", true, "Bio104" },
+                    { 15, 2, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8366), null, "Etaj 1", true, "Bio105" },
+                    { 16, 2, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8368), "Echipament laborator", "Etaj 2", true, "LabBio201" },
+                    { 17, 2, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8371), "Echipament laborator", "Etaj 2", true, "LabBio202" },
+                    { 18, 2, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8373), "Echipament laborator", "Etaj 2", true, "LabBio203" },
+                    { 19, 2, 200, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8375), "Proiector, Sistem audio", "Parter", true, "AmfBio1" },
+                    { 20, 2, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8378), "Proiector", "Parter", true, "AmfBio2" },
+                    { 21, 3, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8380), null, "Etaj 1", true, "Ch101" },
+                    { 22, 3, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8410), null, "Etaj 1", true, "Ch102" },
+                    { 23, 3, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8412), null, "Etaj 1", true, "Ch103" },
+                    { 24, 3, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8414), null, "Etaj 1", true, "Ch104" },
+                    { 25, 3, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8417), null, "Etaj 1", true, "Ch105" },
+                    { 26, 3, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8433), "Echipament chimie", "Etaj 2", true, "LabCh201" },
+                    { 27, 3, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8435), "Echipament chimie", "Etaj 2", true, "LabCh202" },
+                    { 28, 3, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8438), "Echipament chimie", "Etaj 2", true, "LabCh203" },
+                    { 29, 3, 180, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8440), "Proiector, Sistem audio", "Parter", true, "AmfCh1" },
+                    { 30, 3, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8442), "Proiector", "Parter", true, "AmfCh2" },
+                    { 31, 4, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8444), null, "Etaj 1", true, "D101" },
+                    { 32, 4, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8446), null, "Etaj 1", true, "D102" },
+                    { 33, 4, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8448), null, "Etaj 1", true, "D103" },
+                    { 34, 4, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8450), null, "Etaj 1", true, "D104" },
+                    { 35, 4, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8453), null, "Etaj 1", true, "D105" },
+                    { 36, 4, 300, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8455), "Sistem audio-video complet", "Parter", true, "AmfD1" },
+                    { 37, 4, 250, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8457), "Proiector, Sistem audio", "Parter", true, "AmfD2" },
+                    { 38, 4, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8459), null, "Etaj 2", true, "SemD201" },
+                    { 39, 4, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8461), null, "Etaj 2", true, "SemD202" },
+                    { 40, 4, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8476), null, "Etaj 2", true, "SemD203" },
+                    { 41, 5, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8479), null, "Etaj 1", true, "Filo101" },
+                    { 42, 5, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8481), null, "Etaj 1", true, "Filo102" },
+                    { 43, 5, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8483), null, "Etaj 1", true, "Filo103" },
+                    { 44, 5, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8485), null, "Etaj 1", true, "Filo104" },
+                    { 45, 5, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8487), null, "Etaj 1", true, "Filo105" },
+                    { 46, 5, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8490), "Proiector, Sistem audio", "Parter", true, "AmfFilo1" },
+                    { 47, 5, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8492), "Proiector", "Parter", true, "AmfFilo2" },
+                    { 48, 5, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8494), null, "Etaj 2", true, "SemFilo201" },
+                    { 49, 5, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8496), null, "Etaj 2", true, "SemFilo202" },
+                    { 50, 5, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8498), null, "Etaj 2", true, "SemFilo203" },
+                    { 51, 6, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8500), null, "Etaj 1", true, "Fiz101" },
+                    { 52, 6, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8502), null, "Etaj 1", true, "Fiz102" },
+                    { 53, 6, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8504), null, "Etaj 1", true, "Fiz103" },
+                    { 54, 6, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8507), null, "Etaj 1", true, "Fiz104" },
+                    { 55, 6, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8521), null, "Etaj 1", true, "Fiz105" },
+                    { 56, 6, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8524), "Echipament fizică", "Etaj 2", true, "LabFiz201" },
+                    { 57, 6, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8526), "Echipament fizică", "Etaj 2", true, "LabFiz202" },
+                    { 58, 6, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8528), "Echipament fizică", "Etaj 2", true, "LabFiz203" },
+                    { 59, 6, 200, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8530), "Proiector, Sistem audio", "Parter", true, "AmfFiz1" },
+                    { 60, 6, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8533), "Proiector", "Parter", true, "AmfFiz2" },
+                    { 61, 7, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8535), null, "Etaj 1", true, "Geo101" },
+                    { 62, 7, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8537), null, "Etaj 1", true, "Geo102" },
+                    { 63, 7, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8539), null, "Etaj 1", true, "Geo103" },
+                    { 64, 7, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8541), null, "Etaj 1", true, "Geo104" },
+                    { 65, 7, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8543), null, "Etaj 1", true, "Geo105" },
+                    { 66, 7, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8545), "Hărți, Computere GIS", "Etaj 2", true, "LabGeo201" },
+                    { 67, 7, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8548), "Computere GIS", "Etaj 2", true, "LabGeo202" },
+                    { 68, 7, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8550), null, "Etaj 2", true, "SemGeo203" },
+                    { 69, 7, 180, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8563), "Proiector, Sistem audio", "Parter", true, "AmfGeo1" },
+                    { 70, 7, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8566), "Proiector", "Parter", true, "AmfGeo2" },
+                    { 71, 8, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8568), null, "Etaj 1", true, "GG101" },
+                    { 72, 8, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8570), null, "Etaj 1", true, "GG102" },
+                    { 73, 8, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8572), null, "Etaj 1", true, "GG103" },
+                    { 74, 8, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8574), null, "Etaj 1", true, "GG104" },
+                    { 75, 8, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8576), null, "Etaj 1", true, "GG105" },
+                    { 76, 8, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8578), "Echipament geologic", "Etaj 2", true, "LabGG201" },
+                    { 77, 8, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8580), "Echipament geofizic", "Etaj 2", true, "LabGG202" },
+                    { 78, 8, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8582), null, "Etaj 2", true, "SemGG203" },
+                    { 79, 8, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8585), "Proiector, Sistem audio", "Parter", true, "AmfGG1" },
+                    { 80, 8, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8586), "Proiector", "Parter", true, "AmfGG2" },
+                    { 81, 9, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8588), null, "Etaj 1", true, "Ist101" },
+                    { 82, 9, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8591), null, "Etaj 1", true, "Ist102" },
+                    { 83, 9, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8605), null, "Etaj 1", true, "Ist103" },
+                    { 84, 9, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8607), null, "Etaj 1", true, "Ist104" },
+                    { 85, 9, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8609), null, "Etaj 1", true, "Ist105" },
+                    { 86, 9, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8611), null, "Etaj 2", true, "SemIst201" },
+                    { 87, 9, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8614), null, "Etaj 2", true, "SemIst202" },
+                    { 88, 9, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8616), null, "Etaj 2", true, "SemIst203" },
+                    { 89, 9, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8618), "Proiector, Sistem audio", "Parter", true, "AmfIst1" },
+                    { 90, 9, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8634), "Proiector", "Parter", true, "AmfIst2" },
+                    { 91, 10, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8637), null, "Etaj 6", true, "J101" },
+                    { 92, 10, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8639), null, "Etaj 6", true, "J102" },
+                    { 93, 10, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8641), null, "Etaj 6", true, "J103" },
+                    { 94, 10, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8644), null, "Etaj 6", true, "J104" },
+                    { 95, 10, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8646), null, "Etaj 6", true, "J105" },
+                    { 96, 10, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8648), "Camere, Echipament video", "Etaj 7", true, "LabMedia201" },
+                    { 97, 10, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8650), "Echipament audio", "Etaj 7", true, "LabMedia202" },
+                    { 98, 10, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8665), null, "Etaj 7", true, "SemPR203" },
+                    { 99, 10, 100, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8667), "Proiector, Sistem audio", "Etaj 6", true, "AmfJ1" },
+                    { 100, 10, 20, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8669), "Studio TV/Radio", "Etaj 7", true, "StudioJ2" },
+                    { 101, 11, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8671), null, "Etaj 1", true, "LLS101" },
+                    { 102, 11, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8673), null, "Etaj 1", true, "LLS102" },
+                    { 103, 11, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8675), null, "Etaj 1", true, "LLS103" },
+                    { 104, 11, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8677), null, "Etaj 1", true, "LLS104" },
+                    { 105, 11, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8679), null, "Etaj 1", true, "LLS105" },
+                    { 106, 11, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8682), "Echipament limbi străine", "Etaj 2", true, "LabLingv201" },
+                    { 107, 11, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8684), "Computere, Software lingvistic", "Etaj 2", true, "LabLingv202" },
+                    { 108, 11, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8686), null, "Etaj 2", true, "SemLLS203" },
+                    { 109, 11, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8688), "Proiector, Sistem audio", "Parter", true, "AmfLLS1" },
+                    { 110, 11, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8691), "Proiector", "Parter", true, "AmfLLS2" },
+                    { 111, 12, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8693), null, "Etaj 1", true, "Lit101" },
+                    { 112, 12, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8706), null, "Etaj 1", true, "Lit102" },
+                    { 113, 12, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8708), null, "Etaj 1", true, "Lit103" },
+                    { 114, 12, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8711), null, "Etaj 1", true, "Lit104" },
+                    { 115, 12, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8713), null, "Etaj 1", true, "Lit105" },
+                    { 116, 12, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8715), null, "Etaj 2", true, "SemLit201" },
+                    { 117, 12, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8717), null, "Etaj 2", true, "SemLit202" },
+                    { 118, 12, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8719), null, "Etaj 2", true, "SemLit203" },
+                    { 119, 12, 200, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8721), "Proiector, Sistem audio", "Parter", true, "AmfLit1" },
+                    { 120, 12, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8723), "Proiector", "Parter", true, "AmfLit2" },
+                    { 121, 13, 300, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8725), "Proiector, Sistem audio premium", "Parter", true, "Amf. Spiru Haret" },
+                    { 122, 13, 250, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8728), "Proiector, Sistem audio", "Parter", true, "Amf. Gheorghe Țițeica" },
+                    { 123, 13, 200, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8730), "Proiector, Sistem audio", "Parter", true, "Amf. Simion Stoilow" },
+                    { 124, 13, 180, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8732), "Proiector, Sistem audio", "Parter", true, "Amf. Dimitrie Pompeiu" },
+                    { 125, 13, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8734), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 1" },
+                    { 126, 13, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8748), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 2" },
+                    { 127, 13, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8750), "30 Computere, Proiector", "Etaj 1", true, "Lab FMI 3" },
+                    { 128, 13, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8752), null, "Etaj 1", true, "S101" },
+                    { 129, 13, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8755), null, "Etaj 1", true, "S102" },
+                    { 130, 13, 50, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8757), null, "Etaj 1", true, "S103" },
+                    { 131, 14, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8759), null, "Etaj 1", true, "Psi101" },
+                    { 132, 14, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8761), null, "Etaj 1", true, "Psi102" },
+                    { 133, 14, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8763), null, "Etaj 1", true, "Psi103" },
+                    { 134, 14, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8764), null, "Etaj 1", true, "Psi104" },
+                    { 135, 14, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8766), null, "Etaj 1", true, "Psi105" },
+                    { 136, 14, 20, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8769), "Echipament psihologie", "Etaj 2", true, "LabPsi201" },
+                    { 137, 14, 20, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8770), "Computere, Software psiho", "Etaj 2", true, "LabPsi202" },
+                    { 138, 14, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8773), null, "Etaj 2", true, "SemEdu203" },
+                    { 139, 14, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8775), "Proiector, Sistem audio", "Parter", true, "AmfPsi1" },
+                    { 140, 14, 120, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8777), "Proiector", "Parter", true, "AmfPsi2" },
+                    { 141, 15, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8791), null, "Etaj 1", true, "SAS101" },
+                    { 142, 15, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8793), null, "Etaj 1", true, "SAS102" },
+                    { 143, 15, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8795), null, "Etaj 1", true, "SAS103" },
+                    { 144, 15, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8797), null, "Etaj 1", true, "SAS104" },
+                    { 145, 15, 40, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8799), null, "Etaj 1", true, "SAS105" },
+                    { 146, 15, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8801), null, "Etaj 2", true, "SemSAS201" },
+                    { 147, 15, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8803), null, "Etaj 2", true, "SemSAS202" },
+                    { 148, 15, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8805), null, "Etaj 2", true, "SemSAS203" },
+                    { 149, 15, 150, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8808), "Proiector, Sistem audio", "Parter", true, "AmfSAS1" },
+                    { 150, 15, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8810), "Computere, Software SPSS", "Etaj 2", true, "LabSAS2" },
+                    { 151, 16, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8812), null, "Etaj 1", true, "FSP101" },
+                    { 152, 16, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8814), null, "Etaj 1", true, "FSP102" },
+                    { 153, 16, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8816), null, "Etaj 1", true, "FSP103" },
+                    { 154, 16, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8817), null, "Etaj 1", true, "FSP104" },
+                    { 155, 16, 45, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8831), null, "Etaj 1", true, "FSP105" },
+                    { 156, 16, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8833), null, "Etaj 2", true, "SemFSP201" },
+                    { 157, 16, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8835), null, "Etaj 2", true, "SemFSP202" },
+                    { 158, 16, 30, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8838), null, "Etaj 2", true, "SemFSP203" },
+                    { 159, 16, 180, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8849), "Proiector, Sistem audio", "Parter", true, "AmfFSP1" },
+                    { 160, 16, 25, new DateTime(2026, 1, 17, 10, 41, 20, 695, DateTimeKind.Utc).AddTicks(8851), "Computere", "Etaj 2", true, "LabFSP2" }
                 });
 
             migrationBuilder.InsertData(
@@ -860,16 +967,26 @@ namespace CampusConnect.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "CreatedByProfessorId", "Description", "EndTime", "IsActive", "RecurrenceEndDate", "RecurrencePattern", "RoomId", "StartTime", "Title" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(2661), 14, "Principii de inginerie software și design patterns", new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 121, new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local), "Curs Inginerie Software" },
-                    { 2, new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3177), 15, "Lucru cu SQL și modelare baze de date", new DateTime(2025, 12, 26, 16, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 125, new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local), "Seminar Baze de Date" },
-                    { 3, new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3182), 14, "Algoritmi de sortare și căutare", new DateTime(2025, 12, 26, 10, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 122, new DateTime(2025, 12, 26, 8, 0, 0, 0, DateTimeKind.Local), "Curs Algoritmi și Structuri de Date" },
-                    { 4, new DateTime(2025, 12, 26, 11, 42, 46, 268, DateTimeKind.Utc).AddTicks(3185), 15, "Dreptul persoanelor și al familiei", new DateTime(2025, 12, 26, 14, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 36, new DateTime(2025, 12, 26, 12, 0, 0, 0, DateTimeKind.Local), "Curs Drept Civil" }
+                    { 1, new DateTime(2026, 1, 17, 10, 41, 20, 698, DateTimeKind.Utc).AddTicks(9103), 14, "Principii de inginerie software și design patterns", new DateTime(2026, 1, 17, 12, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 121, new DateTime(2026, 1, 17, 10, 0, 0, 0, DateTimeKind.Local), "Curs Inginerie Software" },
+                    { 2, new DateTime(2026, 1, 17, 10, 41, 20, 698, DateTimeKind.Utc).AddTicks(9234), 15, "Lucru cu SQL și modelare baze de date", new DateTime(2026, 1, 17, 16, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 125, new DateTime(2026, 1, 17, 14, 0, 0, 0, DateTimeKind.Local), "Seminar Baze de Date" },
+                    { 3, new DateTime(2026, 1, 17, 10, 41, 20, 698, DateTimeKind.Utc).AddTicks(9237), 14, "Algoritmi de sortare și căutare", new DateTime(2026, 1, 17, 10, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 122, new DateTime(2026, 1, 17, 8, 0, 0, 0, DateTimeKind.Local), "Curs Algoritmi și Structuri de Date" },
+                    { 4, new DateTime(2026, 1, 17, 10, 41, 20, 698, DateTimeKind.Utc).AddTicks(9273), 15, "Dreptul persoanelor și al familiei", new DateTime(2026, 1, 17, 14, 0, 0, 0, DateTimeKind.Local), true, null, "Weekly", 36, new DateTime(2026, 1, 17, 12, 0, 0, 0, DateTimeKind.Local), "Curs Drept Civil" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Buildings_Name",
                 table: "Buildings",
                 column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseMaterials_GroupId",
+                table: "CourseMaterials",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseMaterials_UploadedByProfessorId",
+                table: "CourseMaterials",
+                column: "UploadedByProfessorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventParticipants_EventId",
@@ -880,6 +997,21 @@ namespace CampusConnect.Infrastructure.Migrations
                 name: "IX_Events_OrganizerId",
                 table: "Events",
                 column: "OrganizerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupAnnouncements_AnnouncementId",
+                table: "GroupAnnouncements",
+                column: "AnnouncementId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupAnnouncements_ForwardedByProfessorId",
+                table: "GroupAnnouncements",
+                column: "ForwardedByProfessorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupAnnouncements_GroupId_AnnouncementId",
+                table: "GroupAnnouncements",
+                columns: new[] { "GroupId", "AnnouncementId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupMembers_GroupId",
@@ -906,6 +1038,11 @@ namespace CampusConnect.Infrastructure.Migrations
                 name: "IX_GroupTasks_GroupId",
                 table: "GroupTasks",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LibraryItems_FolderId",
+                table: "LibraryItems",
+                column: "FolderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -1044,10 +1181,19 @@ namespace CampusConnect.Infrastructure.Migrations
                 name: "CategorySubscriptions");
 
             migrationBuilder.DropTable(
+                name: "CourseMaterials");
+
+            migrationBuilder.DropTable(
                 name: "EventParticipants");
 
             migrationBuilder.DropTable(
+                name: "GroupAnnouncements");
+
+            migrationBuilder.DropTable(
                 name: "GroupMembers");
+
+            migrationBuilder.DropTable(
+                name: "LibraryItems");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
@@ -1087,6 +1233,9 @@ namespace CampusConnect.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "LibraryFolders");
 
             migrationBuilder.DropTable(
                 name: "Announcements");

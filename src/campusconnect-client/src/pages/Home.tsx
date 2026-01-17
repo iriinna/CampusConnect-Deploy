@@ -12,7 +12,8 @@ import {
   Clock,
   UserCog,
   BookOpen,
-  Trophy
+  Trophy,
+  GraduationCap
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -53,7 +54,7 @@ function Home() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [myAchievements, setMyAchievements] = useState<UserAchievement[]>([]);
   const [recentActivities, setRecentActivities] = useState<FormattedActivity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -148,6 +149,27 @@ function Home() {
       gradient: 'from-indigo-500 via-purple-500 to-pink-500',
       badge: 'New',
     },
+
+    // Carduri pentru sistemul de note - diferite pentru profesori vs elevi
+    ...((user.role === 'Professor' || user.role === 'Admin') ? [
+      {
+        title: 'My Subjects',
+        description: 'Manage subjects and grades',
+        icon: GraduationCap,
+        link: '/subjects',
+        gradient: 'from-blue-600 via-indigo-600 to-purple-600',
+        badge: 'Profesor',
+      }
+    ] : [
+      {
+        title: 'My Grades',
+        description: 'View your grades by subject',
+        icon: GraduationCap,
+        link: '/my-grades',
+        gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
+        badge: 'Student',
+      }
+    ]),
 
     {
       title: 'My Tasks',
