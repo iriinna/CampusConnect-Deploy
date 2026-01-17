@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { subjectApi } from '../services/gradesApi';
 import type { Subject, CreateSubjectRequest, UpdateSubjectRequest } from '../services/gradesApi';
-import { Pencil, Trash2, Plus, X, ArrowRight, BookOpen, Calendar, GraduationCap, Sparkles } from 'lucide-react';
+import { Pencil, Trash2, Plus, X, ArrowRight, BookOpen, Calendar, GraduationCap, Sparkles, ArrowLeft } from 'lucide-react';
 import { Layout } from '../components/Layout';
 
 const SubjectsManagement: React.FC = () => {
@@ -119,7 +119,7 @@ const SubjectsManagement: React.FC = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         {/* Hero Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -128,12 +128,24 @@ const SubjectsManagement: React.FC = () => {
         >
           <div className="container mx-auto px-4 py-12">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              <div>
+              <div className="flex items-center gap-4">
+                <motion.button
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30"
+                >
+                  <ArrowLeft size={20} />
+                  Back
+                </motion.button>
+                
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="flex items-center gap-3 mb-3"
+                  className="flex items-center gap-3"
                 >
                   <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
                     <BookOpen className="h-10 w-10" />
@@ -178,11 +190,11 @@ const SubjectsManagement: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20"
             >
-              <div className="inline-block p-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full mb-6">
-                <BookOpen className="text-indigo-600" size={64} />
+              <div className="inline-block p-6 bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-full mb-6">
+                <BookOpen className="text-indigo-400" size={64} />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-3">No subjects yet</h2>
-              <p className="text-gray-500 text-lg mb-6">Create your first subject to start adding grades</p>
+              <h2 className="text-3xl font-bold text-gray-100 mb-3">No subjects yet</h2>
+              <p className="text-gray-400 text-lg mb-6">Create your first subject to start adding grades</p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -203,24 +215,24 @@ const SubjectsManagement: React.FC = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ y: -8 }}
                   onClick={() => navigate(`/subjects/${subject.id}`)}
-                  className="group bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl hover:border-indigo-300 transition-all duration-300 cursor-pointer relative"
+                  className="group bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-700 hover:shadow-2xl hover:border-indigo-500 transition-all duration-300 cursor-pointer relative"
                 >
                   {/* Decorative gradient */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-bl-full transform translate-x-8 -translate-y-8"></div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-bl-full transform translate-x-8 -translate-y-8"></div>
                   
                   <div className="p-6 relative">
                     {/* Header with icons */}
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex items-start gap-3 flex-1">
-                        <div className="p-3 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl group-hover:from-indigo-200 group-hover:to-purple-200 transition-all">
-                          <GraduationCap className="h-6 w-6 text-indigo-600" />
+                        <div className="p-3 bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-xl group-hover:from-indigo-800/50 group-hover:to-purple-800/50 transition-all">
+                          <GraduationCap className="h-6 w-6 text-indigo-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-xl font-bold text-gray-800 mb-1 group-hover:text-indigo-600 transition-colors truncate">
+                          <h3 className="text-xl font-bold text-gray-100 mb-1 group-hover:text-indigo-400 transition-colors truncate">
                             {subject.name}
                           </h3>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-mono text-gray-500 bg-gray-100 px-2 py-1 rounded">{subject.code}</span>
+                            <span className="text-sm font-mono text-gray-400 bg-slate-700 px-2 py-1 rounded">{subject.code}</span>
                           </div>
                         </div>
                       </div>
@@ -234,7 +246,7 @@ const SubjectsManagement: React.FC = () => {
                             e.stopPropagation();
                             handleEdit(subject);
                           }}
-                          className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                          className="p-2 text-indigo-400 hover:bg-indigo-900/50 rounded-lg transition-all"
                           title="Editează"
                         >
                           <Pencil size={18} />
@@ -246,7 +258,7 @@ const SubjectsManagement: React.FC = () => {
                             e.stopPropagation();
                             handleDelete(subject.id, subject.name);
                           }}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                          className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-all"
                           title="Șterge"
                         >
                           <Trash2 size={18} />
@@ -256,21 +268,21 @@ const SubjectsManagement: React.FC = () => {
                     
                     {/* Description */}
                     {subject.description && (
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
                         {subject.description}
                       </p>
                     )}
                     
                     {/* Footer */}
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <div className="flex justify-between items-center pt-4 border-t border-slate-700">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
                         <Calendar size={14} />
                         {new Date(subject.createdAt).toLocaleDateString('en-US')}
                       </div>
                       <motion.div
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-1 text-indigo-600 font-medium text-sm"
+                        className="flex items-center gap-1 text-indigo-400 font-medium text-sm"
                       >
                         <span>Manage Grades</span>
                         <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

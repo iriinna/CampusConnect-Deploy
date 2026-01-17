@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, Trash2, Sparkles } from 'lucide-react';
+import { BookOpen, Plus, Trash2, Sparkles, ArrowLeft } from 'lucide-react';
 import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -46,7 +46,7 @@ const MySubjects = () => {
   };
 
   const handleDeleteSubject = async (id: number) => {
-    if (!window.confirm('Sigur vrei să ștergi această materie? Toate notele asociate vor fi șterse!')) return;
+    if (!window.confirm('Are you sure you want to delete this subject? All associated grades will be deleted!')) return;
     try {
       await gradesApi.subjectApi.deleteSubject(id);
       loadSubjects();
@@ -73,15 +73,24 @@ const MySubjects = () => {
           
           <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={() => navigate(-1)}
+                  className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border-white/30 shadow-lg"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Back
+                </Button>
+              </motion.div>
               <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
                 <BookOpen className="h-8 w-8" />
               </div>
               <div>
                 <h1 className="text-4xl font-bold flex items-center gap-2">
-                  Materiile Mele
+                  My Subjects
                   <Sparkles className="h-6 w-6 text-yellow-300" />
                 </h1>
-                <p className="text-white/80 mt-1">Gestionează-ți materiile și acordă note studenților</p>
+                <p className="text-white/80 mt-1">Manage your subjects and grade students</p>
               </div>
             </div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -90,7 +99,7 @@ const MySubjects = () => {
                 className="bg-white text-purple-600 hover:bg-white/90 shadow-lg"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Materie Nouă
+                New Subject
               </Button>
             </motion.div>
           </div>
@@ -109,17 +118,17 @@ const MySubjects = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Creează Materie Nouă</CardTitle>
+                  <CardTitle>Create New Subject</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleCreateSubject} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Nume Materie *
+                        Subject Name *
                       </label>
                       <Input
                         type="text"
-                        placeholder="ex: Matematică, Fizică, etc."
+                        placeholder="e.g: Mathematics, Physics, etc."
                         value={newSubject.name}
                         onChange={(e) => setNewSubject({ ...newSubject, name: e.target.value })}
                         required
@@ -128,10 +137,10 @@ const MySubjects = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Descriere (opțional)
+                        Description (optional)
                       </label>
                       <textarea
-                        placeholder="Descriere materie..."
+                        placeholder="Subject description..."
                         value={newSubject.description || ''}
                         onChange={(e) => setNewSubject({ ...newSubject, description: e.target.value })}
                         className="w-full px-3 py-2 border border-input rounded-md bg-background"
@@ -140,14 +149,14 @@ const MySubjects = () => {
                     </div>
                     <div className="flex gap-3">
                       <Button type="submit">
-                        Creează Materia
+                        Create Subject
                       </Button>
                       <Button
                         type="button"
                         onClick={() => setShowCreateForm(false)}
                         variant="outline"
                       >
-                        Anulează
+                        Cancel
                       </Button>
                     </div>
                   </form>
@@ -166,13 +175,13 @@ const MySubjects = () => {
           <Card>
             <CardContent className="py-12 text-center">
               <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-xl mb-2">Nu ai nicio materie încă</p>
-              <p className="text-muted-foreground mb-4">Creează prima ta materie pentru a începe</p>
+              <p className="text-xl mb-2">You don't have any subjects yet</p>
+              <p className="text-muted-foreground mb-4">Create your first subject to get started</p>
               <Button
                 onClick={() => setShowCreateForm(true)}
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Creează Materie
+                Create Subject
               </Button>
             </CardContent>
           </Card>
@@ -217,7 +226,7 @@ const MySubjects = () => {
                         className="flex-1"
                         size="sm"
                       >
-                        Vezi Detalii
+                        View Details
                       </Button>
                       <Button
                         onClick={(e) => {
