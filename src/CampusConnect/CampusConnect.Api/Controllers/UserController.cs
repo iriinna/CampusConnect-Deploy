@@ -39,8 +39,8 @@ namespace CampusConnect.API.Controllers
         return Ok(response);
     }   
     
- [HttpGet("search")]
-public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQuery] string? search)
+    [HttpGet("search")]
+    public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQuery] string? search)
 {
     // 1. Obținem lista de useri din baza de date
     var users = await _userService.SearchUsersAsync(search ?? "");
@@ -71,6 +71,7 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Email = user.Email ?? string.Empty,
             ProfilePictureUrl = user.ProfilePictureUrl,
             StudentId = user.StudentId,
             Role = displayRole // Aici va fi acum valoarea corectă
@@ -80,7 +81,6 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
     return Ok(resultList);
 }
 
-[HttpGet("current-user-id")]
         private int? GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

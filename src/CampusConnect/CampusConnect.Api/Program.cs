@@ -83,6 +83,8 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<ICampusMapService, CampusMapService>();
 builder.Services.AddScoped<IAchievementService, AchievementService>();
 builder.Services.AddScoped<IActivityLoggerService, ActivityLoggerService>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<IGradeService, GradeService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
