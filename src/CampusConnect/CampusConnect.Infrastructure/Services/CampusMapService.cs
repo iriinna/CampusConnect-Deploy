@@ -376,6 +376,19 @@ public class CampusMapService : ICampusMapService
         var userId = _currentUserService.GetCurrentUserId();
         if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
 
+        // Validate booking time (8 AM - 8 PM)
+        if (!IsValidBookingTime(request.StartTime, request.EndTime))
+        {
+            throw new InvalidOperationException("Rezervările pot fi făcute doar între orele 8:00 și 20:00.");
+        }
+
+        // Check for overlapping schedules
+        var isAvailable = await IsTimeSlotAvailableAsync(request.RoomId, request.StartTime, request.EndTime);
+        if (!isAvailable)
+        {
+            throw new InvalidOperationException("Intervalul orar selectat se suprapune cu o rezervare existentă.");
+        }
+
         var schedule = new Schedule
         {
             Title = request.Title,
@@ -459,6 +472,323 @@ public class CampusMapService : ICampusMapService
 
         schedule.IsActive = false;
         await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // Room reservation operations
+    public async Task<RoomReservationDto> CreateReservationAsync(CreateReservationRequest request)
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
+
+        // Validate booking time (8 AM - 8 PM)
+        if (!IsValidBookingTime(request.StartTime, request.EndTime))
+        {
+            throw new InvalidOperationException("Rezervările pot fi făcute doar între orele 8:00 și 20:00.");
+        }
+
+        // Check for overlapping schedules or approved reservations
+        var isAvailable = await IsTimeSlotAvailableAsync(request.RoomId, request.StartTime, request.EndTime);
+        if (!isAvailable)
+        {
+            throw new InvalidOperationException("Intervalul orar selectat se suprapune cu o rezervare existentă.");
+        }
+
+        var reservation = new RoomReservation
+        {
+            Title = request.Title,
+            Description = request.Description,
+            RoomId = request.RoomId,
+            StartTime = request.StartTime,
+            EndTime = request.EndTime,
+            RequestedByUserId = userId.Value,
+            Status = ReservationStatus.Pending,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.RoomReservations.Add(reservation);
+
+        // Create notifications for all admins
+        var admins = await _userManager.GetUsersInRoleAsync("Admin");
+        var user = await _context.Users.FindAsync(userId.Value);
+        var room = await _context.Rooms.Include(r => r.Building).FirstAsync(r => r.Id == request.RoomId);
+
+        foreach (var admin in admins)
+        {
+            var notification = new Notification
+            {
+                UserId = admin.Id,
+                Message = $"Cerere nouă de rezervare sală: {room.Name} ({room.Building.Name}) de la {user!.FirstName} {user.LastName} pentru {request.StartTime:dd.MM.yyyy HH:mm} - {request.EndTime:HH:mm}",
+                RelatedEntityType = "RoomReservation",
+                RelatedEntityId = reservation.Id,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Notifications.Add(notification);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return new RoomReservationDto
+        {
+            Id = reservation.Id,
+            Title = reservation.Title,
+            Description = reservation.Description,
+            RoomId = reservation.RoomId,
+            RoomName = room.Name,
+            BuildingId = room.BuildingId,
+            BuildingName = room.Building.Name,
+            StartTime = reservation.StartTime,
+            EndTime = reservation.EndTime,
+            RequestedByUserId = reservation.RequestedByUserId,
+            RequestedByUserName = $"{user!.FirstName} {user.LastName}",
+            Status = reservation.Status.ToString(),
+            CreatedAt = reservation.CreatedAt
+        };
+    }
+
+    public async Task<IEnumerable<RoomReservationDto>> GetPendingReservationsAsync()
+    {
+        var reservations = await _context.RoomReservations
+            .Include(r => r.Room)
+                .ThenInclude(r => r.Building)
+            .Include(r => r.RequestedByUser)
+            .Where(r => r.Status == ReservationStatus.Pending)
+            .OrderBy(r => r.CreatedAt)
+            .ToListAsync();
+
+        return reservations.Select(r => new RoomReservationDto
+        {
+            Id = r.Id,
+            Title = r.Title,
+            Description = r.Description,
+            RoomId = r.RoomId,
+            RoomName = r.Room.Name,
+            BuildingId = r.Room.BuildingId,
+            BuildingName = r.Room.Building.Name,
+            StartTime = r.StartTime,
+            EndTime = r.EndTime,
+            RequestedByUserId = r.RequestedByUserId,
+            RequestedByUserName = $"{r.RequestedByUser.FirstName} {r.RequestedByUser.LastName}",
+            Status = r.Status.ToString(),
+            CreatedAt = r.CreatedAt
+        });
+    }
+
+    public async Task<IEnumerable<RoomReservationDto>> GetUserReservationsAsync()
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
+
+        var reservations = await _context.RoomReservations
+            .Include(r => r.Room)
+                .ThenInclude(r => r.Building)
+            .Include(r => r.RequestedByUser)
+            .Include(r => r.ProcessedByAdmin)
+            .Where(r => r.RequestedByUserId == userId.Value)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+
+        return reservations.Select(r => new RoomReservationDto
+        {
+            Id = r.Id,
+            Title = r.Title,
+            Description = r.Description,
+            RoomId = r.RoomId,
+            RoomName = r.Room.Name,
+            BuildingId = r.Room.BuildingId,
+            BuildingName = r.Room.Building.Name,
+            StartTime = r.StartTime,
+            EndTime = r.EndTime,
+            RequestedByUserId = r.RequestedByUserId,
+            RequestedByUserName = $"{r.RequestedByUser.FirstName} {r.RequestedByUser.LastName}",
+            Status = r.Status.ToString(),
+            ProcessedByAdminId = r.ProcessedByAdminId,
+            ProcessedByAdminName = r.ProcessedByAdmin != null ? $"{r.ProcessedByAdmin.FirstName} {r.ProcessedByAdmin.LastName}" : null,
+            RejectionReason = r.RejectionReason,
+            CreatedAt = r.CreatedAt,
+            ProcessedAt = r.ProcessedAt
+        });
+    }
+
+    public async Task<RoomReservationDto> ProcessReservationAsync(int reservationId, ProcessReservationRequest request)
+    {
+        var adminId = _currentUserService.GetCurrentUserId();
+        if (adminId == null) throw new UnauthorizedAccessException("User not authenticated");
+
+        var reservation = await _context.RoomReservations
+            .Include(r => r.Room)
+                .ThenInclude(r => r.Building)
+            .Include(r => r.RequestedByUser)
+            .FirstOrDefaultAsync(r => r.Id == reservationId);
+
+        if (reservation == null) throw new Exception("Reservation not found");
+        if (reservation.Status != ReservationStatus.Pending) throw new InvalidOperationException("Reservation is not pending");
+
+        var admin = await _context.Users.FindAsync(adminId.Value);
+
+        if (request.Approve)
+        {
+            // Check if time slot is still available
+            var isAvailable = await IsTimeSlotAvailableAsync(reservation.RoomId, reservation.StartTime, reservation.EndTime, reservationId);
+            if (!isAvailable)
+            {
+                throw new InvalidOperationException("Intervalul orar nu mai este disponibil. Există o suprapunere cu o altă rezervare.");
+            }
+
+            reservation.Status = ReservationStatus.Approved;
+            reservation.ProcessedByAdminId = adminId.Value;
+            reservation.ProcessedAt = DateTime.UtcNow;
+
+            // Create schedule from the approved reservation
+            var schedule = new Schedule
+            {
+                Title = reservation.Title,
+                Description = reservation.Description,
+                RoomId = reservation.RoomId,
+                StartTime = reservation.StartTime,
+                EndTime = reservation.EndTime,
+                CreatedByProfessorId = adminId.Value, // Admin who approved
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Schedules.Add(schedule);
+
+            // Notify user of approval
+            var approvalNotification = new Notification
+            {
+                UserId = reservation.RequestedByUserId,
+                Message = $"Cererea dvs. de rezervare pentru sala {reservation.Room.Name} ({reservation.Room.Building.Name}) pe {reservation.StartTime:dd.MM.yyyy HH:mm} - {reservation.EndTime:HH:mm} a fost APROBATĂ.",
+                RelatedEntityType = "RoomReservation",
+                RelatedEntityId = reservation.Id,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Notifications.Add(approvalNotification);
+        }
+        else
+        {
+            reservation.Status = ReservationStatus.Rejected;
+            reservation.ProcessedByAdminId = adminId.Value;
+            reservation.ProcessedAt = DateTime.UtcNow;
+            reservation.RejectionReason = request.RejectionReason;
+
+            // Notify user of rejection
+            var rejectionNotification = new Notification
+            {
+                UserId = reservation.RequestedByUserId,
+                Message = $"Cererea dvs. de rezervare pentru sala {reservation.Room.Name} ({reservation.Room.Building.Name}) pe {reservation.StartTime:dd.MM.yyyy HH:mm} - {reservation.EndTime:HH:mm} a fost RESPINSĂ. Motiv: {request.RejectionReason ?? "Nespecificat"}",
+                RelatedEntityType = "RoomReservation",
+                RelatedEntityId = reservation.Id,
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Notifications.Add(rejectionNotification);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return new RoomReservationDto
+        {
+            Id = reservation.Id,
+            Title = reservation.Title,
+            Description = reservation.Description,
+            RoomId = reservation.RoomId,
+            RoomName = reservation.Room.Name,
+            BuildingId = reservation.Room.BuildingId,
+            BuildingName = reservation.Room.Building.Name,
+            StartTime = reservation.StartTime,
+            EndTime = reservation.EndTime,
+            RequestedByUserId = reservation.RequestedByUserId,
+            RequestedByUserName = $"{reservation.RequestedByUser.FirstName} {reservation.RequestedByUser.LastName}",
+            Status = reservation.Status.ToString(),
+            ProcessedByAdminId = reservation.ProcessedByAdminId,
+            ProcessedByAdminName = $"{admin!.FirstName} {admin.LastName}",
+            RejectionReason = reservation.RejectionReason,
+            CreatedAt = reservation.CreatedAt,
+            ProcessedAt = reservation.ProcessedAt
+        };
+    }
+
+    public async Task<bool> CancelReservationAsync(int reservationId)
+    {
+        var userId = _currentUserService.GetCurrentUserId();
+        if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
+
+        var reservation = await _context.RoomReservations.FindAsync(reservationId);
+        if (reservation == null) return false;
+
+        // Only the user who created the reservation can cancel it (if pending)
+        if (reservation.RequestedByUserId != userId.Value)
+            throw new UnauthorizedAccessException("You can only cancel your own reservations");
+
+        if (reservation.Status != ReservationStatus.Pending)
+            throw new InvalidOperationException("Only pending reservations can be cancelled");
+
+        _context.RoomReservations.Remove(reservation);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    // Validation helpers
+    public async Task<bool> IsTimeSlotAvailableAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeReservationId = null)
+    {
+        var targetDate = startTime.Date;
+
+        // Check against existing schedules
+        var schedules = await _context.Schedules
+            .Where(s => s.RoomId == roomId && s.IsActive)
+            .ToListAsync();
+
+        var effectiveSchedules = GetEffectiveSchedulesForDate(schedules, targetDate);
+
+        foreach (var schedule in effectiveSchedules)
+        {
+            // Check for overlap: two intervals overlap if one starts before the other ends
+            if (startTime < schedule.EndTime && endTime > schedule.StartTime)
+            {
+                return false;
+            }
+        }
+
+        // Check against pending/approved reservations for the same date
+        var reservations = await _context.RoomReservations
+            .Where(r => r.RoomId == roomId &&
+                        r.Status != ReservationStatus.Rejected &&
+                        r.StartTime.Date == targetDate &&
+                        (excludeReservationId == null || r.Id != excludeReservationId))
+            .ToListAsync();
+
+        foreach (var reservation in reservations)
+        {
+            if (startTime < reservation.EndTime && endTime > reservation.StartTime)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool IsValidBookingTime(DateTime startTime, DateTime endTime)
+    {
+        // Valid booking hours: 8:00 AM to 8:00 PM (20:00)
+        var startHour = startTime.Hour;
+        var endHour = endTime.Hour;
+        var endMinute = endTime.Minute;
+
+        // Start must be >= 8:00
+        if (startHour < 8) return false;
+
+        // End must be <= 20:00 (8 PM)
+        if (endHour > 20 || (endHour == 20 && endMinute > 0)) return false;
+
+        // End must be after start
+        if (endTime <= startTime) return false;
+
+        // Start and end must be on the same day
+        if (startTime.Date != endTime.Date) return false;
+
         return true;
     }
 

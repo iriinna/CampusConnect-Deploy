@@ -99,15 +99,13 @@ const CampusMap = () => {
                   <p className="text-white/80 mt-1">Navigare interactivă în campus</p>
                 </div>
               </div>
-              {isAdminOrProfessor && (
-                <Button
-                  onClick={() => setCreateDialogOpen(true)}
-                  className="bg-white text-blue-600 hover:bg-white/90"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Adaugă program
-                </Button>
-              )}
+              <Button
+                onClick={() => setCreateDialogOpen(true)}
+                className="bg-white text-blue-600 hover:bg-white/90"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                {isAdminOrProfessor ? 'Adaugă program' : 'Solicită rezervare'}
+              </Button>
             </div>
           </div>
         </motion.div>

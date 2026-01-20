@@ -27,7 +27,7 @@ export interface Room {
   equipment?: string;
   buildingId: number;
   buildingName: string;
-  currentStatus: 'Free' | 'Occupied' | 'OccupiedSoon';
+  currentStatus: 'Free' | 'Occupied' | 'OccupiedSoon' | 'Unknown';
   occupiedUntil?: string;
   nextOccupiedAt?: string;
 }
@@ -69,6 +69,44 @@ export interface UpdateScheduleRequest {
   endTime?: string;
   recurrencePattern?: string;
   recurrenceEndDate?: string;
+}
+
+export interface RoomReservation {
+  id: number;
+  title: string;
+  description?: string;
+  roomId: number;
+  roomName: string;
+  buildingId: number;
+  buildingName: string;
+  startTime: string;
+  endTime: string;
+  requestedByUserId: number;
+  requestedByUserName: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  processedByAdminId?: number;
+  processedByAdminName?: string;
+  rejectionReason?: string;
+  createdAt: string;
+  processedAt?: string;
+}
+
+export interface CreateReservationRequest {
+  title: string;
+  description?: string;
+  roomId: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface ProcessReservationRequest {
+  approve: boolean;
+  rejectionReason?: string;
+}
+
+export interface AvailabilityCheckResult {
+  available: boolean;
+  reason?: string;
 }
 
 export const campusMapApi = {
@@ -171,5 +209,69 @@ export const campusMapApi = {
       headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to delete schedule');
+  },
+
+  // Room Reservations
+  createReservation: async (request: CreateReservationRequest): Promise<RoomReservation> => {
+    const response = await fetch(`${API_BASE_URL}/roomreservation`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to create reservation');
+    }
+    return response.json();
+  },
+
+  getPendingReservations: async (): Promise<RoomReservation[]> => {
+    const response = await fetch(`${API_BASE_URL}/roomreservation/pending`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to fetch pending reservations');
+    return response.json();
+  },
+
+  getMyReservations: async (): Promise<RoomReservation[]> => {
+    const response = await fetch(`${API_BASE_URL}/roomreservation/my-reservations`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to fetch my reservations');
+    return response.json();
+  },
+
+  processReservation: async (id: number, request: ProcessReservationRequest): Promise<RoomReservation> => {
+    const response = await fetch(`${API_BASE_URL}/roomreservation/${id}/process`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(request)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Failed to process reservation');
+    }
+    return response.json();
+  },
+
+  cancelReservation: async (id: number): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/roomreservation/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to cancel reservation');
+  },
+
+  checkAvailability: async (roomId: number, startTime: string, endTime: string): Promise<AvailabilityCheckResult> => {
+    const params = new URLSearchParams({
+      roomId: roomId.toString(),
+      startTime,
+      endTime
+    });
+    const response = await fetch(`${API_BASE_URL}/roomreservation/check-availability?${params}`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to check availability');
+    return response.json();
   }
 };

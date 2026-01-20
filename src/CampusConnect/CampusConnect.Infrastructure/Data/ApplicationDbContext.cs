@@ -39,6 +39,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Grade> Grades { get; set; }
+    public DbSet<RoomReservation> RoomReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -790,6 +791,38 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(g => new { g.SubjectId, g.StudentId });
+        });
+
+        // 22. Configure RoomReservation
+        builder.Entity<RoomReservation>(entity =>
+        {
+            entity.Property(r => r.Title)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(r => r.Description)
+                .HasMaxLength(1000);
+
+            entity.Property(r => r.RejectionReason)
+                .HasMaxLength(500);
+
+            entity.HasOne(r => r.Room)
+                .WithMany()
+                .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(r => r.RequestedByUser)
+                .WithMany()
+                .HasForeignKey(r => r.RequestedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.ProcessedByAdmin)
+                .WithMany()
+                .HasForeignKey(r => r.ProcessedByAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => new { r.RoomId, r.StartTime, r.EndTime });
+            entity.HasIndex(r => r.Status);
         });
     }
 
