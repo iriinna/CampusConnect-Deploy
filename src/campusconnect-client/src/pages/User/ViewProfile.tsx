@@ -30,8 +30,6 @@ import achievementApi, { type UserAchievement } from '../../services/achievement
 
 const API_BASE_URL = 'http://localhost:5099/api';
 
-// --- INTERFEȚE ---
-
 
 interface Announcement {
   id: number;
@@ -78,6 +76,7 @@ function ProfileView() {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const token = localStorage.getItem('token');
+  const isAdmin = user.role === 'Admin' || user.isAdmin === true;
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -240,23 +239,41 @@ function ProfileView() {
             className="rounded-xl border border-blue-200 bg-blue-50 p-6 shadow-sm dark:bg-blue-950/20 dark:border-blue-900"
           >
             <div className="flex items-center justify-between mb-4">
-               <div className="flex items-center gap-3">
-                 <div className="p-2 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900 dark:text-blue-400">
-                   <Inbox className="h-6 w-6 animate-bounce" />
-                 </div>
-                 <div>
-                   <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300">
-                     Noutăți
-                   </h3>
-                   <p className="text-sm text-blue-600 dark:text-blue-400">
-                     Ai {notifications.length} anunțuri noi în categoriile tale favorite.
-                   </p>
-                 </div>
-               </div>
-               <Button variant="ghost" size="sm" onClick={markAllRead} className="text-blue-700 hover:bg-blue-100 hover:text-blue-900">
-                 Mark all read
-               </Button>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900 dark:text-blue-400">
+                  <Inbox className="h-6 w-6 animate-bounce" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300">
+                    Notifications
+                  </h3>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">
+                    You have {notifications.length} new notifications.
+                  </p>
+                </div>
+              </div>
+              
+              {/* --- AICI ESTE MODIFICAREA: GRUP DE BUTOANE --- */}
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate('/notifications')} 
+                  className="bg-white/50 hover:bg-white text-blue-700 border-blue-200"
+                >
+                  View All History
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={markAllRead} 
+                  className="text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                >
+                  Mark all read
+                </Button>
+              </div>
             </div>
+          
 
             <div className="space-y-2">
               {notifications.map(notif => (
@@ -281,6 +298,15 @@ function ProfileView() {
                                 } else if (notif.relatedEntityType === 'Announcement') {
                                     navigate(`/announcements`); 
                                 }
+                                else if (notif.relatedEntityType === 'Event') {
+                                    navigate(`/event/${notif.relatedEntityId}`);
+                                }
+                                else if (notif.relatedEntityType === 'RoomBookingRequest') {
+                                    if (isAdmin) {
+                                        navigate(`/booking-requests`);
+                                    }
+                                }
+
                                 
                             }}
                           >

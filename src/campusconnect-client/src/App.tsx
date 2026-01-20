@@ -21,7 +21,14 @@ import CampusMap from './pages/CampusMap/CampusMap';
 import AllAchievements from './pages/Achievements/AllAchievements';
 import ManageAchievements from './pages/Achievements/ManageAchievements';
 import ActivityHistory from './pages/ActivityHistory';
+import BookingRequests from './pages/BookingRequests/BookingRequests';
+import MyBookingRequests from './pages/MyBookingRequests/MyBookingRequests';
+import Notifications from './pages/Notifications';
 import Library from './pages/Library/Library';
+import SubjectsManagement from './pages/SubjectsManagement';
+import GradesManagement from './pages/GradesManagement';
+import StudentGrades from './pages/StudentGrades';
+import SubjectDetails from './pages/Subjects/SubjectDetails';
 
 
 function App() {
@@ -51,7 +58,14 @@ function App() {
           <Route path="/achievements" element={<AllAchievements />} />
           <Route path="/manage-achievements" element={<ManageAchievements />} />
           <Route path="/activity-history" element={<ActivityHistory />} />
+          <Route path="/booking-requests" element={<BookingRequests />} />
+          <Route path="/my-booking-requests" element={<MyBookingRequests />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="/library" element={<Library />} />
+          <Route path="/subjects" element={<SubjectsManagement />} />
+          <Route path="/subjects/:id" element={<SubjectDetails />} />
+          <Route path="/manage-grades" element={<GradesManagement />} />
+          <Route path="/my-grades" element={<StudentGrades />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
