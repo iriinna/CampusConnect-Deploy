@@ -163,12 +163,13 @@ public class GradeService : IGradeService
             .ToListAsync();
 
         var groupedGrades = grades
-            .GroupBy(g => new { g.SubjectId, g.Subject.Name, g.Subject.Code, ProfessorName = $"{g.Subject.Professor.FirstName} {g.Subject.Professor.LastName}" })
+            .GroupBy(g => new { g.SubjectId, g.Subject.Name, g.Subject.Code, g.Subject.Year, ProfessorName = $"{g.Subject.Professor.FirstName} {g.Subject.Professor.LastName}" })
             .Select(group => new SubjectGrades
             {
                 SubjectId = group.Key.SubjectId,
                 SubjectName = group.Key.Name,
                 SubjectCode = group.Key.Code,
+                Year = group.Key.Year,
                 ProfessorName = group.Key.ProfessorName,
                 Grades = group.Select(g => new GradeDto
                 {

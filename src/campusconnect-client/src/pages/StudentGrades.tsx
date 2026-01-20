@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { gradeApi } from '../services/gradesApi';
 import type { StudentGradesResponse } from '../services/gradesApi';
-import { BookOpen, Calendar, Award, BarChart3, Star, GraduationCap, Trophy } from 'lucide-react';
+import { BookOpen, GraduationCap, Trophy } from 'lucide-react';
 import { Layout } from '../components/Layout';
 
 const StudentGrades: React.FC = () => {
@@ -90,17 +90,10 @@ const StudentGrades: React.FC = () => {
       : 0;
   
   const getGradeColor = (grade: number) => {
-    if (grade >= 9) return 'from-emerald-500 to-green-600';
-    if (grade >= 7) return 'from-blue-500 to-indigo-600';
-    if (grade >= 5) return 'from-amber-500 to-orange-600';
-    return 'from-red-500 to-rose-600';
-  };
-
-  const getGradeBadgeColor = (grade: number) => {
-    if (grade >= 9) return 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-green-500/30';
-    if (grade >= 7) return 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30';
-    if (grade >= 5) return 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30';
-    return 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30';
+    if (grade >= 9) return 'text-green-600 bg-green-50 border-green-200';
+    if (grade >= 7) return 'text-blue-600 bg-blue-50 border-blue-200';
+    if (grade >= 5) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+    return 'text-red-600 bg-red-50 border-red-200';
   };
 
   return (
@@ -173,133 +166,81 @@ const StudentGrades: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Subjects Grid */}
+        {/* Grades List - Minimalist */}
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {gradesData.subjectGrades.map((subjectGrade, index) => (
-              <motion.div
-                key={subjectGrade.subjectId}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5, scale: 1.01 }}
-                className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden border-2 border-slate-700 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-300"
-              >
-                {/* Subject Header */}
-                <div className={`bg-gradient-to-br ${getGradeColor(subjectGrade.averageGrade || 0)} p-6 text-white relative overflow-hidden shadow-lg`}>
-                  <div className="absolute top-0 right-0 opacity-10">
-                    <BookOpen size={120} />
-                  </div>
-                  <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex-1">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-2 text-white drop-shadow-lg">
-                          {subjectGrade.subjectName}
-                        </h3>
-                        <div className="inline-block bg-white/30 backdrop-blur-sm px-3 py-1 rounded-full">
-                          <p className="text-white font-mono text-sm font-semibold">{subjectGrade.subjectCode}</p>
-                        </div>
-                      </div>
-                      {subjectGrade.averageGrade !== undefined && (
-                        <div className="bg-white/25 backdrop-blur-md rounded-2xl p-4 text-center border-2 border-white/40 shadow-xl">
-                          <div className="flex items-center gap-1 mb-1 justify-center">
-                            <Star className="h-4 w-4 fill-yellow-300 text-yellow-300" />
-                            <p className="text-xs font-bold text-white">AVERAGE</p>
-                          </div>
-                          <div className="text-4xl font-black text-white drop-shadow-lg">
-                            {subjectGrade.averageGrade.toFixed(2)}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 mt-4 bg-white/15 backdrop-blur-sm rounded-lg p-2 inline-flex">
-                      <div className="h-7 w-7 bg-white/30 rounded-full flex items-center justify-center">
-                        <GraduationCap size={16} className="text-white" />
-                      </div>
-                      <p className="text-sm font-medium text-white">
-                        Professor: <span className="font-bold">{subjectGrade.professorName}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
+          <div className="space-y-12">
+            {[1, 2, 3].map(year => {
+              const yearSubjects = gradesData.subjectGrades.filter(sg => sg.year === year);
+              if (yearSubjects.length === 0) return null;
 
-                {/* Grades List */}
-                <div className="p-6 bg-slate-800/50">
-                  {subjectGrade.grades.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="inline-block p-5 bg-slate-700/50 rounded-2xl mb-4">
-                        <Award className="text-slate-500" size={40} />
-                      </div>
-                      <p className="text-gray-400 font-semibold text-lg">No grades for this subject yet.</p>
+              // Calculate year average
+              const yearGrades = yearSubjects.flatMap(sg => sg.grades);
+              const yearAverage = yearGrades.length > 0 
+                ? yearGrades.reduce((sum, g) => sum + g.value, 0) / yearGrades.length 
+                : 0;
+
+              return (
+                <motion.div 
+                  key={year}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6 bg-slate-800/30 rounded-xl p-6"
+                >
+                  {/* Year Header - Ultra Minimalist */}
+                  <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-indigo-500/50">
+                    <div className="flex items-center gap-3">
+                      <GraduationCap className="text-indigo-400" size={32} />
+                      <h2 className="text-3xl font-bold text-white">Anul {year}</h2>
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {subjectGrade.grades.map((grade, gradeIndex) => (
-                        <motion.div
-                          key={grade.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: gradeIndex * 0.05 }}
-                          className="group relative bg-slate-700/50 rounded-2xl p-5 border-2 border-slate-600 hover:border-indigo-500 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div className={`${getGradeBadgeColor(grade.value)} rounded-2xl px-5 py-4 text-center min-w-[80px] transform group-hover:scale-110 transition-transform duration-300`}>
-                              <div className="text-3xl font-black leading-none">{grade.value.toFixed(2)}</div>
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-3">
-                                <div className="bg-indigo-600/30 p-1.5 rounded-lg">
-                                  <Calendar size={16} className="text-indigo-400" />
-                                </div>
-                                <span className="text-sm font-bold text-gray-300">
-                                  {new Date(grade.createdAt).toLocaleDateString('en-US', {
-                                    day: '2-digit',
-                                    month: 'long',
-                                    year: 'numeric',
-                                  })}
-                                </span>
-                              </div>
-                              {grade.comments && (
-                                <div className="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border-l-4 border-indigo-500 p-4 rounded-r-xl mb-3 shadow-sm">
-                                  <p className="text-sm text-gray-200 font-medium italic leading-relaxed">"{grade.comments}"</p>
-                                </div>
+                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
+                      <div className="text-sm font-medium opacity-90">Media anul {year}</div>
+                      <div className="text-2xl font-bold">{yearAverage.toFixed(2)}</div>
+                    </div>
+                  </div>
+
+                  {/* Subjects List - No Containers */}
+                  <div className="space-y-8 pl-2">
+                    {yearSubjects.map((subjectGrade, index) => (
+                      <motion.div
+                        key={subjectGrade.subjectId}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                        className="space-y-3 bg-slate-800/50 rounded-lg p-4"
+                      >
+                        {/* Subject Name with Average */}
+                        <div className="flex items-baseline gap-3 flex-wrap">
+                          <h3 className="text-xl font-semibold text-white">
+                            {subjectGrade.subjectName}
+                          </h3>
+                          <span className="text-sm text-indigo-400 font-medium bg-indigo-900/30 px-3 py-1 rounded-full">
+                            Media: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'}
+                          </span>
+                        </div>
+
+                        {/* Grades - Simple Inline List */}
+                        <div className="flex items-center gap-2 flex-wrap pl-2">
+                          <span className="text-gray-400 font-medium text-sm">Note:</span>
+                          {subjectGrade.grades.map((grade, idx) => (
+                            <span key={grade.id} className="inline-flex items-center">
+                              <span
+                                className={`${getGradeColor(grade.value)} px-3 py-1.5 rounded-md font-bold text-base cursor-help transition-all hover:scale-105 border-2 shadow-sm`}
+                                title={`${new Date(grade.createdAt).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}${grade.comments ? '\n' + grade.comments : ''}`}
+                              >
+                                {grade.value.toFixed(2)}
+                              </span>
+                              {idx < subjectGrade.grades.length - 1 && (
+                                <span className="text-gray-500 mx-1.5">•</span>
                               )}
-                              <div className="flex items-center gap-2 text-xs text-gray-400 bg-slate-700/70 px-3 py-2 rounded-lg inline-flex">
-                                <GraduationCap size={14} className="text-indigo-400" />
-                                <span>Added by: <span className="font-bold text-gray-200">{grade.createdByProfessorName}</span></span>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Subject Footer Stats */}
-                {subjectGrade.grades.length > 0 && (
-                  <div className="bg-slate-700/50 px-6 py-4 border-t-2 border-slate-600">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <BarChart3 size={18} className="text-indigo-400" />
-                        <span className="font-bold text-gray-200">Total grades: {subjectGrade.grades.length}</span>
-                      </div>
-                      <div className="flex gap-4 text-sm font-bold">
-                        <span className="flex items-center gap-1.5">
-                          <span className="text-xs text-gray-500">Min:</span>
-                          <span className="text-red-400 text-lg">{Math.min(...subjectGrade.grades.map((g) => g.value)).toFixed(2)}</span>
-                        </span>
-                        <span className="h-6 w-px bg-slate-600"></span>
-                        <span className="flex items-center gap-1.5">
-                          <span className="text-xs text-gray-500">Max:</span>
-                          <span className="text-green-400 text-lg">{Math.max(...subjectGrade.grades.map((g) => g.value)).toFixed(2)}</span>
-                        </span>
-                      </div>
-                    </div>
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                )}
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ export interface Subject {
   name: string;
   code: string;
   description?: string;
+  year: number; // Anul de studiu: 1, 2, 3
   professorId: number;
   professorName: string;
   createdAt: string;
@@ -17,11 +18,13 @@ export interface CreateSubjectRequest {
   name: string;
   code: string;
   description?: string;
+  year: number; // Anul de studiu: 1, 2, 3
 }
 
 export interface UpdateSubjectRequest {
   name: string;
   description?: string;
+  year: number; // Anul de studiu: 1, 2, 3
 }
 
 export interface Grade {
@@ -63,6 +66,7 @@ export interface SubjectGrades {
   subjectId: number;
   subjectName: string;
   subjectCode: string;
+  year: number; // Anul de studiu
   professorName: string;
   grades: Grade[];
   averageGrade?: number;

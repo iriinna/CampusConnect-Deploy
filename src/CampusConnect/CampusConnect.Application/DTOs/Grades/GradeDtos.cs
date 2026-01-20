@@ -5,12 +5,14 @@ public class CreateSubjectRequest
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public int Year { get; set; } = 1; // Anul de studiu: 1, 2 sau 3
 }
 
 public class UpdateSubjectRequest
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public int Year { get; set; } = 1; // Anul de studiu: 1, 2 sau 3
 }
 
 public class SubjectDto
@@ -19,6 +21,7 @@ public class SubjectDto
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public int Year { get; set; } = 1; // Anul de studiu: 1, 2 sau 3
     public int ProfessorId { get; set; }
     public string ProfessorName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
@@ -69,6 +72,7 @@ public class SubjectGrades
     public int SubjectId { get; set; }
     public string SubjectName { get; set; } = string.Empty;
     public string SubjectCode { get; set; } = string.Empty;
+    public int Year { get; set; } = 1; // Anul de studiu
     public string ProfessorName { get; set; } = string.Empty;
     public List<GradeDto> Grades { get; set; } = new();
     public decimal? AverageGrade { get; set; }

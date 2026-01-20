@@ -147,57 +147,86 @@ const MyGrades = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-6">
-            {gradesData.subjectGrades.map((subjectGrade, index) => (
-              <motion.div
-                key={subjectGrade.subjectId}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-              >
-                <Card>
-                  <CardHeader>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-3">
-                        <BookOpen className="w-6 h-6 text-primary" />
-                        <div>
-                          <CardTitle className="text-xl">{subjectGrade.subjectName}</CardTitle>
-                          <p className="text-sm text-muted-foreground">
-                            {subjectGrade.professorName}
-                          </p>
+          <div className="space-y-12">
+            {[1, 2, 3].map(year => {
+              const yearSubjects = gradesData.subjectGrades.filter(sg => sg.year === year);
+              if (yearSubjects.length === 0) return null;
+
+              return (
+                <motion.div 
+                  key={year}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  {/* Year Header - Ultra Minimalist */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <GraduationCap className="text-indigo-600" size={32} />
+                    <h2 className="text-3xl font-bold text-gray-900">Anul {year}</h2>
+                  </div>
+
+                  {/* Subjects List - No Containers */}
+                  <div className="space-y-8 pl-6">
+                    {yearSubjects.map((subjectGrade, index) => (
+                      <motion.div
+                        key={subjectGrade.subjectId}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                        className="space-y-3"
+                      >
+                        {/* Subject Name with Average */}
+                        <div className="flex items-baseline gap-3">
+                          <h3 className="text-xl font-semibold text-gray-800">
+                            {subjectGrade.subjectName}
+                          </h3>
+                          <span className="text-sm text-indigo-600 font-medium">
+                            (Media: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'})
+                          </span>
                         </div>
-                      </div>
-                      <Badge className="bg-primary/10 text-primary border-primary/20 text-lg px-4 py-2">
-                        Media: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {subjectGrade.grades.map((grade) => (
-                        <div
-                          key={grade.id}
-                          className="p-4 border rounded-lg hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <Badge className={`${getGradeColor(grade.value)} font-bold text-lg px-3 py-1`}>
-                                  {grade.value.toFixed(2)}
-                                </Badge>
-                                <span className="text-sm text-muted-foreground">
-                                  {new Date(grade.createdAt).toLocaleDateString('ro-RO', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                  })}
-                                </span>
+
+                        {/* Grades - Simple Inline List */}
+                        <div className="flex items-center gap-2 flex-wrap pl-4">
+                          <span className="text-gray-600 font-medium">Note:</span>
+                          {subjectGrade.grades.map((grade, idx) => (
+                            <span key={grade.id} className="inline-flex items-center">
+                              <span
+                                className={`${getGradeColor(grade.value)} px-3 py-1 rounded-md font-bold text-base cursor-help transition-all hover:scale-105`}
+                                title={`${new Date(grade.createdAt).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}${grade.comments ? '\n' + grade.comments : ''}`}
+                              >
+                                {grade.value.toFixed(2)}
+                              </span>
+                              {idx < subjectGrade.grades.length - 1 && (
+                                <span className="text-gray-400 mx-1">•</span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                              {grade.comments && (
-                                <div className="mt-2 p-3 bg-accent rounded-lg">
-                                  <p className="text-sm text-muted-foreground">
-                                    <span className="font-medium">Comentarii: </span>
-                                    {grade.comments}
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        )}
                                   </p>
                                 </div>
                               )}
