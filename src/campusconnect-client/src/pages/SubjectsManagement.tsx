@@ -17,6 +17,7 @@ const SubjectsManagement: React.FC = () => {
     name: '',
     code: '',
     description: '',
+    year: 1,
   });
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const SubjectsManagement: React.FC = () => {
 
   const handleCreate = () => {
     setEditingSubject(null);
-    setFormData({ name: '', code: '', description: '' });
+    setFormData({ name: '', code: '', description: '', year: 1 });
     setShowModal(true);
   };
 
@@ -48,6 +49,7 @@ const SubjectsManagement: React.FC = () => {
       name: subject.name,
       code: subject.code,
       description: subject.description || '',
+      year: subject.year,
     });
     setShowModal(true);
   };
@@ -78,6 +80,7 @@ const SubjectsManagement: React.FC = () => {
         const updateData: UpdateSubjectRequest = {
           name: formData.name,
           description: formData.description || undefined,
+          year: formData.year,
         };
         await subjectApi.updateSubject(editingSubject.id, updateData);
       } else {
@@ -86,6 +89,7 @@ const SubjectsManagement: React.FC = () => {
           name: formData.name,
           code: generatedCode,
           description: formData.description || undefined,
+          year: formData.year,
         };
         await subjectApi.createSubject(createData);
       }
@@ -101,7 +105,7 @@ const SubjectsManagement: React.FC = () => {
   const closeModal = () => {
     setShowModal(false);
     setEditingSubject(null);
-    setFormData({ name: '', code: '', description: '' });
+    setFormData({ name: '', code: '', description: '', year: 1 });
   };
 
   if (loading) {
@@ -206,97 +210,120 @@ const SubjectsManagement: React.FC = () => {
               </motion.button>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {subjects.map((subject, index) => (
-                <motion.div
-                  key={subject.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ y: -8 }}
-                  onClick={() => navigate(`/subjects/${subject.id}`)}
-                  className="group bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-700 hover:shadow-2xl hover:border-indigo-500 transition-all duration-300 cursor-pointer relative"
-                >
-                  {/* Decorative gradient */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-bl-full transform translate-x-8 -translate-y-8"></div>
-                  
-                  <div className="p-6 relative">
-                    {/* Header with icons */}
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-start gap-3 flex-1">
-                        <div className="p-3 bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-xl group-hover:from-indigo-800/50 group-hover:to-purple-800/50 transition-all">
-                          <GraduationCap className="h-6 w-6 text-indigo-400" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-xl font-bold text-gray-100 mb-1 group-hover:text-indigo-400 transition-colors truncate">
-                            {subject.name}
-                          </h3>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-mono text-gray-400 bg-slate-700 px-2 py-1 rounded">{subject.code}</span>
+            <>
+              {[1, 2, 3].map(year => {
+                const yearSubjects = subjects.filter(s => s.year === year);
+                if (yearSubjects.length === 0) return null;
+                
+                return (
+                  <div key={year} className="mb-12">
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="flex items-center gap-3 mb-6"
+                    >
+                      <div className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-lg">
+                        <GraduationCap size={24} />
+                        <h2 className="text-2xl font-bold">Year {year}</h2>
+                      </div>
+                      <div className="h-1 flex-1 bg-gradient-to-r from-indigo-600/50 to-transparent rounded"></div>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {yearSubjects.map((subject, index) => (
+                        <motion.div
+                          key={subject.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          whileHover={{ y: -8 }}
+                          onClick={() => navigate(`/subjects/${subject.id}`)}
+                          className="group bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-700 hover:shadow-2xl hover:border-indigo-500 transition-all duration-300 cursor-pointer relative"
+                        >
+                          {/* Decorative gradient */}
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-bl-full transform translate-x-8 -translate-y-8"></div>
+                          
+                          <div className="p-6 relative">
+                            {/* Header with icons */}
+                            <div className="flex justify-between items-start mb-4">
+                              <div className="flex items-start gap-3 flex-1">
+                                <div className="p-3 bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-xl group-hover:from-indigo-800/50 group-hover:to-purple-800/50 transition-all">
+                                  <GraduationCap className="h-6 w-6 text-indigo-400" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="text-xl font-bold text-gray-100 mb-1 group-hover:text-indigo-400 transition-colors truncate">
+                                    {subject.name}
+                                  </h3>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-mono text-gray-400 bg-slate-700 px-2 py-1 rounded">{subject.code}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Action buttons */}
+                              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                                <motion.button
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEdit(subject);
+                                  }}
+                                  className="p-2 text-indigo-400 hover:bg-indigo-900/50 rounded-lg transition-all"
+                                  title="Editează"
+                                >
+                                  <Pencil size={18} />
+                                </motion.button>
+                                <motion.button
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(subject.id, subject.name);
+                                  }}
+                                  className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-all"
+                                  title="Șterge"
+                                >
+                                  <Trash2 size={18} />
+                                </motion.button>
+                              </div>
+                            </div>
+                            
+                            {/* Description */}
+                            {subject.description && (
+                              <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
+                                {subject.description}
+                              </p>
+                            )}
+                            
+                            {/* Footer */}
+                            <div className="flex justify-between items-center pt-4 border-t border-slate-700">
+                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <Calendar size={14} />
+                                {new Date(subject.createdAt).toLocaleDateString('en-US')}
+                              </div>
+                              <motion.div
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="flex items-center gap-1 text-indigo-400 font-medium text-sm"
+                              >
+                                <span>Manage Grades</span>
+                                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                              </motion.div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
 
-                      {/* Action buttons */}
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(subject);
-                          }}
-                          className="p-2 text-indigo-400 hover:bg-indigo-900/50 rounded-lg transition-all"
-                          title="Editează"
-                        >
-                          <Pencil size={18} />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(subject.id, subject.name);
-                          }}
-                          className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-all"
-                          title="Șterge"
-                        >
-                          <Trash2 size={18} />
-                        </motion.button>
-                      </div>
-                    </div>
-                    
-                    {/* Description */}
-                    {subject.description && (
-                      <p className="text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
-                        {subject.description}
-                      </p>
-                    )}
-                    
-                    {/* Footer */}
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-700">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Calendar size={14} />
-                        {new Date(subject.createdAt).toLocaleDateString('en-US')}
-                      </div>
-                      <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-1 text-indigo-400 font-medium text-sm"
-                      >
-                        <span>Manage Grades</span>
-                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                      </motion.div>
+                          {/* Hover effect sparkle */}
+                          <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Sparkles className="text-yellow-400" size={20} />
+                          </div>
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
-
-                  {/* Hover effect sparkle */}
-                  <div className="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Sparkles className="text-yellow-400" size={20} />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                );
+              })}
+            </>
           )}
         </div>
 
@@ -354,6 +381,23 @@ const SubjectsManagement: React.FC = () => {
                       required
                       placeholder="e.g.: Mathematics"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                      <GraduationCap size={18} className="text-indigo-600" />
+                      Academic Year *
+                    </label>
+                    <select
+                      value={formData.year}
+                      onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                      required
+                    >
+                      <option value={1}>Year 1</option>
+                      <option value={2}>Year 2</option>
+                      <option value={3}>Year 3</option>
+                    </select>
                   </div>
 
                   <div>

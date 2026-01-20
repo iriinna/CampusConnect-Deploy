@@ -31,6 +31,7 @@ public class SubjectService : ISubjectService
             Name = request.Name,
             Code = request.Code,
             Description = request.Description,
+            Year = request.Year,
             ProfessorId = professorId,
             CreatedAt = DateTime.UtcNow,
             IsActive = true
@@ -54,6 +55,7 @@ public class SubjectService : ISubjectService
 
         subject.Name = request.Name;
         subject.Description = request.Description;
+        subject.Year = request.Year;
 
         await _context.SaveChangesAsync();
 
@@ -92,12 +94,14 @@ public class SubjectService : ISubjectService
                 Name = s.Name,
                 Code = s.Code,
                 Description = s.Description,
+                Year = s.Year,
                 ProfessorId = s.ProfessorId,
                 ProfessorName = $"{s.Professor.FirstName} {s.Professor.LastName}",
                 CreatedAt = s.CreatedAt,
                 IsActive = s.IsActive
             })
-            .OrderBy(s => s.Name)
+            .OrderBy(s => s.Year)
+            .ThenBy(s => s.Name)
             .ToListAsync();
     }
 
@@ -112,12 +116,14 @@ public class SubjectService : ISubjectService
                 Name = s.Name,
                 Code = s.Code,
                 Description = s.Description,
+                Year = s.Year,
                 ProfessorId = s.ProfessorId,
                 ProfessorName = $"{s.Professor.FirstName} {s.Professor.LastName}",
                 CreatedAt = s.CreatedAt,
                 IsActive = s.IsActive
             })
-            .OrderBy(s => s.Name)
+            .OrderBy(s => s.Year)
+            .ThenBy(s => s.Name)
             .ToListAsync();
     }
 
@@ -138,6 +144,7 @@ public class SubjectService : ISubjectService
             Name = subject.Name,
             Code = subject.Code,
             Description = subject.Description,
+            Year = subject.Year,
             ProfessorId = subject.ProfessorId,
             ProfessorName = $"{subject.Professor.FirstName} {subject.Professor.LastName}",
             CreatedAt = subject.CreatedAt,
