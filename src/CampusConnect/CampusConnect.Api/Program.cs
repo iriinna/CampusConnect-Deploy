@@ -86,13 +86,17 @@ builder.Services.AddScoped<IActivityLoggerService, ActivityLoggerService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 
+// AI Assistant Services (using Gemini)
+builder.Services.AddHttpClient<IOpenAiService, GeminiService>();
+builder.Services.AddScoped<IAssistantService, AssistantService>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-// ✅ Swagger
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

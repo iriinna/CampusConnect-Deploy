@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AssistantProvider } from './contexts/AssistantContext';
+import { FloatingAssistantButton, ChatWidget } from './components/Assistant';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmEmail from './pages/ConfirmEmail';
@@ -26,41 +28,63 @@ import MySubjects from './pages/Subjects/MySubjects';
 import SubjectDetails from './pages/Subjects/SubjectDetails';
 import MyGrades from './pages/Grades/MyGrades';
 
+// Component to conditionally show assistant on authenticated pages
+function AssistantWrapper() {
+  const location = useLocation();
+  const publicPaths = ['/login', '/register', '/confirm-email', '/'];
+  const isPublicPage = publicPaths.includes(location.pathname);
+  const token = localStorage.getItem('token');
+
+  // Only show assistant on authenticated pages when user is logged in
+  if (isPublicPage || !token) {
+    return null;
+  }
+
+  return (
+    <>
+      <FloatingAssistantButton />
+      <ChatWidget />
+    </>
+  );
+}
+
 function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/confirm-email" element={<ConfirmEmail />} />
-          <Route path="/dashboard" element={<Home />} />
-          <Route path="/profile" element={<ViewProfile />} />
-          <Route path="/profile/:id" element={<ViewProfile />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
-          <Route path="/announcements" element={<Announcements />} />
-          <Route path="/create-announcement" element={<CreateAnnouncement />} />
-          <Route path="/events" element={<UpcomingEvents />} />
-          <Route path="/create-event" element={<CreateEvent />} />
-          <Route path="/edit-event/:id" element={<EditEvent />} />
-          <Route path="/event/:id" element={<ViewEvent />} />
-          <Route path="/groups" element={<Groups />} />
-          <Route path='/users' element={<Users />} />
-          <Route path="/groups/:id" element={<GroupDetails />} />
-          <Route path="/my-tasks" element={<MyTasks />} />
-          <Route path="/campus-map" element={<CampusMap />} />
-          <Route path="/achievements" element={<AllAchievements />} />
-          <Route path="/manage-achievements" element={<ManageAchievements />} />
-          <Route path="/activity-history" element={<ActivityHistory />} />
-          <Route path="/library" element={<Library />} />
-          <Route path="/subjects" element={<MySubjects />} />
-          <Route path="/subjects/:id" element={<SubjectDetails />} />
-          <Route path="/my-grades" element={<MyGrades />} />
-        </Routes>
-      </BrowserRouter>
+      <AssistantProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/confirm-email" element={<ConfirmEmail />} />
+            <Route path="/dashboard" element={<Home />} />
+            <Route path="/profile" element={<ViewProfile />} />
+            <Route path="/profile/:id" element={<ViewProfile />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/announcements" element={<Announcements />} />
+            <Route path="/create-announcement" element={<CreateAnnouncement />} />
+            <Route path="/events" element={<UpcomingEvents />} />
+            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/edit-event/:id" element={<EditEvent />} />
+            <Route path="/event/:id" element={<ViewEvent />} />
+            <Route path="/groups" element={<Groups />} />
+            <Route path='/users' element={<Users />} />
+            <Route path="/groups/:id" element={<GroupDetails />} />
+            <Route path="/my-tasks" element={<MyTasks />} />
+            <Route path="/campus-map" element={<CampusMap />} />
+            <Route path="/achievements" element={<AllAchievements />} />
+            <Route path="/manage-achievements" element={<ManageAchievements />} />
+            <Route path="/activity-history" element={<ActivityHistory />} />
+            <Route path="/library" element={<Library />} />
+            <Route path="/subjects" element={<MySubjects />} />
+            <Route path="/subjects/:id" element={<SubjectDetails />} />
+            <Route path="/my-grades" element={<MyGrades />} />
+          </Routes>
+          <AssistantWrapper />
+        </BrowserRouter>
+      </AssistantProvider>
     </ThemeProvider>
-
   );
 }
 export default App;
