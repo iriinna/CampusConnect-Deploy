@@ -42,15 +42,6 @@ public class AuthService : IAuthService
                 Message = "Doar studenții sau angajații UniBuc pot crea cont (email-ul trebuie să fie @unibuc.ro sau @s.unibuc.ro)."
             };
         }
-        // 4. Verificare existență utilizator
-        if (!IsEmailDomainAllowed(request.Email))
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Doar studenții UniBuc pot crea cont (email trebuie să fie @unibuc.ro sau @s.unibuc.ro)"
-            };
-        }
 
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
@@ -62,44 +53,16 @@ public class AuthService : IAuthService
             };
         }
 
-        var user = new ApplicationUser
-        {
-            UserName = request.Email,
-            Email = request.Email,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            StudentId = request.StudentId,
-            DateOfBirth = request.DateOfBirth,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var result = await _userManager.CreateAsync(user, request.Password);
-
-        if (!result.Succeeded)
-        {
-            return new AuthResult
-            {
-                Success = false,
-                Message = "Eroare la crearea contului. Verifică dacă parola respectă cerințele.",
-                Errors = result.Errors.Select(e => e.Description).ToList() // Aici vei vedea erorile de complexitate parolă
-            };
-        }
-
-        // 5. Atribuire Rol bazat pe email
+        // Determinăm rolul bazat pe email ÎNAINTE de a crea userul
         var normalizedEmail = request.Email.ToLowerInvariant();
         string roleName;
 
-        // Logica de atribuire roluri:
-        // - admin1@unibuc.ro și admin2@unibuc.ro -> Admin
-        // - *@s.unibuc.ro -> User (Studenți)
-        // - *@unibuc.ro (alte emailuri) -> Professor
         if (normalizedEmail == "admin1@unibuc.ro" || normalizedEmail == "admin2@unibuc.ro")
         {
             roleName = "Admin";
         }
         else if (normalizedEmail.EndsWith("@s.unibuc.ro"))
         {
-            // Excepții pentru profesori cu adresă de student
             if (normalizedEmail == "anastasia.ispas@s.unibuc.ro" || normalizedEmail == "irina-maria.istrate@s.unibuc.ro")
             {
                 roleName = "Professor";
@@ -115,7 +78,37 @@ public class AuthService : IAuthService
         }
         else
         {
-            roleName = "User"; // Default pentru alte emailuri
+            roleName = "User";
+        }
+
+        // Generăm StudentId automat doar pentru studenți (rol "User")
+        string? studentId = null;
+        if (roleName == "User")
+        {
+            studentId = GenerateStudentId();
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = request.Email,
+            Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            StudentId = studentId,
+            DateOfBirth = request.DateOfBirth,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var result = await _userManager.CreateAsync(user, request.Password);
+
+        if (!result.Succeeded)
+        {
+            return new AuthResult
+            {
+                Success = false,
+                Message = "Eroare la crearea contului. Verifică dacă parola respectă cerințele.",
+                Errors = result.Errors.Select(e => e.Description).ToList()
+            };
         }
 
         // Asigură-te că rolul există în bază înainte de a-l atribui
@@ -202,7 +195,8 @@ public class AuthService : IAuthService
                 LastName = user.LastName,
                 Id = user.Id,
                 ExpiresAt = DateTime.UtcNow.AddDays(expirationDays),
-                Role = role
+                Role = role,
+                StudentId = user.StudentId
             }
         };
     }
@@ -266,5 +260,14 @@ public class AuthService : IAuthService
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private string GenerateStudentId()
+    {
+        // Format: an curent (4 cifre) + 5 cifre random = "202512345"
+        var year = DateTime.UtcNow.Year;
+        var random = new Random();
+        var randomDigits = random.Next(10000, 99999);
+        return $"{year}{randomDigits}";
     }
 }

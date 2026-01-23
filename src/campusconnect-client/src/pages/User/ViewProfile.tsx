@@ -18,7 +18,8 @@ import {
   ArrowRight,
   Check,
   Inbox,
-  Trophy
+  Trophy,
+  CreditCard
 } from 'lucide-react';
 import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
@@ -224,6 +225,11 @@ function ProfileView() {
               <Button onClick={() => navigate('/edit-profile')} className="bg-white text-purple-600 hover:bg-white/90">
                 <Edit className="h-4 w-4 mr-2" /> Edit Profile
               </Button>
+              {user.studentId && (
+                <Button onClick={() => navigate('/student-card')} className="bg-amber-500 text-white hover:bg-amber-600">
+                  <CreditCard className="h-4 w-4 mr-2" /> Student Card
+                </Button>
+              )}
               <Button variant="outline" onClick={handleLogout} className="border-white text-white hover:bg-white/20">
                 <LogOut className="h-4 w-4 mr-2" /> Logout
               </Button>
