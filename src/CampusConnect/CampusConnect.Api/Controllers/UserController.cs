@@ -71,6 +71,7 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
             Id = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Email = user.Email ?? string.Empty,
             ProfilePictureUrl = user.ProfilePictureUrl,
             StudentId = user.StudentId,
             Role = displayRole // Aici va fi acum valoarea corectă
@@ -121,6 +122,7 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
         }
 
 
+        [AllowAnonymous]
         [HttpGet("public-details/{id}")]
         public async Task<IActionResult> GetPublicUserDetails(int id)
         {
@@ -200,10 +202,10 @@ public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQu
                 return NotFound(new { message = "Utilizatorul nu a fost găsit." });
             }
 
-            return Ok(new 
-            { 
-                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}", 
-                newRole = newRole 
+            return Ok(new
+            {
+                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}",
+                newRole = newRole
             });
         }
 

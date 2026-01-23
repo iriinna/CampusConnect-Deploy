@@ -6,6 +6,8 @@ import ConfirmEmail from './pages/ConfirmEmail';
 import Home from './pages/Home';
 import ViewProfile from './pages/User/ViewProfile';
 import EditProfile from './pages/User/EditProfile';
+import StudentCard from './pages/User/StudentCard';
+import VerifyStudent from './pages/User/VerifyStudent';
 import Announcements from './pages/Announcements';
 import CreateAnnouncement from './pages/CreateAnnouncement';
 import CreateEvent from './pages/Event/CreateEvent';
@@ -66,6 +68,8 @@ function App() {
           <Route path="/subjects/:id" element={<SubjectDetails />} />
           <Route path="/manage-grades" element={<GradesManagement />} />
           <Route path="/my-grades" element={<StudentGrades />} />
+          <Route path="/student-card" element={<StudentCard />} />
+          <Route path="/verify-student/:id/:token" element={<VerifyStudent />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
