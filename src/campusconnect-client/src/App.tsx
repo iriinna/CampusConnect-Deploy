@@ -31,6 +31,7 @@ import SubjectsManagement from './pages/SubjectsManagement';
 import GradesManagement from './pages/GradesManagement';
 import StudentGrades from './pages/StudentGrades';
 import SubjectDetails from './pages/Subjects/SubjectDetails';
+import Documents from './pages/Documents/Documents';
 
 
 function App() {
@@ -68,6 +69,7 @@ function App() {
           <Route path="/subjects/:id" element={<SubjectDetails />} />
           <Route path="/manage-grades" element={<GradesManagement />} />
           <Route path="/my-grades" element={<StudentGrades />} />
+          <Route path="/documents" element={<Documents />} />
           <Route path="/student-card" element={<StudentCard />} />
           <Route path="/verify-student/:id/:token" element={<VerifyStudent />} />
         </Routes>
