@@ -230,7 +230,7 @@ function ProfileView() {
                   <CreditCard className="h-4 w-4 mr-2" /> Student Card
                 </Button>
               )}
-              <Button variant="outline" onClick={handleLogout} className="border-white text-white hover:bg-white/20">
+              <Button onClick={handleLogout} className="border border-white/70 bg-white/10 !text-white hover:bg-white/20">
                 <LogOut className="h-4 w-4 mr-2" /> Logout
               </Button>
             </div>

@@ -13,7 +13,8 @@ import {
   UserCog,
   BookOpen,
   Trophy,
-  GraduationCap
+  GraduationCap,
+  FileText
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card';
@@ -168,6 +169,14 @@ function Home() {
         link: '/my-grades',
         gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
         badge: 'Student',
+      },
+      {
+        title: 'Documents',
+        description: 'Generate official documents',
+        icon: FileText,
+        link: '/documents',
+        gradient: 'from-teal-500 via-cyan-500 to-blue-500',
+        badge: 'PDF',
       }
     ]),
 
