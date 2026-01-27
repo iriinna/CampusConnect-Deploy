@@ -26,11 +26,11 @@ export const FMI_PARTER: FloorPlanConfig = {
 
   // 🔧 Alege o dimensiune “standard”
   // Recomand: 900x600 sau 1000x700
-  canvas: { w: 500, h: 500 },
+  canvas: { w: 532, h: 423 },
 
   pins: [
-    { roomName: "Amf. Spiru Haret", label: "Amf. Haret", x: 78, y: 435 },
-    { roomName: "S1", label: "S1", x: 170, y: 60 },
-    { roomName: "S3", label: "S3", x: 260, y: 60 },
+    { roomName: "Amf. Spiru Haret", label: "Amf. Haret", x: 117, y: 233 },
+    { roomName: "S1", label: "S1", x: 233, y: 133 },
+    { roomName: "S3", label: "S3", x: 377, y: 133 },
   ],
 };
