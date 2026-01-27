@@ -6,6 +6,8 @@ import ConfirmEmail from './pages/ConfirmEmail';
 import Home from './pages/Home';
 import ViewProfile from './pages/User/ViewProfile';
 import EditProfile from './pages/User/EditProfile';
+import StudentCard from './pages/User/StudentCard';
+import VerifyStudent from './pages/User/VerifyStudent';
 import Announcements from './pages/Announcements';
 import CreateAnnouncement from './pages/CreateAnnouncement';
 import CreateEvent from './pages/Event/CreateEvent';
@@ -25,6 +27,11 @@ import BookingRequests from './pages/BookingRequests/BookingRequests';
 import MyBookingRequests from './pages/MyBookingRequests/MyBookingRequests';
 import Notifications from './pages/Notifications';
 import Library from './pages/Library/Library';
+import SubjectsManagement from './pages/SubjectsManagement';
+import GradesManagement from './pages/GradesManagement';
+import StudentGrades from './pages/StudentGrades';
+import SubjectDetails from './pages/Subjects/SubjectDetails';
+import Documents from './pages/Documents/Documents';
 
 
 function App() {
@@ -58,6 +65,13 @@ function App() {
           <Route path="/my-booking-requests" element={<MyBookingRequests />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/library" element={<Library />} />
+          <Route path="/subjects" element={<SubjectsManagement />} />
+          <Route path="/subjects/:id" element={<SubjectDetails />} />
+          <Route path="/manage-grades" element={<GradesManagement />} />
+          <Route path="/my-grades" element={<StudentGrades />} />
+          <Route path="/documents" element={<Documents />} />
+          <Route path="/student-card" element={<StudentCard />} />
+          <Route path="/verify-student/:id/:token" element={<VerifyStudent />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

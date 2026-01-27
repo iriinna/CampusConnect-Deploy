@@ -37,6 +37,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<UserActivity> UserActivities { get; set; }
     public DbSet<LibraryFolder> LibraryFolders { get; set; } 
     public DbSet<LibraryItem> LibraryItems { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Grade> Grades { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -779,6 +781,48 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 IsActive = true
             }
         );
+
+        // Subject configuration
+        builder.Entity<Subject>(entity =>
+        {
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.Name).IsRequired().HasMaxLength(200);
+            entity.Property(s => s.Code).IsRequired().HasMaxLength(50);
+            entity.Property(s => s.Description).HasMaxLength(1000);
+            
+            entity.HasOne(s => s.Professor)
+                .WithMany()
+                .HasForeignKey(s => s.ProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(s => s.Code).IsUnique();
+            entity.HasIndex(s => s.ProfessorId);
+        });
+
+        // Grade configuration
+        builder.Entity<Grade>(entity =>
+        {
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Value).HasColumnType("decimal(4,2)");
+            entity.Property(g => g.Comments).HasMaxLength(500);
+            
+            entity.HasOne(g => g.Subject)
+                .WithMany(s => s.Grades)
+                .HasForeignKey(g => g.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(g => g.Student)
+                .WithMany()
+                .HasForeignKey(g => g.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(g => g.CreatedByProfessor)
+                .WithMany()
+                .HasForeignKey(g => g.CreatedByProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(g => new { g.SubjectId, g.StudentId, g.CreatedAt });
+        });
     }
 
     private static ApplicationUser CreateUser(int id, string email, string firstName, string lastName, PasswordHasher<ApplicationUser> hasher)
