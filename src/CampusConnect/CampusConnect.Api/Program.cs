@@ -86,6 +86,11 @@ builder.Services.AddScoped<IAchievementService, AchievementService>();
 builder.Services.AddScoped<IActivityLoggerService, ActivityLoggerService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
+
+// AI Assistant Services (using Gemini)
+builder.Services.AddHttpClient<IOpenAiService, GeminiService>();
+builder.Services.AddScoped<IAssistantService, AssistantService>();
+builder.Services.AddScoped<IAiAssistantService, AiAssistantService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 builder.Services.AddControllers()
@@ -95,7 +100,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
-// ✅ Swagger
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

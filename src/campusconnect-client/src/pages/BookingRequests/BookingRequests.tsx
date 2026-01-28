@@ -71,9 +71,9 @@ export const BookingRequests = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Pending': return 'În Așteptare';
-      case 'Approved': return 'Aprobată';
-      case 'Rejected': return 'Respinsă';
+      case 'Pending': return 'Pending';
+      case 'Approved': return 'Approved';
+      case 'Rejected': return 'Rejected';
       default: return status;
     }
   };
@@ -81,7 +81,7 @@ export const BookingRequests = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Se încarcă cererile...</div>
+        <div className="text-center">Loading requests...</div>
       </div>
     );
   }
@@ -94,9 +94,9 @@ export const BookingRequests = () => {
         className="space-y-6"
       >
         <div>
-          <h1 className="text-3xl font-bold">Cereri de Rezervare Săli</h1>
+          <h1 className="text-3xl font-bold">Room Booking Requests</h1>
           <p className="text-muted-foreground mt-2">
-            Gestionează cererile de rezervare primite de la utilizatori
+            Manage booking requests received from users
           </p>
         </div>
 
@@ -111,7 +111,7 @@ export const BookingRequests = () => {
             <CardContent className="py-12">
               <div className="text-center text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Nu există cereri în așteptare</p>
+                <p>No pending requests</p>
               </div>
             </CardContent>
           </Card>
@@ -177,15 +177,15 @@ export const BookingRequests = () => {
 
                       {request.recurrencePattern && (
                         <div className="text-sm text-muted-foreground">
-                          <strong>Recurență:</strong> {request.recurrencePattern}
+                          <strong>Recurrence:</strong> {request.recurrencePattern}
                           {request.recurrenceEndDate && (
-                            <> până la {new Date(request.recurrenceEndDate).toLocaleDateString('ro-RO')}</>
+                            <> until {new Date(request.recurrenceEndDate).toLocaleDateString('ro-RO')}</>
                           )}
                         </div>
                       )}
 
                       <div className="text-xs text-muted-foreground">
-                        Cerere trimisă la: {new Date(request.createdAt).toLocaleString('ro-RO')}
+                        Request sent at: {new Date(request.createdAt).toLocaleString('ro-RO')}
                       </div>
                     </div>
 
@@ -198,7 +198,7 @@ export const BookingRequests = () => {
                           size="sm"
                         >
                           <CheckCircle className="h-4 w-4" />
-                          Aprobă
+                          Approve
                         </Button>
                         <Button
                           onClick={() => setSelectedRequest(request)}
@@ -208,7 +208,7 @@ export const BookingRequests = () => {
                           size="sm"
                         >
                           <XCircle className="h-4 w-4" />
-                          Respinge
+                          Reject
                         </Button>
                       </div>
                     )}
@@ -229,26 +229,25 @@ export const BookingRequests = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Respinge Cererea</CardTitle>
+                  <CardTitle>Reject Request</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <p className="text-sm text-muted-foreground mb-2">
-                      Cerere de la: <strong>{selectedRequest.requestedByUserName}</strong>
+                      Request from: <strong>{selectedRequest.requestedByUserName}</strong>
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Sală: <strong>{selectedRequest.roomName}</strong>
+                      Room: <strong>{selectedRequest.roomName}</strong>
                     </p>
                   </div>
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">
-                      Motivul respingerii (opțional)
+                      Reason for rejection (optional)
                     </label>
                     <Textarea
                       value={rejectionReason}
                       onChange={(e) => setRejectionReason(e.target.value)}
-                      placeholder="Exemplu: Sala este rezervată pentru o altă activitate..."
                       rows={4}
                     />
                   </div>
@@ -262,14 +261,14 @@ export const BookingRequests = () => {
                       }}
                       disabled={processing}
                     >
-                      Anulează
+                      Cancel
                     </Button>
                     <Button
                       variant="destructive"
                       onClick={() => handleReject(selectedRequest.id)}
                       disabled={processing}
                     >
-                      {processing ? 'Se respinge...' : 'Confirmă Respingerea'}
+                      {processing ? 'Rejecting...' : 'Confirm Rejection'}
                     </Button>
                   </div>
                 </CardContent>

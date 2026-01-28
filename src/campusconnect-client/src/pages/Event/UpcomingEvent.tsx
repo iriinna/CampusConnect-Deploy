@@ -9,7 +9,6 @@ import {
   Clock,
   Sparkles,
   Filter,
-  Search,
   CalendarDays,
   Tag,
 } from 'lucide-react';

@@ -23,10 +23,10 @@ export const RoomCard = ({ room }: Props) => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Free': return 'Liber';
-      case 'Occupied': return 'Ocupat';
-      case 'OccupiedSoon': return 'Ocupat în curând';
-      default: return 'Necunoscut';
+      case 'Free': return 'Free';
+      case 'Occupied': return 'Occupied';
+      case 'OccupiedSoon': return 'Occupied Soon';
+      default: return 'Unknown';
     }
   };
 
@@ -68,7 +68,7 @@ export const RoomCard = ({ room }: Props) => {
         {room.occupiedUntil && (
           <div className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
             <Clock className="h-3 w-3" />
-            Ocupat până la {new Date(room.occupiedUntil).toLocaleTimeString('ro-RO', {
+            Occupied until {new Date(room.occupiedUntil).toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit'
             })}

@@ -15,7 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { Layout } from '../../components/Layout';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { groupApi } from '../../services/groupApi';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Calendar,
   ArrowLeft,
@@ -73,7 +73,7 @@ function ViewEvent() {
   const fetchEvent = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/event/${id}`);
-      if (!response.ok) throw new Error('Evenimentul nu a fost gasit');
+      if (!response.ok) throw new Error('Event not found');
       
       const data = await response.json();
       setEvent(data);
@@ -88,7 +88,7 @@ function ViewEvent() {
       // Check if event is saved
       await checkIfSaved();
     } catch (err) {
-      setError('Nu s-a putut incarca evenimentul.');
+      setError('Could not load the event.');
     } finally {
       setLoading(false);
     }
@@ -116,7 +116,7 @@ function ViewEvent() {
   const handleJoinToggle = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      alert("Trebuie sa fii autentificat.");
+      alert("You must be authenticated.");
       return;
     }
     const endpoint = isJoined ? `${id}/leave` : `${id}/join`;
@@ -130,9 +130,9 @@ function ViewEvent() {
 
       if (response.ok) {
         setIsJoined(!isJoined);
-        navigate('/events'); 
+        navigate('/events');
       } else {
-        alert("Eroare la procesarea cererii.");
+        alert("Error processing request.");
       }
     } catch (error) {
       console.error(error);
@@ -140,7 +140,7 @@ function ViewEvent() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("Sigur vrei să stergi acest eveniment?")) return;
+    if (!window.confirm("Are you sure you want to delete this event?")) return;
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${API_BASE_URL}/event/${id}`, {
@@ -151,14 +151,14 @@ function ViewEvent() {
         navigate('/events'); 
       }
     } catch (error) {
-      alert("Eroare la stergere");
+      alert("Error deleting event");
     }
   };
 
   const handleSaveToggle = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      alert("Trebuie sa fii autentificat.");
+      alert("You must be authenticated.");
       return;
     }
 
@@ -173,14 +173,14 @@ function ViewEvent() {
 
       if (response.ok) {
         setIsSaved(!isSaved);
-        alert(isSaved ? 'Eveniment eliminat din salvate!' : 'Eveniment salvat cu succes!');
+        alert(isSaved ? 'Event removed from saved!' : 'Event saved successfully!');
       } else {
         const errorData = await response.json();
-        alert(errorData.message || "Eroare la procesarea cererii.");
+        alert(errorData.message || "Error processing request.");
       }
     } catch (error) {
       console.error(error);
-      alert("Eroare la procesarea cererii.");
+      alert("Error processing request.");
     }
   };
   const checkAdmin = () => {

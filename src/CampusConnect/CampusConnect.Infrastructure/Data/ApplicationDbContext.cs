@@ -39,7 +39,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<LibraryItem> LibraryItems { get; set; }
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Grade> Grades { get; set; }
-
+    public DbSet<RoomReservation> RoomReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -106,8 +106,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
         var admin1 = CreateUser(10, "admin1@unibuc.ro", "Andrei", "Popescu", hasher);
         var admin2 = CreateUser(11, "admin2@unibuc.ro", "Maria", "Ionescu", hasher);
-        var user1 = CreateUser(12, "student1@s.unibuc.ro", "Ion", "Vasilescu", hasher);
-        var user2 = CreateUser(13, "student2@s.unibuc.ro", "Elena", "Georgescu", hasher);
+        var user1 = CreateStudent(12, "student1@s.unibuc.ro", "Ion", "Vasilescu", "STD2024001", hasher);
+        var user2 = CreateStudent(13, "student2@s.unibuc.ro", "Elena", "Georgescu", "STD2024002", hasher);
         var professor1 = CreateUser(14, "anastasia.ispas@s.unibuc.ro", "Anastasia", "Ispas", hasher);
         var professor2 = CreateUser(15, "irina-maria.istrate@s.unibuc.ro", "Irina-Maria", "Istrate", hasher);
 
@@ -836,6 +836,27 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             NormalizedEmail = email.ToUpper(),
             FirstName = firstName,
             LastName = lastName,
+            EmailConfirmed = true,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            ConcurrencyStamp = Guid.NewGuid().ToString(),
+            CreatedAt = DateTime.UtcNow
+        };
+        user.PasswordHash = hasher.HashPassword(user, "Parola@123");
+        return user;
+    }
+
+    private static ApplicationUser CreateStudent(int id, string email, string firstName, string lastName, string studentId, PasswordHasher<ApplicationUser> hasher)
+    {
+        var user = new ApplicationUser
+        {
+            Id = id,
+            UserName = email,
+            NormalizedUserName = email.ToUpper(),
+            Email = email,
+            NormalizedEmail = email.ToUpper(),
+            FirstName = firstName,
+            LastName = lastName,
+            StudentId = studentId,
             EmailConfirmed = true,
             SecurityStamp = Guid.NewGuid().ToString(),
             ConcurrencyStamp = Guid.NewGuid().ToString(),

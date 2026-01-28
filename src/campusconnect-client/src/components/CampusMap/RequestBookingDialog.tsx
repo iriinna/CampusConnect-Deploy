@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { X, Calendar, Clock, AlertTriangle } from 'lucide-react';
+import { X, Calendar, Clock, AlertTriangle, Info } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -10,6 +10,7 @@ import { roomBookingApi } from '../../services/roomBookingApi';
 import { campusMapApi } from '../../services/campusMapApi';
 import type { CreateRoomBookingRequest } from '../../services/roomBookingApi';
 import type { Schedule } from '../../services/campusMapApi';
+
 interface Props {
   roomId: number;
   roomName: string;
@@ -18,10 +19,14 @@ interface Props {
   onSuccess?: () => void;
 }
 
+const BOOKING_START_HOUR = 8;  // 8 AM
+const BOOKING_END_HOUR = 20;   // 8 PM
+
 export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, onSuccess }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [conflictWarning, setConflictWarning] = useState<string | null>(null);
+  const [timeError, setTimeError] = useState<string | null>(null);
   const [existingSchedules, setExistingSchedules] = useState<Schedule[]>([]);
   const [formData, setFormData] = useState<CreateRoomBookingRequest>({
     title: '',
@@ -48,12 +53,48 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
     }
   }, [formData.startTime, roomId]);
 
-  // Check for conflicts when end time changes
+  // Check for conflicts and time validation when times change
   useEffect(() => {
-    if (formData.startTime && formData.endTime && existingSchedules.length > 0) {
+    if (formData.startTime && formData.endTime) {
+      validateTime(formData.startTime, formData.endTime);
       checkForConflicts(formData.startTime, formData.endTime, existingSchedules);
+    } else {
+      setTimeError(null);
+      setConflictWarning(null);
     }
-  }, [formData.endTime]);
+  }, [formData.startTime, formData.endTime, existingSchedules]);
+
+  const validateTime = (startTimeStr: string, endTimeStr: string) => {
+    const startTime = new Date(startTimeStr);
+    const endTime = new Date(endTimeStr);
+
+    // Check if end time is after start time
+    if (endTime <= startTime) {
+      setTimeError('Ora de terminare trebuie să fie după ora de începere.');
+      return false;
+    }
+
+    // Check if booking spans multiple days
+    if (startTime.toDateString() !== endTime.toDateString()) {
+      setTimeError('Rezervările nu pot să se întindă pe mai multe zile.');
+      return false;
+    }
+
+    // Check if booking is within allowed hours (8 AM - 8 PM)
+    if (startTime.getHours() < BOOKING_START_HOUR || startTime.getHours() >= BOOKING_END_HOUR) {
+      setTimeError(`Rezervările sunt permise doar între ${BOOKING_START_HOUR}:00 și ${BOOKING_END_HOUR}:00. Ora de începere este în afara intervalului permis.`);
+      return false;
+    }
+
+    if (endTime.getHours() < BOOKING_START_HOUR || endTime.getHours() > BOOKING_END_HOUR ||
+        (endTime.getHours() === BOOKING_END_HOUR && endTime.getMinutes() > 0)) {
+      setTimeError(`Rezervările sunt permise doar între ${BOOKING_START_HOUR}:00 și ${BOOKING_END_HOUR}:00. Ora de terminare este în afara intervalului permis.`);
+      return false;
+    }
+
+    setTimeError(null);
+    return true;
+  };
 
   const checkForConflicts = (startTimeStr: string, endTimeStr: string, schedules: Schedule[]) => {
     if (!startTimeStr || !endTimeStr) {
@@ -63,11 +104,6 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
 
     const requestStart = new Date(startTimeStr);
     const requestEnd = new Date(endTimeStr);
-
-    if (requestEnd <= requestStart) {
-      setConflictWarning('Ora de terminare trebuie să fie după ora de începere');
-      return;
-    }
 
     const conflicts = schedules.filter(schedule => {
       const scheduleStart = new Date(schedule.startTime);
@@ -81,15 +117,35 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
       const conflictTimes = conflicts.map(c =>
         `${new Date(c.startTime).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} - ${new Date(c.endTime).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })} (${c.title})`
       ).join(', ');
-      setConflictWarning(`Atenție! Sala este deja rezervată în intervalul: ${conflictTimes}`);
+      setConflictWarning(`Sala este deja rezervată în intervalul: ${conflictTimes}`);
     } else {
       setConflictWarning(null);
     }
   };
 
+  const isFormValid = () => {
+    return formData.title.trim() !== '' &&
+           formData.startTime !== '' &&
+           formData.endTime !== '' &&
+           !timeError &&
+           !conflictWarning;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!isFormValid()) {
+      if (timeError) {
+        setError(timeError);
+      } else if (conflictWarning) {
+        setError('Nu puteți rezerva sala în acest interval deoarece există un conflict.');
+      } else {
+        setError('Vă rugăm să completați toate câmpurile obligatorii.');
+      }
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -103,7 +159,7 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
       onSuccess?.();
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create booking request');
+      setError(err instanceof Error ? err.message : 'Nu s-a putut trimite cererea de rezervare');
     } finally {
       setLoading(false);
     }
@@ -134,14 +190,29 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Info about booking hours */}
+              <div className="p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-md text-sm flex items-start gap-2">
+                <Info className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <span>
+                  Rezervările sunt permise doar între <strong>{BOOKING_START_HOUR}:00</strong> și <strong>{BOOKING_END_HOUR}:00</strong>.
+                </span>
+              </div>
+
               {error && (
                 <div className="p-3 bg-red-100 border border-red-300 text-red-800 rounded-md text-sm">
                   {error}
                 </div>
               )}
 
-              {conflictWarning && (
-                <div className="p-3 bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-md text-sm flex items-start gap-2">
+              {timeError && (
+                <div className="p-3 bg-red-100 border border-red-300 text-red-800 rounded-md text-sm flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                  <span>{timeError}</span>
+                </div>
+              )}
+
+              {conflictWarning && !timeError && (
+                <div className="p-3 bg-red-100 border border-red-300 text-red-800 rounded-md text-sm flex items-start gap-2">
                   <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
                   <span>{conflictWarning}</span>
                 </div>
@@ -182,6 +253,9 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
                     onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
                     required
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Între {BOOKING_START_HOUR}:00 - {BOOKING_END_HOUR}:00
+                  </p>
                 </div>
 
                 <div>
@@ -196,6 +270,9 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
                     onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
                     required
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Între {BOOKING_START_HOUR}:00 - {BOOKING_END_HOUR}:00
+                  </p>
                 </div>
               </div>
 
@@ -232,16 +309,16 @@ export const RequestBookingDialog = ({ roomId, roomName, buildingName, onClose, 
 
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Note:</strong> The request will be reviewed by an administrator. 
-                  You will be notified once it is approved or rejected.
+                  <strong>Notă:</strong> Cererea va fi revizuită de un administrator.
+                  Veți primi o notificare când cererea va fi aprobată sau respinsă.
                 </p>
               </div>
 
               <div className="flex gap-2 justify-end pt-4">
                 <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
-                  Cancel
+                  Anulează
                 </Button>
-                <Button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading || !isFormValid()}>
                   {loading ? 'Se trimite...' : 'Trimite Cerere'}
                 </Button>
               </div>
