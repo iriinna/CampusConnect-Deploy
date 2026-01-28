@@ -26,6 +26,7 @@ interface Student {
   id: number;
   fullName: string;
   email: string;
+  studentId: string;
 }
 
 const SubjectDetails = () => {
@@ -81,7 +82,8 @@ const SubjectDetails = () => {
           .map((u: any) => ({
             id: u.id,
             fullName: `${u.firstName} ${u.lastName}`,
-            email: u.studentId || `student${u.id}@unibuc.ro`,
+            email: u.email || '',
+            studentId: u.studentId || '',
           }));
         setStudents(studentsList);
       } catch (err) {
@@ -480,6 +482,7 @@ const SubjectDetails = () => {
                                     (student) =>
                                       student.fullName.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
                                       student.email.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
+                                      student.studentId.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
                                       student.id.toString().includes(studentSearchTerm)
                                   )
                                   .map((student) => (
@@ -490,13 +493,13 @@ const SubjectDetails = () => {
                                       }`}
                                       onClick={() => {
                                         setFormData({ ...formData, studentId: student.id });
-                                        setStudentSearchTerm(`${student.fullName} (${student.email})`);
+                                        setStudentSearchTerm(student.fullName);
                                         setShowStudentDropdown(false);
                                       }}
                                     >
                                       <div className="font-medium">{student.fullName}</div>
                                       <div className="text-xs text-muted-foreground">
-                                        ID: {student.id} | {student.email}
+                                        {student.email} {student.studentId && `| Nr. matricol: ${student.studentId}`}
                                       </div>
                                     </div>
                                   ))}
@@ -504,6 +507,7 @@ const SubjectDetails = () => {
                                   (student) =>
                                     student.fullName.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
                                     student.email.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
+                                    student.studentId.toLowerCase().includes(studentSearchTerm.toLowerCase()) ||
                                     student.id.toString().includes(studentSearchTerm)
                                 ).length === 0 && (
                                   <div className="px-3 py-2 text-muted-foreground text-sm">
@@ -515,7 +519,7 @@ const SubjectDetails = () => {
                           </div>
                           {formData.studentId > 0 && (
                             <div className="mt-2 text-sm text-green-600 dark:text-green-400">
-                              Selected: {students.find(s => s.id === formData.studentId)?.fullName}
+                              Selected: {students.find(s => s.id === formData.studentId)?.fullName} ({students.find(s => s.id === formData.studentId)?.email})
                             </div>
                           )}
                         </div>
