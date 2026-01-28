@@ -9,8 +9,7 @@ import {
   ShieldAlert,
   ShieldCheck,
   Sparkles,
-  GraduationCap,
-  Mail
+  GraduationCap
 } from 'lucide-react';
 
 // Importăm componentele UI (asigură-te că le ai în proiect)

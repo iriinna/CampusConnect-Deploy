@@ -90,6 +90,7 @@ builder.Services.AddScoped<IGradeService, GradeService>();
 // AI Assistant Services (using Gemini)
 builder.Services.AddHttpClient<IOpenAiService, GeminiService>();
 builder.Services.AddScoped<IAssistantService, AssistantService>();
+builder.Services.AddScoped<IAiAssistantService, AiAssistantService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 
 builder.Services.AddControllers()

@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AssistantProvider } from './contexts/AssistantContext';
-import { FloatingAssistantButton, ChatWidget } from './components/Assistant';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmEmail from './pages/ConfirmEmail';
@@ -34,31 +32,22 @@ import GradesManagement from './pages/GradesManagement';
 import StudentGrades from './pages/StudentGrades';
 import SubjectDetails from './pages/Subjects/SubjectDetails';
 import Documents from './pages/Documents/Documents';
+import { AiChatWidget } from './components/AiAssistant/AiChatWidget';
 
-// Component to conditionally show assistant on authenticated pages
-function AssistantWrapper() {
+function AiChatWrapper() {
   const location = useLocation();
-  const publicPaths = ['/login', '/register', '/confirm-email', '/'];
-  const isPublicPage = publicPaths.includes(location.pathname);
-  const token = localStorage.getItem('token');
+  const publicPaths = ['/', '/login', '/register', '/confirm-email'];
+  const isPublicPath = publicPaths.includes(location.pathname) || location.pathname.startsWith('/verify-student');
 
-  // Only show assistant on authenticated pages when user is logged in
-  if (isPublicPage || !token) {
-    return null;
-  }
-
-  return (
-    <>
-      <FloatingAssistantButton />
-      <ChatWidget />
-    </>
-  );
+  if (isPublicPath) return null;
+  return <AiChatWidget />;
 }
 
 function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
+        <AiChatWrapper />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />

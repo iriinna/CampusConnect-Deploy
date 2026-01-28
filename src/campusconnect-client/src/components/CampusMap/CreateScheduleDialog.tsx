@@ -79,7 +79,7 @@ export function CreateScheduleDialog({
       setBuildings(data);
     } catch (error) {
       console.error('Error loading buildings:', error);
-      setError('Nu s-au putut încărca clădirile');
+      setError('The buildings could not be loaded');
     }
   };
 
@@ -89,7 +89,7 @@ export function CreateScheduleDialog({
       setRooms(data);
     } catch (error) {
       console.error('Error loading rooms:', error);
-      setError('Nu s-au putut încărca sălile');
+      setError('The rooms could not be loaded');
     }
   };
 
@@ -101,13 +101,13 @@ export function CreateScheduleDialog({
     const [endHour, endMin] = endTime.split(':').map(Number);
 
     if (startHour < 8) {
-      return 'Ora de început trebuie să fie după 08:00';
+      return 'Start time must be after 08:00';
     }
     if (endHour > 20 || (endHour === 20 && endMin > 0)) {
-      return 'Ora de sfârșit trebuie să fie înainte de 20:00';
+      return 'End time must be before 20:00';
     }
     if (startTime >= endTime) {
-      return 'Ora de sfârșit trebuie să fie după ora de început';
+      return 'End time must be after start time';
     }
     return null;
   };
@@ -118,12 +118,12 @@ export function CreateScheduleDialog({
     setSuccess(null);
 
     if (!formData.roomId) {
-      setError('Selectați o sală');
+      setError('Select a room');
       return;
     }
 
     if (!formData.title || !scheduleDate || !startTimeOnly || !endTimeOnly) {
-      setError('Completați toate câmpurile obligatorii');
+      setError('Please fill in all required fields');
       return;
     }
 
@@ -154,7 +154,7 @@ export function CreateScheduleDialog({
         };
 
         await campusMapApi.createSchedule(request);
-        setSuccess('Program creat cu succes!');
+        setSuccess('Schedule created successfully!');
       } else {
         // Regular user: Create reservation request
         const request: CreateReservationRequest = {
@@ -166,7 +166,7 @@ export function CreateScheduleDialog({
         };
 
         await campusMapApi.createReservation(request);
-        setSuccess('Cererea de rezervare a fost trimisă! Veți primi o notificare când va fi procesată.');
+        setSuccess('The reservation request has been sent! You will be notified when it is processed.');
       }
 
       // Reset form after short delay to show success message
@@ -190,7 +190,7 @@ export function CreateScheduleDialog({
       }, 1500);
     } catch (error: any) {
       console.error('Error creating schedule/reservation:', error);
-      setError(error.message || 'Eroare la creare');
+      setError(error.message || 'Error creating schedule/reservation');
     } finally {
       setIsLoading(false);
     }
@@ -221,12 +221,12 @@ export function CreateScheduleDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5" />
-              {isAdminOrProfessor ? 'Adaugă program nou' : 'Solicită rezervare sală'}
+              {isAdminOrProfessor ? 'Add New Schedule' : 'Request Room Reservation'}
             </DialogTitle>
             <DialogDescription>
               {isAdminOrProfessor
-                ? 'Creați un program pentru o sală din campus'
-                : 'Trimiteți o cerere de rezervare care va fi procesată de un administrator'
+                ? 'Create a schedule for a room in the campus'
+                : 'Submit a reservation request that will be processed by an administrator'
               }
             </DialogDescription>
           </DialogHeader>
@@ -235,14 +235,14 @@ export function CreateScheduleDialog({
             {/* Info box for time restrictions */}
             <div className="rounded-md bg-blue-50 dark:bg-blue-950/20 p-3 text-sm text-blue-700 dark:text-blue-300 flex items-start gap-2">
               <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <span>Rezervările pot fi făcute doar între orele 08:00 și 20:00.</span>
+              <span>Reservations can only be made between 08:00 and 20:00.</span>
             </div>
 
             {/* Info box for regular users */}
             {!isAdminOrProfessor && (
               <div className="rounded-md bg-amber-50 dark:bg-amber-950/20 p-3 text-sm text-amber-700 dark:text-amber-300 flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span>Cererea dvs. va fi trimisă unui administrator pentru aprobare. Veți fi notificat când cererea este procesată.</span>
+                <span>Your request will be sent to an administrator for approval. You will be notified when the request is processed.</span>
               </div>
             )}
 
@@ -259,10 +259,10 @@ export function CreateScheduleDialog({
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="title">Titlu *</Label>
+              <Label htmlFor="title">Title *</Label>
               <Input
                 id="title"
-                placeholder="ex: Întâlnire proiect, Sesiune studiu..."
+                placeholder="e.g., Project Meeting, Study Session..."
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
@@ -270,10 +270,10 @@ export function CreateScheduleDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Descriere</Label>
+              <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
-                placeholder="Detalii suplimentare despre eveniment..."
+                placeholder="Additional details about the event..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={3}
@@ -282,7 +282,7 @@ export function CreateScheduleDialog({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="building">Clădire *</Label>
+                <Label htmlFor="building">Building *</Label>
                 <Select
                   id="building"
                   value={selectedBuildingId || ''}
@@ -294,7 +294,7 @@ export function CreateScheduleDialog({
                   disabled={!!preselectedBuildingId}
                   required
                 >
-                  <option value="">Selectează clădirea</option>
+                  <option value="">Select a building</option>
                   {buildings.map((building) => (
                     <option key={building.id} value={building.id}>
                       {building.name}
@@ -304,7 +304,7 @@ export function CreateScheduleDialog({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="room">Sală *</Label>
+                <Label htmlFor="room">Room *</Label>
                 <Select
                   id="room"
                   value={formData.roomId}
@@ -312,10 +312,10 @@ export function CreateScheduleDialog({
                   disabled={!selectedBuildingId || !!preselectedRoomId}
                   required
                 >
-                  <option value="">Selectează sala</option>
+                  <option value="">Select a room</option>
                   {rooms.map((room) => (
                     <option key={room.id} value={room.id}>
-                      {room.name} {room.capacity ? `(${room.capacity} locuri)` : ''}
+                      {room.name} {room.capacity ? `(${room.capacity} seats)` : ''}
                     </option>
                   ))}
                 </Select>
@@ -325,7 +325,7 @@ export function CreateScheduleDialog({
             <div className="space-y-2">
               <Label htmlFor="scheduleDate" className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                Data *
+                Date *
               </Label>
               <Input
                 id="scheduleDate"
@@ -341,7 +341,7 @@ export function CreateScheduleDialog({
               <div className="space-y-2">
                 <Label htmlFor="startTime" className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  Ora început * (08:00 - 20:00)
+                  Start Time * (08:00 - 20:00)
                 </Label>
                 <Input
                   id="startTime"
@@ -357,7 +357,7 @@ export function CreateScheduleDialog({
               <div className="space-y-2">
                 <Label htmlFor="endTime" className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  Ora sfârșit * (08:00 - 20:00)
+                  End Time * (08:00 - 20:00)
                 </Label>
                 <Input
                   id="endTime"
@@ -375,23 +375,23 @@ export function CreateScheduleDialog({
             {isAdminOrProfessor && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="recurrencePattern">Recurență</Label>
+                  <Label htmlFor="recurrencePattern">Recurrence</Label>
                   <Select
                     id="recurrencePattern"
                     value={formData.recurrencePattern}
                     onChange={(e) => setFormData({ ...formData, recurrencePattern: e.target.value })}
                   >
-                    <option value="">Fără recurență</option>
-                    <option value="Daily">Zilnic</option>
-                    <option value="Weekly">Săptămânal</option>
-                    <option value="BiWeekly">La 2 săptămâni</option>
-                    <option value="Monthly">Lunar</option>
+                    <option value="">No recurrence</option>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="BiWeekly">Every 2 weeks</option>
+                    <option value="Monthly">Monthly</option>
                   </Select>
                 </div>
 
                 {formData.recurrencePattern && (
                   <div className="space-y-2">
-                    <Label htmlFor="recurrenceEndDate">Data sfârșit recurență</Label>
+                    <Label htmlFor="recurrenceEndDate">Recurrence End Date</Label>
                     <Input
                       id="recurrenceEndDate"
                       type="date"
@@ -412,14 +412,14 @@ export function CreateScheduleDialog({
               onClick={handleClose}
               disabled={isLoading}
             >
-              Anulează
+              Cancel
             </Button>
             <Button type="submit" disabled={isLoading || !!success}>
               {isLoading
-                ? 'Se procesează...'
+                ? 'Processing...'
                 : isAdminOrProfessor
-                  ? 'Creează program'
-                  : 'Trimite cererea'
+                  ? 'Create Schedule'
+                  : 'Submit Request'
               }
             </Button>
           </DialogFooter>

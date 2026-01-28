@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// ✅ Icon normal + icon selectat (mov)
+//  Icon normal + icon selectat (mov)
 const normalIcon = new L.Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -36,7 +36,7 @@ const selectedIcon = new L.Icon({
   iconAnchor: [15, 45],
 });
 
-// ✅ (opțional, dar foarte util) centrează harta pe clădirea selectată
+//  centreaza harta pe cladirea selectata
 const MapCenterOnBuilding = ({ building }: { building: Building | null }) => {
   const map = useMap();
 
@@ -95,8 +95,8 @@ const CampusMap = () => {
                   <MapPin className="h-8 w-8" />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-bold">Harta Campus UniBuc</h1>
-                  <p className="text-white/80 mt-1">Navigare interactivă în campus</p>
+                  <h1 className="text-4xl font-bold">Campus Map UniBuc</h1>
+                  <p className="text-white/80 mt-1">Interactive navigation in campus</p>
                 </div>
               </div>
               <Button
@@ -104,7 +104,7 @@ const CampusMap = () => {
                 className="bg-white text-blue-600 hover:bg-white/90"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                {isAdminOrProfessor ? 'Adaugă program' : 'Solicită rezervare'}
+                {isAdminOrProfessor ? 'Add Schedule' : 'Request Booking'}
               </Button>
             </div>
           </div>
@@ -121,7 +121,7 @@ const CampusMap = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="text"
-                      placeholder="Caută clădiri..."
+                      placeholder="Search buildings..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10"
@@ -147,7 +147,7 @@ const CampusMap = () => {
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-sm truncate">{building.name}</h3>
                           <p className="text-xs text-muted-foreground truncate">{building.address}</p>
-                          <p className="text-xs text-muted-foreground mt-1">{building.roomsCount} săli</p>
+                          <p className="text-xs text-muted-foreground mt-1">{building.roomsCount} rooms</p>
                         </div>
                       </div>
                     </motion.div>

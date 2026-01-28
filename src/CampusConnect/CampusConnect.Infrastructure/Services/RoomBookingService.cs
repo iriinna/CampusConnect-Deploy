@@ -10,6 +10,9 @@ public class RoomBookingService : IRoomBookingService
 {
     private readonly ApplicationDbContext _context;
 
+    private const int BOOKING_START_HOUR = 8;  // 8 AM
+    private const int BOOKING_END_HOUR = 20;   // 8 PM
+
     public RoomBookingService(ApplicationDbContext context)
     {
         _context = context;
@@ -24,9 +27,12 @@ public class RoomBookingService : IRoomBookingService
         if (room == null)
             throw new Exception("Room not found");
 
+        // Validate booking time is within allowed hours (8 AM - 8 PM)
+        ValidateBookingTime(request.StartTime, request.EndTime);
+
         var hasConflict = await CheckScheduleConflictAsync(request.RoomId, request.StartTime, request.EndTime, null);
         if (hasConflict)
-            throw new Exception("The room is already booked for this time slot");
+            throw new Exception("Sala este deja rezervată în acest interval orar. Vă rugăm să alegeți alt interval.");
 
         var bookingRequest = new RoomBookingRequest
         {
@@ -201,6 +207,24 @@ public class RoomBookingService : IRoomBookingService
                           ((r.StartTime < endTime && r.EndTime > startTime)));
 
         return hasPendingConflict;
+    }
+
+    private void ValidateBookingTime(DateTime startTime, DateTime endTime)
+    {
+        // Check if end time is after start time
+        if (endTime <= startTime)
+            throw new Exception("Ora de terminare trebuie să fie după ora de începere.");
+
+        // Check if booking is within allowed hours (8 AM - 8 PM)
+        if (startTime.Hour < BOOKING_START_HOUR || startTime.Hour >= BOOKING_END_HOUR)
+            throw new Exception($"Rezervările sunt permise doar între {BOOKING_START_HOUR}:00 și {BOOKING_END_HOUR}:00. Ora de începere este în afara intervalului permis.");
+
+        if (endTime.Hour < BOOKING_START_HOUR || endTime.Hour > BOOKING_END_HOUR || (endTime.Hour == BOOKING_END_HOUR && endTime.Minute > 0))
+            throw new Exception($"Rezervările sunt permise doar între {BOOKING_START_HOUR}:00 și {BOOKING_END_HOUR}:00. Ora de terminare este în afara intervalului permis.");
+
+        // Check if booking spans multiple days
+        if (startTime.Date != endTime.Date)
+            throw new Exception("Rezervările nu pot să se întindă pe mai multe zile.");
     }
 
     private async Task NotifyAllAdminsAsync(int requestId)

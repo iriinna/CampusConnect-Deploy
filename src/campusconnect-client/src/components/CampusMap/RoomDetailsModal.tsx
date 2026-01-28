@@ -169,10 +169,10 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Free': return 'Liber';
-      case 'Occupied': return 'Ocupat';
-      case 'OccupiedSoon': return 'Ocupat în <30min';
-      default: return 'Necunoscut';
+      case 'Free': return 'Free';
+      case 'Occupied': return 'Occupied';
+      case 'OccupiedSoon': return 'Occupied Soon';
+      default: return 'Unknown';
     }
   };
 
@@ -260,7 +260,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                 )}
                 {room.floor === "Etaj 2" && buildingId === 1 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (FAA – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (FAA – Floor 2)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -271,14 +271,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată e evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Parter" && buildingId === 2 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Biologie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Biology – Ground Floor)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -289,14 +289,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 1" && buildingId === 2 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Biologie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Biology – Floor 1)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -311,7 +311,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
                 {room.floor === "Etaj 2" && buildingId === 2 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Biologie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Biology – Floor 2)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -326,7 +326,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
                 {room.floor === "Parter" && buildingId === 3 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Chimie - Parter)</h3>
+                    <h3 className="font-semibold">Map (Chemistry - Ground Floor)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -337,14 +337,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 1" && buildingId === 3 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Chimie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Chemistry – Floor 1)</h3>
 
                     <FloorPlanViewer
                       config={CHIMIE_ETAJ1}
@@ -353,14 +353,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     />
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată pe plan.
+                      The selected room is highlighted on the map.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 2" && buildingId === 3 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Chimie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Chemistry – Floor 2)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -371,14 +371,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată e evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Parter" && buildingId === 4 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Drept – Parter)</h3>
+                    <h3 className="font-semibold">Map (Law – Ground Floor)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -389,14 +389,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată cu mov. Culorile arată statusul sălilor.
+                      The selected room is highlighted in purple. The colors indicate the status of the rooms.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 1" && buildingId === 4 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Drept – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Law – Floor 1)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -407,14 +407,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată pe plan.
+                      The selected room is highlighted on the map.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 2" && buildingId === 4 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Drept – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Law – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
                         config={DREPT_ETAJ2}
@@ -423,7 +423,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
@@ -431,310 +431,310 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                 {/* Filosofie (BuildingId=5) */}
                 {room.floor === "Parter" && buildingId === 5 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Filosofie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Philosophy – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FILO_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 5 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Filosofie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Philosophy – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FILO_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted on the map.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 5 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Filosofie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Philosophy – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FILO_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Fizică (BuildingId=6) */}
                 {room.floor === "Parter" && buildingId === 6 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Fizică – Parter)</h3>
+                    <h3 className="font-semibold">Map (Physics – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FIZ_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 6 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Fizică – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Physics – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FIZ_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted on the map.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 6 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Fizică – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Physics – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FIZ_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Geografie (BuildingId=7) */}
                 {room.floor === "Parter" && buildingId === 7 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geografie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Geography – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GEO_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 7 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geografie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Geography – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GEO_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted on the map.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 7 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geografie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Geography – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GEO_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Geologie și Geofizică (BuildingId=8) */}
                 {room.floor === "Parter" && buildingId === 8 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geologie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Geology – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GG_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 8 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geologie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Geology – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GG_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted on the map.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 8 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Geologie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Geology – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={GG_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Istorie (BuildingId=9) */}
                 {room.floor === "Parter" && buildingId === 9 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Istorie – Parter)</h3>
+                    <h3 className="font-semibold">Map (History – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={IST_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 9 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Istorie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (History – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={IST_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted on the map.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 9 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Istorie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (History – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={IST_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Jurnalism (BuildingId=10) */}
                 {room.floor === "Etaj 6" && buildingId === 10 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Jurnalism – Etaj 6)</h3>
+                    <h3 className="font-semibold">Map (Journalism – Floor 6)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={JURNALISM_ETAJ6} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 7" && buildingId === 10 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Jurnalism – Etaj 7)</h3>
+                    <h3 className="font-semibold">Map (Journalism – Floor 7)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={JURNALISM_ETAJ7} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* FLLS (BuildingId=11) */}
                 {room.floor === "Parter" && buildingId === 11 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (FLLS – Parter)</h3>
+                    <h3 className="font-semibold">Map (FLLS – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FLLS_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 11 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (FLLS – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (FLLS – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FLLS_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 11 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (FLLS – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (FLLS – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FLLS_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Litere (BuildingId=12) */}
                 {room.floor === "Parter" && buildingId === 12 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Litere – Parter)</h3>
+                    <h3 className="font-semibold">Map (Litere – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={LIT_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 12 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Litere – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Litere – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={LIT_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 12 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Litere – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Litere – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={LIT_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Psihologie (BuildingId=14) */}
                 {room.floor === "Parter" && buildingId === 14 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Psihologie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Psihologie – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={PSI_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 14 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Psihologie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Psihologie – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={PSI_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 14 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Psihologie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Psihologie – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={PSI_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Sociologie (BuildingId=15) */}
                 {room.floor === "Parter" && buildingId === 15 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Sociologie – Parter)</h3>
+                    <h3 className="font-semibold">Map (Sociologie – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={SAS_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 15 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Sociologie – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Sociologie – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={SAS_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 15 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Sociologie – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Sociologie – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={SAS_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
                 {/* Științe Politice (BuildingId=16) */}
                 {room.floor === "Parter" && buildingId === 16 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Științe Politice – Parter)</h3>
+                    <h3 className="font-semibold">Map (Științe Politice – Ground Floor)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FSP_PARTER} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 1" && buildingId === 16 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Științe Politice – Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Științe Politice – Floor 1)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FSP_ETAJ1} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată pe plan.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
                 {room.floor === "Etaj 2" && buildingId === 16 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Științe Politice – Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Științe Politice – Floor 2)</h3>
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer config={FSP_ETAJ2} rooms={buildingRooms} selectedRoomName={room.name} />
                     </div>
-                    <p className="text-xs text-muted-foreground">Sala selectată este evidențiată cu mov.</p>
+                    <p className="text-xs text-muted-foreground">The selected room is highlighted in purple.</p>
                   </div>
                 )}
 
@@ -746,10 +746,10 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                 {/* ✅ Floorplan FMI - Parter */}
                 {showFmiParterPlan && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (FMI - Parter)</h3>
+                    <h3 className="font-semibold">Map (FMI - Ground Floor)</h3>
 
                     {loadingBuildingRooms ? (
-                      <div className="text-sm text-muted-foreground">Se încarcă harta...</div>
+                      <div className="text-sm text-muted-foreground">Loading map...</div>
                     ) : (
                       <FloorPlanViewer
                         config={FMI_PARTER}
@@ -759,7 +759,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     )}
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată cu mov. Culorile reflectă statusul (liber/ocupat/în curând).
+                      The selected room is highlighted in purple. Colors reflect the status (free/occupied/soon).
                     </p>
                   </div>
                 )}
@@ -767,7 +767,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                 {/* Floorplan FMI - Etaj 1 */}
                 {room.floor === "Etaj 1" && buildingId === 13 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Etaj 1)</h3>
+                    <h3 className="font-semibold">Map (Floor 1)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -778,7 +778,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată este evidențiată pe plan.
+                      The selected room is highlighted on the map.
                     </p>
                   </div>
                 )}
@@ -807,7 +807,7 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
 
                 {room.floor === "Etaj 2" && buildingId === 13 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Etaj 2)</h3>
+                    <h3 className="font-semibold">Map (Floor 2)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer
@@ -818,14 +818,14 @@ export const RoomDetailsModal = ({ roomId, onClose }: Props) => {
                     </div>
 
                     <p className="text-xs text-muted-foreground">
-                      Sala selectată e evidențiată cu mov.
+                      The selected room is highlighted in purple.
                     </p>
                   </div>
                 )}
 
                 {room.floor === "Etaj 3" && buildingId === 13 && (
                   <div className="space-y-2">
-                    <h3 className="font-semibold">Hartă (Etaj 3)</h3>
+                    <h3 className="font-semibold">Map (Floor 3)</h3>
 
                     <div className="rounded-lg border overflow-hidden">
                       <FloorPlanViewer

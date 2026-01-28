@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, GraduationCap, TrendingUp, Award, Sparkles } from 'lucide-react';
 import { Layout } from '../../components/Layout';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
+import { Card, CardContent } from '../../components/ui/Card';
 import * as gradesApi from '../../services/gradesApi';
 import type { StudentGradesResponse } from '../../services/gradesApi';
 
@@ -64,7 +63,7 @@ const MyGrades = () => {
                   My Grades
                   <Sparkles className="h-6 w-6 text-yellow-300" />
                 </h1>
-                <p className="text-white/80 mt-1">Vizualizează progresul tău academic</p>
+                <p className="text-white/80 mt-1">View your academic progress</p>
               </div>
             </div>
           </div>
@@ -82,7 +81,7 @@ const MyGrades = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-primary font-medium mb-1">Media Generală</p>
+                    <p className="text-sm text-primary font-medium mb-1">Overall Average</p>
                     <p className="text-3xl font-bold text-primary">{average}</p>
                   </div>
                   <TrendingUp className="w-12 h-12 text-primary opacity-50" />
@@ -100,7 +99,7 @@ const MyGrades = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-green-600 font-medium mb-1">Total Note</p>
+                    <p className="text-sm text-green-600 font-medium mb-1">Total Grades</p>
                     <p className="text-3xl font-bold text-green-700">
                       {gradesData?.subjectGrades.reduce((acc, sg) => acc + sg.grades.length, 0) || 0}
                     </p>
@@ -142,8 +141,8 @@ const MyGrades = () => {
           <Card>
             <CardContent className="py-12 text-center">
               <GraduationCap className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-xl mb-2">Nu ai nicio notă încă</p>
-              <p className="text-muted-foreground">Notele tale vor apărea aici după ce profesorii le acordă</p>
+              <p className="text-xl mb-2">You don't have any grades yet</p>
+              <p className="text-muted-foreground">Your grades will appear here after your professors assign them</p>
             </CardContent>
           </Card>
         ) : (
@@ -162,7 +161,7 @@ const MyGrades = () => {
                   {/* Year Header - Ultra Minimalist */}
                   <div className="flex items-center gap-3 mb-6">
                     <GraduationCap className="text-indigo-600" size={32} />
-                    <h2 className="text-3xl font-bold text-gray-900">Anul {year}</h2>
+                    <h2 className="text-3xl font-bold text-gray-900">Year {year}</h2>
                   </div>
 
                   {/* Subjects List - No Containers */}
@@ -181,18 +180,18 @@ const MyGrades = () => {
                             {subjectGrade.subjectName}
                           </h3>
                           <span className="text-sm text-indigo-600 font-medium">
-                            (Media: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'})
+                            (Average: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'})
                           </span>
                         </div>
 
                         {/* Grades - Simple Inline List */}
                         <div className="flex items-center gap-2 flex-wrap pl-4">
-                          <span className="text-gray-600 font-medium">Note:</span>
+                          <span className="text-gray-600 font-medium">Grades:</span>
                           {subjectGrade.grades.map((grade, idx) => (
                             <span key={grade.id} className="inline-flex items-center">
                               <span
                                 className={`${getGradeColor(grade.value)} px-3 py-1 rounded-md font-bold text-base cursor-help transition-all hover:scale-105`}
-                                title={`${new Date(grade.createdAt).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}${grade.comments ? '\n' + grade.comments : ''}`}
+                                title={`${new Date(grade.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' })}${grade.comments ? '\n' + grade.comments : ''}`}
                               >
                                 {grade.value.toFixed(2)}
                               </span>

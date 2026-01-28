@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  User,
   Mail,
   X,
   Calendar,
@@ -67,9 +66,9 @@ interface Notification {
 function ProfileView() {
   const navigate = useNavigate();
   
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [_message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
 
   const [savedAnnouncements, setSavedAnnouncements] = useState<Announcement[]>([]);
   const [savedEvents, setSavedEvents] = useState<Event[]>([]);
@@ -162,7 +161,7 @@ function ProfileView() {
             body: JSON.stringify(category) 
         });
     } catch (error) {
-        console.error("Eroare la abonare", error);
+        console.error("Error subscribing", error);
     }
   };
 
@@ -202,7 +201,7 @@ function ProfileView() {
   const handleRejectReservation = async (id: number) => {
     setProcessingReservation(id);
     try {
-      await campusMapApi.processReservation(id, { approve: false, rejectionReason: rejectionReason || 'Cererea a fost respinsă.' });
+      await campusMapApi.processReservation(id, { approve: false, rejectionReason: rejectionReason || 'Request was rejected.' });
       setPendingReservations(prev => prev.filter(r => r.id !== id));
       setShowRejectDialog(null);
       setRejectionReason('');
@@ -214,7 +213,7 @@ function ProfileView() {
   };
 
   const handleCancelReservation = async (id: number) => {
-    if (!window.confirm('Sigur doriți să anulați această cerere de rezervare?')) return;
+    if (!window.confirm('Are you sure you want to cancel this booking request?')) return;
     try {
       await campusMapApi.cancelReservation(id);
       setMyReservations(prev => prev.filter(r => r.id !== id));
@@ -225,9 +224,9 @@ function ProfileView() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'Pending': return <Badge className="bg-yellow-500 text-white">În așteptare</Badge>;
-      case 'Approved': return <Badge className="bg-green-500 text-white">Aprobată</Badge>;
-      case 'Rejected': return <Badge className="bg-red-500 text-white">Respinsă</Badge>;
+      case 'Pending': return <Badge className="bg-yellow-500 text-white">Pending</Badge>;
+      case 'Approved': return <Badge className="bg-green-500 text-white">Approved</Badge>;
+      case 'Rejected': return <Badge className="bg-red-500 text-white">Rejected</Badge>;
       default: return <Badge>{status}</Badge>;
     }
   };
@@ -414,10 +413,10 @@ function ProfileView() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-orange-800 dark:text-orange-300">
-                  Cereri de rezervare săli
+                  Room Booking Requests
                 </h3>
                 <p className="text-sm text-orange-600 dark:text-orange-400">
-                  {pendingReservations.length} cereri în așteptare
+                  {pendingReservations.length} pending requests
                 </p>
               </div>
             </div>
@@ -427,11 +426,11 @@ function ProfileView() {
                 <div key={reservation.id} className="bg-white p-4 rounded-lg border border-orange-100 dark:bg-zinc-900 dark:border-zinc-800 shadow-sm">
                   {showRejectDialog === reservation.id ? (
                     <div className="space-y-3">
-                      <p className="text-sm font-medium">Motivul respingerii:</p>
+                      <p className="text-sm font-medium">Rejection reason:</p>
                       <Textarea
                         value={rejectionReason}
                         onChange={(e) => setRejectionReason(e.target.value)}
-                        placeholder="Introduceți motivul respingerii..."
+                        placeholder="Enter rejection reason..."
                         rows={2}
                       />
                       <div className="flex gap-2">
@@ -440,7 +439,7 @@ function ProfileView() {
                           variant="outline"
                           onClick={() => { setShowRejectDialog(null); setRejectionReason(''); }}
                         >
-                          Anulează
+                          Cancel
                         </Button>
                         <Button
                           size="sm"
@@ -448,7 +447,7 @@ function ProfileView() {
                           onClick={() => handleRejectReservation(reservation.id)}
                           disabled={processingReservation === reservation.id}
                         >
-                          {processingReservation === reservation.id ? 'Se procesează...' : 'Respinge'}
+                          {processingReservation === reservation.id ? 'Processing...' : 'Reject'}
                         </Button>
                       </div>
                     </div>
@@ -465,10 +464,10 @@ function ProfileView() {
                             </p>
                             <p className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {new Date(reservation.startTime).toLocaleDateString('ro-RO')} {new Date(reservation.startTime).toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})} - {new Date(reservation.endTime).toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}
+                              {new Date(reservation.startTime).toLocaleDateString('en-US')} {new Date(reservation.startTime).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})} - {new Date(reservation.endTime).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})}
                             </p>
                             <p className="text-muted-foreground">
-                              Solicitat de: <span className="font-medium">{reservation.requestedByUserName}</span>
+                              Requested by: <span className="font-medium">{reservation.requestedByUserName}</span>
                             </p>
                           </div>
                         </div>
@@ -480,7 +479,7 @@ function ProfileView() {
                             disabled={processingReservation === reservation.id}
                           >
                             <CheckCircle className="h-4 w-4 mr-1" />
-                            {processingReservation === reservation.id ? '...' : 'Aprobă'}
+                            {processingReservation === reservation.id ? '...' : 'Approve'}
                           </Button>
                           <Button
                             size="sm"
@@ -490,7 +489,7 @@ function ProfileView() {
                             disabled={processingReservation === reservation.id}
                           >
                             <XCircle className="h-4 w-4 mr-1" />
-                            Respinge
+                            Reject
                           </Button>
                         </div>
                       </div>
@@ -509,7 +508,7 @@ function ProfileView() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <DoorOpen className="h-5 w-5 text-cyan-500" />
-                  Rezervările mele de săli
+                  My Room Reservations
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -521,7 +520,7 @@ function ProfileView() {
                           <div className="flex items-center gap-2 mb-1">
                             {getStatusBadge(reservation.status)}
                             <span className="text-xs text-muted-foreground">
-                              {new Date(reservation.createdAt).toLocaleDateString('ro-RO')}
+                              {new Date(reservation.createdAt).toLocaleDateString('en-US')}
                             </span>
                           </div>
                           <h4 className="font-semibold">{reservation.title}</h4>
@@ -529,12 +528,12 @@ function ProfileView() {
                             <p>{reservation.roomName} - {reservation.buildingName}</p>
                             <p className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {new Date(reservation.startTime).toLocaleDateString('ro-RO')} {new Date(reservation.startTime).toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})} - {new Date(reservation.endTime).toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}
+                              {new Date(reservation.startTime).toLocaleDateString('en-US')} {new Date(reservation.startTime).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})} - {new Date(reservation.endTime).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'})}
                             </p>
                           </div>
                           {reservation.status === 'Rejected' && reservation.rejectionReason && (
                             <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                              Motiv: {reservation.rejectionReason}
+                              Reason: {reservation.rejectionReason}
                             </p>
                           )}
                         </div>

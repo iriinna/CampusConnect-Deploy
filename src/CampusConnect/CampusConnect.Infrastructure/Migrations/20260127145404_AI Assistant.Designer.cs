@@ -4,6 +4,7 @@ using CampusConnect.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampusConnect.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260127145404_AI Assistant")]
+    partial class AIAssistant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Achievements", (string)null);
+                    b.ToTable("Achievements");
 
                     b.HasData(
                         new
@@ -131,7 +134,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Announcements", (string)null);
+                    b.ToTable("Announcements");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.ApplicationUser", b =>
@@ -390,7 +393,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Buildings", (string)null);
+                    b.ToTable("Buildings");
 
                     b.HasData(
                         new
@@ -588,7 +591,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategorySubscriptions", (string)null);
+                    b.ToTable("CategorySubscriptions");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.CourseMaterial", b =>
@@ -641,7 +644,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("UploadedByProfessorId");
 
-                    b.ToTable("CourseMaterials", (string)null);
+                    b.ToTable("CourseMaterials");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Event", b =>
@@ -677,7 +680,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("OrganizerId");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.EventParticipant", b =>
@@ -695,7 +698,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventParticipants", (string)null);
+                    b.ToTable("EventParticipants");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Grade", b =>
@@ -736,7 +739,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId", "StudentId", "CreatedAt");
 
-                    b.ToTable("Grades", (string)null);
+                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Group", b =>
@@ -774,7 +777,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("Groups", (string)null);
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupAnnouncement", b =>
@@ -805,7 +808,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("GroupId", "AnnouncementId");
 
-                    b.ToTable("GroupAnnouncements", (string)null);
+                    b.ToTable("GroupAnnouncements");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupMember", b =>
@@ -832,7 +835,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("UserId", "GroupId")
                         .IsUnique();
 
-                    b.ToTable("GroupMembers", (string)null);
+                    b.ToTable("GroupMembers");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.GroupTask", b =>
@@ -870,7 +873,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupTasks", (string)null);
+                    b.ToTable("GroupTasks");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryFolder", b =>
@@ -888,7 +891,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LibraryFolders", (string)null);
+                    b.ToTable("LibraryFolders");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.LibraryItem", b =>
@@ -933,7 +936,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("FolderId");
 
-                    b.ToTable("LibraryItems", (string)null);
+                    b.ToTable("LibraryItems");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Notification", b =>
@@ -965,7 +968,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Room", b =>
@@ -1005,7 +1008,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("BuildingId", "Name");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
 
                     b.HasData(
                         new
@@ -2761,7 +2764,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("RoomId", "StartTime", "EndTime");
 
-                    b.ToTable("RoomBookingRequests", (string)null);
+                    b.ToTable("RoomBookingRequests");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedAnnouncement", b =>
@@ -2785,7 +2788,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("UserId", "AnnouncementId")
                         .IsUnique();
 
-                    b.ToTable("SavedAnnouncements", (string)null);
+                    b.ToTable("SavedAnnouncements");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedEvent", b =>
@@ -2809,7 +2812,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("UserId", "EventId")
                         .IsUnique();
 
-                    b.ToTable("SavedEvents", (string)null);
+                    b.ToTable("SavedEvents");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.SavedTask", b =>
@@ -2842,7 +2845,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("UserId", "TaskId")
                         .IsUnique();
 
-                    b.ToTable("SavedTasks", (string)null);
+                    b.ToTable("SavedTasks");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.Schedule", b =>
@@ -2893,7 +2896,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("RoomId", "StartTime", "EndTime");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
 
                     b.HasData(
                         new
@@ -2991,7 +2994,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("ProfessorId");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.UserAchievement", b =>
@@ -3018,7 +3021,7 @@ namespace CampusConnect.Infrastructure.Migrations
                     b.HasIndex("UserId", "AchievementId")
                         .IsUnique();
 
-                    b.ToTable("UserAchievements", (string)null);
+                    b.ToTable("UserAchievements");
                 });
 
             modelBuilder.Entity("CampusConnect.Domain.Entities.UserActivity", b =>
@@ -3060,7 +3063,7 @@ namespace CampusConnect.Infrastructure.Migrations
 
                     b.HasIndex("UserId", "CreatedAt");
 
-                    b.ToTable("UserActivities", (string)null);
+                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
