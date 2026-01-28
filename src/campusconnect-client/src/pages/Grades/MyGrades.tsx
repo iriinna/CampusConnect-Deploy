@@ -5,10 +5,10 @@ import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import * as gradesApi from '../../services/gradesApi';
-import type { Grade } from '../../services/gradesApi';
+import type { StudentGradesResponse } from '../../services/gradesApi';
 
 const MyGrades = () => {
-  const [grades, setGrades] = useState<Grade[]>([]);
+  const [gradesData, setGradesData] = useState<StudentGradesResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ const MyGrades = () => {
   const loadGrades = async () => {
     setLoading(true);
     try {
-      const data = await gradesApi.getMyGrades();
-      setGrades(data);
+      const data = await gradesApi.gradeApi.getMyGrades();
+      setGradesData(data);
     } catch (error) {
       console.error('Error loading grades:', error);
     } finally {
@@ -35,28 +35,12 @@ const MyGrades = () => {
   };
 
   const calculateAverage = () => {
-    if (grades.length === 0) return 0;
-    const sum = grades.reduce((acc, grade) => acc + grade.value, 0);
-    return (sum / grades.length).toFixed(2);
+    if (!gradesData || gradesData.subjectGrades.length === 0) return 0;
+    const allGrades = gradesData.subjectGrades.flatMap(sg => sg.grades);
+    if (allGrades.length === 0) return 0;
+    const sum = allGrades.reduce((acc, grade) => acc + grade.value, 0);
+    return (sum / allGrades.length).toFixed(2);
   };
-
-  const groupGradesBySubject = () => {
-    const grouped: { [key: string]: Grade[] } = {};
-    grades.forEach((grade) => {
-      if (!grouped[grade.subjectName]) {
-        grouped[grade.subjectName] = [];
-      }
-      grouped[grade.subjectName].push(grade);
-    });
-    return grouped;
-  };
-
-  const getSubjectAverage = (subjectGrades: Grade[]) => {
-    const sum = subjectGrades.reduce((acc, grade) => acc + grade.value, 0);
-    return (sum / subjectGrades.length).toFixed(2);
-  };
-
-  const groupedGrades = groupGradesBySubject();
   const average = calculateAverage();
 
   return (
@@ -77,7 +61,7 @@ const MyGrades = () => {
               </div>
               <div>
                 <h1 className="text-4xl font-bold flex items-center gap-2">
-                  Notele Mele
+                  My Grades
                   <Sparkles className="h-6 w-6 text-yellow-300" />
                 </h1>
                 <p className="text-white/80 mt-1">Vizualizează progresul tău academic</p>
@@ -117,7 +101,9 @@ const MyGrades = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-green-600 font-medium mb-1">Total Note</p>
-                    <p className="text-3xl font-bold text-green-700">{grades.length}</p>
+                    <p className="text-3xl font-bold text-green-700">
+                      {gradesData?.subjectGrades.reduce((acc, sg) => acc + sg.grades.length, 0) || 0}
+                    </p>
                   </div>
                   <Award className="w-12 h-12 text-green-600 opacity-50" />
                 </div>
@@ -134,9 +120,9 @@ const MyGrades = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-purple-600 font-medium mb-1">Materii</p>
+                    <p className="text-sm text-purple-600 font-medium mb-1">Subjects</p>
                     <p className="text-3xl font-bold text-purple-700">
-                      {Object.keys(groupedGrades).length}
+                      {gradesData?.subjectGrades.length || 0}
                     </p>
                   </div>
                   <BookOpen className="w-12 h-12 text-purple-600 opacity-50" />
@@ -152,7 +138,7 @@ const MyGrades = () => {
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
-        ) : grades.length === 0 ? (
+        ) : !gradesData || gradesData.subjectGrades.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <GraduationCap className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -161,76 +147,74 @@ const MyGrades = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-6">
-            {Object.entries(groupedGrades).map(([subjectName, subjectGrades], index) => (
-              <motion.div
-                key={subjectName}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-              >
-                <Card>
-                  <CardHeader>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-3">
-                        <BookOpen className="w-6 h-6 text-primary" />
-                        <div>
-                          <CardTitle className="text-xl">{subjectName}</CardTitle>
-                          <p className="text-sm text-muted-foreground">
-                            {subjectGrades[0].professorName}
-                          </p>
+          <div className="space-y-12">
+            {[1, 2, 3].map(year => {
+              const yearSubjects = gradesData.subjectGrades.filter(sg => sg.year === year);
+              if (yearSubjects.length === 0) return null;
+
+              return (
+                <motion.div 
+                  key={year}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  {/* Year Header - Ultra Minimalist */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <GraduationCap className="text-indigo-600" size={32} />
+                    <h2 className="text-3xl font-bold text-gray-900">Anul {year}</h2>
+                  </div>
+
+                  {/* Subjects List - No Containers */}
+                  <div className="space-y-8 pl-6">
+                    {yearSubjects.map((subjectGrade, index) => (
+                      <motion.div
+                        key={subjectGrade.subjectId}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.05 * index }}
+                        className="space-y-3"
+                      >
+                        {/* Subject Name with Average */}
+                        <div className="flex items-baseline gap-3">
+                          <h3 className="text-xl font-semibold text-gray-800">
+                            {subjectGrade.subjectName}
+                          </h3>
+                          <span className="text-sm text-indigo-600 font-medium">
+                            (Media: {subjectGrade.averageGrade?.toFixed(2) || 'N/A'})
+                          </span>
                         </div>
-                      </div>
-                      <Badge className="bg-primary/10 text-primary border-primary/20 text-lg px-4 py-2">
-                        Media: {getSubjectAverage(subjectGrades)}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {subjectGrades.map((grade) => (
-                        <div
-                          key={grade.id}
-                          className="p-4 border rounded-lg hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <Badge className={`${getGradeColor(grade.value)} font-bold text-lg px-3 py-1`}>
-                                  {grade.value.toFixed(2)}
-                                </Badge>
-                                <span className="text-sm text-muted-foreground">
-                                  {new Date(grade.createdAt).toLocaleDateString('ro-RO', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                  })}
-                                </span>
-                              </div>
-                              {grade.comments && (
-                                <div className="mt-2 p-3 bg-accent rounded-lg">
-                                  <p className="text-sm text-muted-foreground">
-                                    <span className="font-medium">Comentarii: </span>
-                                    {grade.comments}
-                                  </p>
-                                </div>
+
+                        {/* Grades - Simple Inline List */}
+                        <div className="flex items-center gap-2 flex-wrap pl-4">
+                          <span className="text-gray-600 font-medium">Note:</span>
+                          {subjectGrade.grades.map((grade, idx) => (
+                            <span key={grade.id} className="inline-flex items-center">
+                              <span
+                                className={`${getGradeColor(grade.value)} px-3 py-1 rounded-md font-bold text-base cursor-help transition-all hover:scale-105`}
+                                title={`${new Date(grade.createdAt).toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}${grade.comments ? '\n' + grade.comments : ''}`}
+                              >
+                                {grade.value.toFixed(2)}
+                              </span>
+                              {idx < subjectGrade.grades.length - 1 && (
+                                <span className="text-gray-400 mx-1">•</span>
                               )}
-                            </div>
-                          </div>
+                            </span>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         )}
         </div>
-        </div>
+      </div>
       </div>
     </Layout>
   );
-};
+}
 
 export default MyGrades;

@@ -31,12 +31,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Building> Buildings { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<RoomBookingRequest> RoomBookingRequests { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<UserActivity> UserActivities { get; set; }
     public DbSet<LibraryFolder> LibraryFolders { get; set; } 
     public DbSet<LibraryItem> LibraryItems { get; set; }
-
     public DbSet<Subject> Subjects { get; set; }
     public DbSet<Grade> Grades { get; set; }
     public DbSet<RoomReservation> RoomReservations { get; set; }
@@ -353,7 +353,35 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(s => new { s.RoomId, s.StartTime, s.EndTime });
         });
 
-        // 15. Seed Campus Map Data (UniBuc)
+        // 15. Configurare RoomBookingRequest
+        builder.Entity<RoomBookingRequest>(entity =>
+        {
+            entity.Property(r => r.Title).IsRequired().HasMaxLength(200);
+            entity.Property(r => r.Description).HasMaxLength(1000);
+            entity.Property(r => r.RecurrencePattern).HasMaxLength(50);
+            entity.Property(r => r.RejectionReason).HasMaxLength(500);
+
+            entity.HasOne(r => r.Room)
+                .WithMany()
+                .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.RequestedByUser)
+                .WithMany()
+                .HasForeignKey(r => r.RequestedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.ReviewedByAdmin)
+                .WithMany()
+                .HasForeignKey(r => r.ReviewedByAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => new { r.RoomId, r.StartTime, r.EndTime });
+            entity.HasIndex(r => r.RequestedByUserId);
+            entity.HasIndex(r => r.Status);
+        });
+
+        // 16. Seed Campus Map Data (UniBuc)
         SeedCampusMapData(builder);
     }
 
@@ -648,7 +676,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             }
         };
         builder.Entity<Schedule>().HasData(schedules);
-        // 16. Configurare Achievement
+        // 17. Configurare Achievement
         builder.Entity<Achievement>(entity =>
         {
             entity.Property(a => a.Title)
@@ -664,7 +692,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .HasMaxLength(100);
         });
 
-        // 17. Configurare UserAchievement
+        // 18. Configurare UserAchievement
         builder.Entity<UserAchievement>(entity =>
         {
             entity.HasIndex(ua => new { ua.UserId, ua.AchievementId }).IsUnique();
@@ -680,7 +708,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // 18. Configurare UserActivity
+        // 19. Configurare UserActivity
         builder.Entity<UserActivity>(entity =>
         {
             entity.Property(a => a.ActivityType)
@@ -705,7 +733,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(a => new { a.UserId, a.CreatedAt });
         });
 
-        // 19. Seed Achievements
+        // 20. Seed Achievements
         builder.Entity<Achievement>().HasData(
             new Achievement
             {
@@ -754,32 +782,30 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             }
         );
 
-        // 20. Configure Subject
+        // Subject configuration
         builder.Entity<Subject>(entity =>
         {
-            entity.Property(s => s.Name)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            entity.Property(s => s.Description)
-                .HasMaxLength(1000);
-
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.Name).IsRequired().HasMaxLength(200);
+            entity.Property(s => s.Code).IsRequired().HasMaxLength(50);
+            entity.Property(s => s.Description).HasMaxLength(1000);
+            
             entity.HasOne(s => s.Professor)
                 .WithMany()
                 .HasForeignKey(s => s.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(s => s.Code).IsUnique();
+            entity.HasIndex(s => s.ProfessorId);
         });
 
-        // 21. Configure Grade
+        // Grade configuration
         builder.Entity<Grade>(entity =>
         {
-            entity.Property(g => g.Value)
-                .IsRequired()
-                .HasPrecision(5, 2);
-
-            entity.Property(g => g.Comments)
-                .HasMaxLength(500);
-
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Value).HasColumnType("decimal(4,2)");
+            entity.Property(g => g.Comments).HasMaxLength(500);
+            
             entity.HasOne(g => g.Subject)
                 .WithMany(s => s.Grades)
                 .HasForeignKey(g => g.SubjectId)
@@ -788,41 +814,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasOne(g => g.Student)
                 .WithMany()
                 .HasForeignKey(g => g.StudentId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(g => new { g.SubjectId, g.StudentId });
-        });
-
-        // 22. Configure RoomReservation
-        builder.Entity<RoomReservation>(entity =>
-        {
-            entity.Property(r => r.Title)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            entity.Property(r => r.Description)
-                .HasMaxLength(1000);
-
-            entity.Property(r => r.RejectionReason)
-                .HasMaxLength(500);
-
-            entity.HasOne(r => r.Room)
-                .WithMany()
-                .HasForeignKey(r => r.RoomId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(r => r.RequestedByUser)
-                .WithMany()
-                .HasForeignKey(r => r.RequestedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasOne(r => r.ProcessedByAdmin)
+            entity.HasOne(g => g.CreatedByProfessor)
                 .WithMany()
-                .HasForeignKey(r => r.ProcessedByAdminId)
+                .HasForeignKey(g => g.CreatedByProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasIndex(r => new { r.RoomId, r.StartTime, r.EndTime });
-            entity.HasIndex(r => r.Status);
+            entity.HasIndex(g => new { g.SubjectId, g.StudentId, g.CreatedAt });
         });
     }
 

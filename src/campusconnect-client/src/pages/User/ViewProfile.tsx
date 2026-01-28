@@ -21,8 +21,9 @@ import {
   Trophy,
   DoorOpen,
   Clock,
+  XCircle,
   CheckCircle,
-  XCircle
+  CreditCard
 } from 'lucide-react';
 import { Layout } from '../../components/Layout';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
@@ -35,8 +36,6 @@ import achievementApi, { type UserAchievement } from '../../services/achievement
 import { campusMapApi, type RoomReservation } from '../../services/campusMapApi';
 
 const API_BASE_URL = 'http://localhost:5099/api';
-
-// --- INTERFEȚE ---
 
 
 interface Announcement {
@@ -91,7 +90,7 @@ function ProfileView() {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const token = localStorage.getItem('token');
-  const isAdmin = user.role === 'Admin';
+  const isAdmin = user.role === 'Admin' || user.isAdmin === true;
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -295,7 +294,12 @@ function ProfileView() {
               <Button onClick={() => navigate('/edit-profile')} className="bg-white text-purple-600 hover:bg-white/90">
                 <Edit className="h-4 w-4 mr-2" /> Edit Profile
               </Button>
-              <Button variant="outline" onClick={handleLogout} className="border-white text-white hover:bg-white/20">
+              {user.studentId && (
+                <Button onClick={() => navigate('/student-card')} className="bg-amber-500 text-white hover:bg-amber-600">
+                  <CreditCard className="h-4 w-4 mr-2" /> Student Card
+                </Button>
+              )}
+              <Button onClick={handleLogout} className="border border-white/70 bg-white/10 !text-white hover:bg-white/20">
                 <LogOut className="h-4 w-4 mr-2" /> Logout
               </Button>
             </div>
@@ -310,23 +314,41 @@ function ProfileView() {
             className="rounded-xl border border-blue-200 bg-blue-50 p-6 shadow-sm dark:bg-blue-950/20 dark:border-blue-900"
           >
             <div className="flex items-center justify-between mb-4">
-               <div className="flex items-center gap-3">
-                 <div className="p-2 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900 dark:text-blue-400">
-                   <Inbox className="h-6 w-6 animate-bounce" />
-                 </div>
-                 <div>
-                   <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300">
-                     Noutăți
-                   </h3>
-                   <p className="text-sm text-blue-600 dark:text-blue-400">
-                     Ai {notifications.length} anunțuri noi.
-                   </p>
-                 </div>
-               </div>
-               <Button variant="ghost" size="sm" onClick={markAllRead} className="text-blue-700 hover:bg-blue-100 hover:text-blue-900">
-                 Mark all read
-               </Button>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 text-blue-600 rounded-full dark:bg-blue-900 dark:text-blue-400">
+                  <Inbox className="h-6 w-6 animate-bounce" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300">
+                    Notifications
+                  </h3>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">
+                    You have {notifications.length} new notifications.
+                  </p>
+                </div>
+              </div>
+              
+              {/* --- AICI ESTE MODIFICAREA: GRUP DE BUTOANE --- */}
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate('/notifications')} 
+                  className="bg-white/50 hover:bg-white text-blue-700 border-blue-200"
+                >
+                  View All History
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={markAllRead} 
+                  className="text-blue-700 hover:bg-blue-100 hover:text-blue-900"
+                >
+                  Mark all read
+                </Button>
+              </div>
             </div>
+          
 
             <div className="space-y-2">
               {notifications.map(notif => (
@@ -339,6 +361,33 @@ function ProfileView() {
                     </div>
                     
                     <div className="flex gap-2">
+                        {/* Buton de navigare inteligent */}
+                        {notif.relatedEntityId && (
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0" 
+                            onClick={() => {
+                                if (notif.relatedEntityType === 'GroupTask') {
+                                    navigate(`/groups/${notif.relatedEntityId}`); 
+                                } else if (notif.relatedEntityType === 'Announcement') {
+                                    navigate(`/announcements`); 
+                                }
+                                else if (notif.relatedEntityType === 'Event') {
+                                    navigate(`/event/${notif.relatedEntityId}`);
+                                }
+                                else if (notif.relatedEntityType === 'RoomBookingRequest') {
+                                    if (isAdmin) {
+                                        navigate(`/booking-requests`);
+                                    }
+                                }
+
+                                
+                            }}
+                          >
+                              <ArrowRight className="h-4 w-4" />
+                          </Button>
+                        )}
 
                         {/* Buton Dismiss */}
                         <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-red-500" onClick={() => markAsRead(notif.id)}>

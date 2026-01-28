@@ -15,134 +15,50 @@ public class GradeService : IGradeService
         _context = context;
     }
 
-    public async Task<IEnumerable<GradeDto>> GetStudentGradesAsync(int studentId)
+    public async Task<GradeDto> CreateGradeAsync(int professorId, CreateGradeRequest request)
     {
-        return await _context.Set<Grade>()
-            .Where(g => g.StudentId == studentId)
-            .Include(g => g.Subject)
-                .ThenInclude(s => s.Professor)
-            .Include(g => g.Student)
-            .Select(g => new GradeDto
-            {
-                Id = g.Id,
-                SubjectId = g.SubjectId,
-                SubjectName = g.Subject.Name,
-                StudentId = g.StudentId,
-                StudentName = $"{g.Student.FirstName} {g.Student.LastName}",
-                StudentEmail = g.Student.Email ?? "",
-                StudentId_Number = g.Student.StudentId,
-                Value = g.Value,
-                Comments = g.Comments,
-                CreatedAt = g.CreatedAt,
-                UpdatedAt = g.UpdatedAt,
-                ProfessorName = $"{g.Subject.Professor.FirstName} {g.Subject.Professor.LastName}"
-            })
-            .OrderByDescending(g => g.CreatedAt)
-            .ToListAsync();
-    }
+        // Verify subject belongs to professor
+        var subject = await _context.Subjects
+            .FirstOrDefaultAsync(s => s.Id == request.SubjectId && s.ProfessorId == professorId);
 
-    public async Task<IEnumerable<GradeDto>> GetSubjectGradesAsync(int subjectId)
-    {
-        var grades = await _context.Set<Grade>()
-            .Where(g => g.SubjectId == subjectId)
-            .Include(g => g.Subject)
-                .ThenInclude(s => s.Professor)
-            .Include(g => g.Student)
-            .Select(g => new GradeDto
-            {
-                Id = g.Id,
-                SubjectId = g.SubjectId,
-                SubjectName = g.Subject.Name,
-                StudentId = g.StudentId,
-                StudentName = $"{g.Student.FirstName} {g.Student.LastName}",
-                StudentEmail = g.Student.Email ?? "",
-                StudentId_Number = g.Student.StudentId,
-                Value = g.Value,
-                Comments = g.Comments,
-                CreatedAt = g.CreatedAt,
-                UpdatedAt = g.UpdatedAt,
-                ProfessorName = $"{g.Subject.Professor.FirstName} {g.Subject.Professor.LastName}"
-            })
-            .ToListAsync();
-        
-        return grades.OrderBy(g => g.StudentName).ToList();
-    }
-
-    public async Task<GradeDto?> GetGradeByIdAsync(int id)
-    {
-        var grade = await _context.Set<Grade>()
-            .Include(g => g.Subject)
-                .ThenInclude(s => s.Professor)
-            .Include(g => g.Student)
-            .FirstOrDefaultAsync(g => g.Id == id);
-
-        if (grade == null)
-            return null;
-
-        return new GradeDto
+        if (subject == null)
         {
-            Id = grade.Id,
-            SubjectId = grade.SubjectId,
-            SubjectName = grade.Subject.Name,
-            StudentId = grade.StudentId,
-            StudentName = $"{grade.Student.FirstName} {grade.Student.LastName}",
-            StudentEmail = grade.Student.Email ?? "",
-            StudentId_Number = grade.Student.StudentId,
-            Value = grade.Value,
-            Comments = grade.Comments,
-            CreatedAt = grade.CreatedAt,
-            UpdatedAt = grade.UpdatedAt,
-            ProfessorName = $"{grade.Subject.Professor.FirstName} {grade.Subject.Professor.LastName}"
-        };
-    }
+            throw new InvalidOperationException("Subject not found or you don't have permission to add grades.");
+        }
 
-    public async Task<GradeDto> CreateGradeAsync(CreateGradeRequest request)
-    {
+        // Verify student exists
+        var student = await _context.Users.FindAsync(request.StudentId);
+        if (student == null)
+        {
+            throw new InvalidOperationException("Student not found.");
+        }
+
         var grade = new Grade
         {
             SubjectId = request.SubjectId,
             StudentId = request.StudentId,
             Value = request.Value,
             Comments = request.Comments,
+            CreatedByProfessorId = professorId,
             CreatedAt = DateTime.UtcNow
         };
 
-        _context.Set<Grade>().Add(grade);
+        _context.Grades.Add(grade);
         await _context.SaveChangesAsync();
 
-        var gradeWithDetails = await _context.Set<Grade>()
-            .Include(g => g.Subject)
-                .ThenInclude(s => s.Professor)
-            .Include(g => g.Student)
-            .FirstOrDefaultAsync(g => g.Id == grade.Id);
-
-        return new GradeDto
-        {
-            Id = gradeWithDetails!.Id,
-            SubjectId = gradeWithDetails.SubjectId,
-            SubjectName = gradeWithDetails.Subject.Name,
-            StudentId = gradeWithDetails.StudentId,
-            StudentName = $"{gradeWithDetails.Student.FirstName} {gradeWithDetails.Student.LastName}",
-            StudentEmail = gradeWithDetails.Student.Email ?? "",
-            StudentId_Number = gradeWithDetails.Student.StudentId,
-            Value = gradeWithDetails.Value,
-            Comments = gradeWithDetails.Comments,
-            CreatedAt = gradeWithDetails.CreatedAt,
-            UpdatedAt = gradeWithDetails.UpdatedAt,
-            ProfessorName = $"{gradeWithDetails.Subject.Professor.FirstName} {gradeWithDetails.Subject.Professor.LastName}"
-        };
+        return await GetGradeDtoAsync(grade.Id);
     }
 
-    public async Task<GradeDto?> UpdateGradeAsync(int id, UpdateGradeRequest request)
+    public async Task<GradeDto> UpdateGradeAsync(int gradeId, int professorId, UpdateGradeRequest request)
     {
-        var grade = await _context.Set<Grade>()
+        var grade = await _context.Grades
             .Include(g => g.Subject)
-                .ThenInclude(s => s.Professor)
-            .Include(g => g.Student)
-            .FirstOrDefaultAsync(g => g.Id == id);
+            .FirstOrDefaultAsync(g => g.Id == gradeId && g.Subject.ProfessorId == professorId);
 
         if (grade == null)
-            return null;
+        {
+            throw new InvalidOperationException("Grade not found or you don't have permission to update it.");
+        }
 
         grade.Value = request.Value;
         grade.Comments = request.Comments;
@@ -150,33 +66,195 @@ public class GradeService : IGradeService
 
         await _context.SaveChangesAsync();
 
+        return await GetGradeDtoAsync(grade.Id);
+    }
+
+    public async Task<bool> DeleteGradeAsync(int gradeId, int professorId)
+    {
+        var grade = await _context.Grades
+            .Include(g => g.Subject)
+            .FirstOrDefaultAsync(g => g.Id == gradeId && g.Subject.ProfessorId == professorId);
+
+        if (grade == null)
+        {
+            return false;
+        }
+
+        _context.Grades.Remove(grade);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<GradeDto?> GetGradeByIdAsync(int gradeId)
+    {
+        return await GetGradeDtoAsync(gradeId);
+    }
+
+    public async Task<List<GradeDto>> GetGradesBySubjectAsync(int subjectId)
+    {
+        return await _context.Grades
+            .Where(g => g.SubjectId == subjectId)
+            .Include(g => g.Subject)
+            .Include(g => g.Student)
+            .Include(g => g.CreatedByProfessor)
+            .Select(g => new GradeDto
+            {
+                Id = g.Id,
+                SubjectId = g.SubjectId,
+                SubjectName = g.Subject.Name,
+                SubjectCode = g.Subject.Code,
+                StudentId = g.StudentId,
+                StudentName = $"{g.Student.FirstName} {g.Student.LastName}",
+                StudentEmail = g.Student.Email,
+                Value = g.Value,
+                Comments = g.Comments,
+                CreatedAt = g.CreatedAt,
+                UpdatedAt = g.UpdatedAt,
+                CreatedByProfessorId = g.CreatedByProfessorId,
+                CreatedByProfessorName = $"{g.CreatedByProfessor.FirstName} {g.CreatedByProfessor.LastName}"
+            })
+            .OrderByDescending(g => g.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<List<GradeDto>> GetGradesByStudentAsync(int studentId)
+    {
+        return await _context.Grades
+            .Where(g => g.StudentId == studentId)
+            .Include(g => g.Subject)
+            .Include(g => g.Student)
+            .Include(g => g.CreatedByProfessor)
+            .Select(g => new GradeDto
+            {
+                Id = g.Id,
+                SubjectId = g.SubjectId,
+                SubjectName = g.Subject.Name,
+                SubjectCode = g.Subject.Code,
+                StudentId = g.StudentId,
+                StudentName = $"{g.Student.FirstName} {g.Student.LastName}",
+                StudentEmail = g.Student.Email,
+                Value = g.Value,
+                Comments = g.Comments,
+                CreatedAt = g.CreatedAt,
+                UpdatedAt = g.UpdatedAt,
+                CreatedByProfessorId = g.CreatedByProfessorId,
+                CreatedByProfessorName = $"{g.CreatedByProfessor.FirstName} {g.CreatedByProfessor.LastName}"
+            })
+            .OrderByDescending(g => g.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<StudentGradesResponse> GetStudentGradesGroupedAsync(int studentId)
+    {
+        var student = await _context.Users.FindAsync(studentId);
+        if (student == null)
+        {
+            throw new InvalidOperationException("Student not found.");
+        }
+
+        var grades = await _context.Grades
+            .Where(g => g.StudentId == studentId)
+            .Include(g => g.Subject)
+                .ThenInclude(s => s.Professor)
+            .Include(g => g.CreatedByProfessor)
+            .OrderBy(g => g.Subject.Name)
+            .ThenByDescending(g => g.CreatedAt)
+            .ToListAsync();
+
+        var groupedGrades = grades
+            .GroupBy(g => new { g.SubjectId, g.Subject.Name, g.Subject.Code, g.Subject.Year, ProfessorName = $"{g.Subject.Professor.FirstName} {g.Subject.Professor.LastName}" })
+            .Select(group => new SubjectGrades
+            {
+                SubjectId = group.Key.SubjectId,
+                SubjectName = group.Key.Name,
+                SubjectCode = group.Key.Code,
+                Year = group.Key.Year,
+                ProfessorName = group.Key.ProfessorName,
+                Grades = group.Select(g => new GradeDto
+                {
+                    Id = g.Id,
+                    SubjectId = g.SubjectId,
+                    SubjectName = g.Subject.Name,
+                    SubjectCode = g.Subject.Code,
+                    StudentId = g.StudentId,
+                    StudentName = $"{student.FirstName} {student.LastName}",
+                    StudentEmail = student.Email,
+                    Value = g.Value,
+                    Comments = g.Comments,
+                    CreatedAt = g.CreatedAt,
+                    UpdatedAt = g.UpdatedAt,
+                    CreatedByProfessorId = g.CreatedByProfessorId,
+                    CreatedByProfessorName = $"{g.CreatedByProfessor.FirstName} {g.CreatedByProfessor.LastName}"
+                }).ToList(),
+                AverageGrade = group.Any() ? Math.Round(group.Average(g => g.Value), 2) : null
+            })
+            .ToList();
+
+        return new StudentGradesResponse
+        {
+            StudentId = studentId,
+            StudentName = $"{student.FirstName} {student.LastName}",
+            StudentEmail = student.Email,
+            SubjectGrades = groupedGrades
+        };
+    }
+
+    public async Task<List<GradeDto>> GetGradesBySubjectAndStudentAsync(int subjectId, int studentId)
+    {
+        return await _context.Grades
+            .Where(g => g.SubjectId == subjectId && g.StudentId == studentId)
+            .Include(g => g.Subject)
+            .Include(g => g.Student)
+            .Include(g => g.CreatedByProfessor)
+            .Select(g => new GradeDto
+            {
+                Id = g.Id,
+                SubjectId = g.SubjectId,
+                SubjectName = g.Subject.Name,
+                SubjectCode = g.Subject.Code,
+                StudentId = g.StudentId,
+                StudentName = $"{g.Student.FirstName} {g.Student.LastName}",
+                StudentEmail = g.Student.Email,
+                Value = g.Value,
+                Comments = g.Comments,
+                CreatedAt = g.CreatedAt,
+                UpdatedAt = g.UpdatedAt,
+                CreatedByProfessorId = g.CreatedByProfessorId,
+                CreatedByProfessorName = $"{g.CreatedByProfessor.FirstName} {g.CreatedByProfessor.LastName}"
+            })
+            .OrderByDescending(g => g.CreatedAt)
+            .ToListAsync();
+    }
+
+    private async Task<GradeDto> GetGradeDtoAsync(int gradeId)
+    {
+        var grade = await _context.Grades
+            .Include(g => g.Subject)
+            .Include(g => g.Student)
+            .Include(g => g.CreatedByProfessor)
+            .FirstOrDefaultAsync(g => g.Id == gradeId);
+
+        if (grade == null)
+        {
+            throw new InvalidOperationException("Grade not found.");
+        }
+
         return new GradeDto
         {
             Id = grade.Id,
             SubjectId = grade.SubjectId,
             SubjectName = grade.Subject.Name,
+            SubjectCode = grade.Subject.Code,
             StudentId = grade.StudentId,
             StudentName = $"{grade.Student.FirstName} {grade.Student.LastName}",
-            StudentEmail = grade.Student.Email ?? "",
-            StudentId_Number = grade.Student.StudentId,
+            StudentEmail = grade.Student.Email,
             Value = grade.Value,
             Comments = grade.Comments,
             CreatedAt = grade.CreatedAt,
             UpdatedAt = grade.UpdatedAt,
-            ProfessorName = $"{grade.Subject.Professor.FirstName} {grade.Subject.Professor.LastName}"
+            CreatedByProfessorId = grade.CreatedByProfessorId,
+            CreatedByProfessorName = $"{grade.CreatedByProfessor.FirstName} {grade.CreatedByProfessor.LastName}"
         };
-    }
-
-    public async Task<bool> DeleteGradeAsync(int id)
-    {
-        var grade = await _context.Set<Grade>().FindAsync(id);
-
-        if (grade == null)
-            return false;
-
-        _context.Set<Grade>().Remove(grade);
-        await _context.SaveChangesAsync();
-
-        return true;
     }
 }

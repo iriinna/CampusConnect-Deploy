@@ -11,7 +11,9 @@ import {
   Menu,
   X,
   MapPin,
-  BookOpen
+  BookOpen,
+  GraduationCap,
+  FileText
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from './ui/Button';
@@ -55,6 +57,23 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Library', path: '/library', icon: BookOpen },
   ];
 
+  // Add role-specific navigation items
+  const roleSpecificItems = [];
+  
+  if (user.role === 'Professor' || user.role === 'Admin') {
+    roleSpecificItems.push(
+      { name: 'Subjects', path: '/subjects', icon: GraduationCap },
+      { name: 'Manage Grades', path: '/manage-grades', icon: FileText }
+    );
+  } else if (user.role === 'User' || !user.role) {
+    // Student role
+    roleSpecificItems.push(
+      { name: 'My Grades', path: '/my-grades', icon: GraduationCap }
+    );
+  }
+
+  const allNavItems = [...navItems, ...roleSpecificItems];
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -88,7 +107,7 @@ export function Layout({ children }: LayoutProps) {
                   <path d="M 150 80 Q 180 110 160 140" stroke="white" strokeWidth="8" fill="none" opacity="0.7" />
                   <path d="M 50 80 Q 40 105 70 130" stroke="white" strokeWidth="8" fill="none" opacity="0.7" />
                   <defs>
-                    <linearGradient id="gradNav" x1="0%" y1="0%" x2="100%" y2="100%">
+               allN    <linearGradient id="gradNav" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" style={{stopColor: '#667eea', stopOpacity: 1}} />
                       <stop offset="100%" style={{stopColor: '#764ba2', stopOpacity: 1}} />
                     </linearGradient>
@@ -213,7 +232,7 @@ export function Layout({ children }: LayoutProps) {
               className="lg:hidden border-t bg-background/95 backdrop-blur-lg overflow-hidden"
             >
               <div className="px-4 py-4 space-y-2">
-                {navItems.map((item, index) => {
+                {allNavItems.map((item, index) => {
                   const Icon = item.icon;
                   const active = isActive(item.path);
                   return (

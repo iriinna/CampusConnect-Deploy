@@ -121,6 +121,7 @@ namespace CampusConnect.API.Controllers
         }
 
 
+        [AllowAnonymous]
         [HttpGet("public-details/{id}")]
         public async Task<IActionResult> GetPublicUserDetails(int id)
         {
@@ -200,10 +201,10 @@ namespace CampusConnect.API.Controllers
                 return NotFound(new { message = "Utilizatorul nu a fost găsit." });
             }
 
-            return Ok(new 
-            { 
-                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}", 
-                newRole = newRole 
+            return Ok(new
+            {
+                message = $"Rolul a fost schimbat cu succes. Noul rol este: {newRole}",
+                newRole = newRole
             });
         }
 

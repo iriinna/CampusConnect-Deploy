@@ -1,13 +1,13 @@
-using CampusConnect.Application.DTOs.Subjects;
+using CampusConnect.Application.DTOs.Grades;
 
 namespace CampusConnect.Application.Interfaces;
 
 public interface ISubjectService
 {
-    Task<IEnumerable<SubjectDto>> GetAllSubjectsAsync();
-    Task<IEnumerable<SubjectDto>> GetProfessorSubjectsAsync(int professorId);
-    Task<SubjectDto?> GetSubjectByIdAsync(int id);
     Task<SubjectDto> CreateSubjectAsync(int professorId, CreateSubjectRequest request);
-    Task<SubjectDto?> UpdateSubjectAsync(int id, int professorId, UpdateSubjectRequest request);
-    Task<bool> DeleteSubjectAsync(int id, int professorId);
+    Task<SubjectDto> UpdateSubjectAsync(int subjectId, int professorId, UpdateSubjectRequest request);
+    Task<bool> DeleteSubjectAsync(int subjectId, int professorId);
+    Task<SubjectDto?> GetSubjectByIdAsync(int subjectId);
+    Task<List<SubjectDto>> GetSubjectsByProfessorAsync(int professorId);
+    Task<List<SubjectDto>> GetAllSubjectsAsync();
 }

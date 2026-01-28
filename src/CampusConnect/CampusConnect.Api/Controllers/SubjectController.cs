@@ -1,4 +1,4 @@
-using CampusConnect.Application.DTOs.Subjects;
+using CampusConnect.Application.DTOs.Grades;
 using CampusConnect.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,66 +18,27 @@ public class SubjectController : ControllerBase
         _subjectService = subjectService;
     }
 
-    private int? GetCurrentUserId()
+    private int GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userIdClaim != null && int.TryParse(userIdClaim, out int userId))
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
         {
-            return userId;
+            throw new UnauthorizedAccessException("User not authenticated");
         }
-        return null;
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<SubjectDto>>> GetAllSubjects()
-    {
-        var subjects = await _subjectService.GetAllSubjectsAsync();
-        return Ok(subjects);
-    }
-
-    [HttpGet("professor/{professorId}")]
-    public async Task<ActionResult<IEnumerable<SubjectDto>>> GetProfessorSubjects(int professorId)
-    {
-        var subjects = await _subjectService.GetProfessorSubjectsAsync(professorId);
-        return Ok(subjects);
-    }
-
-    [HttpGet("my-subjects")]
-    [Authorize(Roles = "Professor,Admin")]
-    public async Task<ActionResult<IEnumerable<SubjectDto>>> GetMySubjects()
-    {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-            return Unauthorized();
-
-        var subjects = await _subjectService.GetProfessorSubjectsAsync(userId.Value);
-        return Ok(subjects);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SubjectDto>> GetSubjectById(int id)
-    {
-        var subject = await _subjectService.GetSubjectByIdAsync(id);
-        if (subject == null)
-            return NotFound();
-
-        return Ok(subject);
+        return userId;
     }
 
     [HttpPost]
     [Authorize(Roles = "Professor,Admin")]
     public async Task<ActionResult<SubjectDto>> CreateSubject([FromBody] CreateSubjectRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-            return Unauthorized();
-
         try
         {
-            var subject = await _subjectService.CreateSubjectAsync(userId.Value, request);
-            return CreatedAtAction(nameof(GetSubjectById), new { id = subject.Id }, subject);
+            var professorId = GetCurrentUserId();
+            var subject = await _subjectService.CreateSubjectAsync(professorId, request);
+            return Ok(subject);
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
             return BadRequest(new { message = ex.Message });
         }
@@ -87,29 +48,59 @@ public class SubjectController : ControllerBase
     [Authorize(Roles = "Professor,Admin")]
     public async Task<ActionResult<SubjectDto>> UpdateSubject(int id, [FromBody] UpdateSubjectRequest request)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-            return Unauthorized();
-
-        var subject = await _subjectService.UpdateSubjectAsync(id, userId.Value, request);
-        if (subject == null)
-            return NotFound();
-
-        return Ok(subject);
+        try
+        {
+            var professorId = GetCurrentUserId();
+            var subject = await _subjectService.UpdateSubjectAsync(id, professorId, request);
+            return Ok(subject);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Professor,Admin")]
     public async Task<ActionResult> DeleteSubject(int id)
     {
-        var userId = GetCurrentUserId();
-        if (userId == null)
-            return Unauthorized();
-
-        var result = await _subjectService.DeleteSubjectAsync(id, userId.Value);
+        var professorId = GetCurrentUserId();
+        var result = await _subjectService.DeleteSubjectAsync(id, professorId);
+        
         if (!result)
-            return NotFound();
+        {
+            return NotFound(new { message = "Subject not found or you don't have permission to delete it." });
+        }
 
-        return NoContent();
+        return Ok(new { message = "Subject deleted successfully" });
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SubjectDto>> GetSubject(int id)
+    {
+        var subject = await _subjectService.GetSubjectByIdAsync(id);
+        
+        if (subject == null)
+        {
+            return NotFound(new { message = "Subject not found" });
+        }
+
+        return Ok(subject);
+    }
+
+    [HttpGet("my-subjects")]
+    [Authorize(Roles = "Professor,Admin")]
+    public async Task<ActionResult<List<SubjectDto>>> GetMySubjects()
+    {
+        var professorId = GetCurrentUserId();
+        var subjects = await _subjectService.GetSubjectsByProfessorAsync(professorId);
+        return Ok(subjects);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<SubjectDto>>> GetAllSubjects()
+    {
+        var subjects = await _subjectService.GetAllSubjectsAsync();
+        return Ok(subjects);
     }
 }
