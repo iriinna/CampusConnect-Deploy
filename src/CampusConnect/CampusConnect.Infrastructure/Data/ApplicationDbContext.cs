@@ -31,11 +31,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Building> Buildings { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<RoomBookingRequest> RoomBookingRequests { get; set; }
     public DbSet<Achievement> Achievements { get; set; }
     public DbSet<UserAchievement> UserAchievements { get; set; }
     public DbSet<UserActivity> UserActivities { get; set; }
     public DbSet<LibraryFolder> LibraryFolders { get; set; } 
     public DbSet<LibraryItem> LibraryItems { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
+    public DbSet<Grade> Grades { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -350,7 +353,35 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(s => new { s.RoomId, s.StartTime, s.EndTime });
         });
 
-        // 15. Seed Campus Map Data (UniBuc)
+        // 15. Configurare RoomBookingRequest
+        builder.Entity<RoomBookingRequest>(entity =>
+        {
+            entity.Property(r => r.Title).IsRequired().HasMaxLength(200);
+            entity.Property(r => r.Description).HasMaxLength(1000);
+            entity.Property(r => r.RecurrencePattern).HasMaxLength(50);
+            entity.Property(r => r.RejectionReason).HasMaxLength(500);
+
+            entity.HasOne(r => r.Room)
+                .WithMany()
+                .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.RequestedByUser)
+                .WithMany()
+                .HasForeignKey(r => r.RequestedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(r => r.ReviewedByAdmin)
+                .WithMany()
+                .HasForeignKey(r => r.ReviewedByAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(r => new { r.RoomId, r.StartTime, r.EndTime });
+            entity.HasIndex(r => r.RequestedByUserId);
+            entity.HasIndex(r => r.Status);
+        });
+
+        // 16. Seed Campus Map Data (UniBuc)
         SeedCampusMapData(builder);
     }
 
@@ -533,15 +564,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 
             // FMI (Building 13)
             new Room { Id = 121, Name = "Amf. Spiru Haret", BuildingId = 13, Floor = "Parter", Capacity = 300, Equipment = "Proiector, Sistem audio premium", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 122, Name = "Amf. Gheorghe Țițeica", BuildingId = 13, Floor = "Parter", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 123, Name = "Amf. Simion Stoilow", BuildingId = 13, Floor = "Parter", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
-            new Room { Id = 124, Name = "Amf. Dimitrie Pompeiu", BuildingId = 13, Floor = "Parter", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 122, Name = "Amf. Gheorghe Țițeica", BuildingId = 13, Floor = "Etaj 3", Capacity = 250, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 123, Name = "Amf. Simion Stoilow", BuildingId = 13, Floor = "Etaj 1", Capacity = 200, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 124, Name = "Amf. Dimitrie Pompeiu", BuildingId = 13, Floor = "Etaj 2", Capacity = 180, Equipment = "Proiector, Sistem audio", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 125, Name = "Lab FMI 1", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 126, Name = "Lab FMI 2", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 127, Name = "Lab FMI 3", BuildingId = 13, Floor = "Etaj 1", Capacity = 30, Equipment = "30 Computere, Proiector", IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 128, Name = "S101", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 129, Name = "S102", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
             new Room { Id = 130, Name = "S103", BuildingId = 13, Floor = "Etaj 1", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 161, Name = "S1", BuildingId = 13, Floor = "Parter", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 162, Name = "S3", BuildingId = 13, Floor = "Parter", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Room { Id = 163, Name = "S201", BuildingId = 13, Floor = "Etaj 2", Capacity = 50, IsActive = true, CreatedAt = DateTime.UtcNow },
 
             // FPSE (Building 14)
             new Room { Id = 131, Name = "Psi101", BuildingId = 14, Floor = "Etaj 1", Capacity = 45, IsActive = true, CreatedAt = DateTime.UtcNow },
@@ -642,7 +676,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             }
         };
         builder.Entity<Schedule>().HasData(schedules);
-        // 16. Configurare Achievement
+        // 17. Configurare Achievement
         builder.Entity<Achievement>(entity =>
         {
             entity.Property(a => a.Title)
@@ -658,7 +692,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .HasMaxLength(100);
         });
 
-        // 17. Configurare UserAchievement
+        // 18. Configurare UserAchievement
         builder.Entity<UserAchievement>(entity =>
         {
             entity.HasIndex(ua => new { ua.UserId, ua.AchievementId }).IsUnique();
@@ -674,7 +708,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // 18. Configurare UserActivity
+        // 19. Configurare UserActivity
         builder.Entity<UserActivity>(entity =>
         {
             entity.Property(a => a.ActivityType)
@@ -699,7 +733,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
             entity.HasIndex(a => new { a.UserId, a.CreatedAt });
         });
 
-        // 19. Seed Achievements
+        // 20. Seed Achievements
         builder.Entity<Achievement>().HasData(
             new Achievement
             {
@@ -747,6 +781,48 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 IsActive = true
             }
         );
+
+        // Subject configuration
+        builder.Entity<Subject>(entity =>
+        {
+            entity.HasKey(s => s.Id);
+            entity.Property(s => s.Name).IsRequired().HasMaxLength(200);
+            entity.Property(s => s.Code).IsRequired().HasMaxLength(50);
+            entity.Property(s => s.Description).HasMaxLength(1000);
+            
+            entity.HasOne(s => s.Professor)
+                .WithMany()
+                .HasForeignKey(s => s.ProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(s => s.Code).IsUnique();
+            entity.HasIndex(s => s.ProfessorId);
+        });
+
+        // Grade configuration
+        builder.Entity<Grade>(entity =>
+        {
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.Value).HasColumnType("decimal(4,2)");
+            entity.Property(g => g.Comments).HasMaxLength(500);
+            
+            entity.HasOne(g => g.Subject)
+                .WithMany(s => s.Grades)
+                .HasForeignKey(g => g.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(g => g.Student)
+                .WithMany()
+                .HasForeignKey(g => g.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(g => g.CreatedByProfessor)
+                .WithMany()
+                .HasForeignKey(g => g.CreatedByProfessorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(g => new { g.SubjectId, g.StudentId, g.CreatedAt });
+        });
     }
 
     private static ApplicationUser CreateUser(int id, string email, string firstName, string lastName, PasswordHasher<ApplicationUser> hasher)

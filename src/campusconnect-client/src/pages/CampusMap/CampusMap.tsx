@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { motion } from 'framer-motion';
 import { MapPin, Building as BuildingIcon, Search, Plus } from 'lucide-react';
 import L from 'leaflet';
@@ -19,6 +19,34 @@ L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
+
+// ✅ Icon normal + icon selectat (mov)
+const normalIcon = new L.Icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+const selectedIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [30, 45],
+  iconAnchor: [15, 45],
+});
+
+// ✅ (opțional, dar foarte util) centrează harta pe clădirea selectată
+const MapCenterOnBuilding = ({ building }: { building: Building | null }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!building) return;
+    map.setView([building.latitude, building.longitude], 17, { animate: true });
+  }, [building, map]);
+
+  return null;
+};
 
 const CampusMap = () => {
   const [buildings, setBuildings] = useState<Building[]>([]);
@@ -46,7 +74,7 @@ const CampusMap = () => {
     }
   };
 
-  const filteredBuildings = buildings.filter(b =>
+  const filteredBuildings = buildings.filter((b) =>
     b.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -121,9 +149,7 @@ const CampusMap = () => {
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-sm truncate">{building.name}</h3>
                           <p className="text-xs text-muted-foreground truncate">{building.address}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {building.roomsCount} săli
-                          </p>
+                          <p className="text-xs text-muted-foreground mt-1">{building.roomsCount} săli</p>
                         </div>
                       </div>
                     </motion.div>
@@ -148,12 +174,17 @@ const CampusMap = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
 
+                  {/* ✅ centrează pe clădire selectată */}
+                  <MapCenterOnBuilding building={selectedBuilding} />
+
                   {filteredBuildings.map((building) => (
                     <Marker
                       key={building.id}
                       position={[building.latitude, building.longitude]}
+                      // ✅ icon mov dacă e selectată
+                      icon={selectedBuilding?.id === building.id ? selectedIcon : normalIcon}
                       eventHandlers={{
-                        click: () => setSelectedBuilding(building)
+                        click: () => setSelectedBuilding(building),
                       }}
                     >
                       <Popup>
@@ -172,10 +203,7 @@ const CampusMap = () => {
 
         {/* Building Details Panel */}
         {selectedBuilding && (
-          <BuildingSidePanel
-            building={selectedBuilding}
-            onClose={() => setSelectedBuilding(null)}
-          />
+          <BuildingSidePanel building={selectedBuilding} onClose={() => setSelectedBuilding(null)} />
         )}
 
         {/* Create Schedule Dialog */}

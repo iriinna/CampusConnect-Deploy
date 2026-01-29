@@ -9,4 +9,5 @@ public class LoginResponse
     public int Id { get; set; }
     public DateTime ExpiresAt { get; set; }
     public required string Role { get; set; }
+    public string? StudentId { get; set; }
 }
