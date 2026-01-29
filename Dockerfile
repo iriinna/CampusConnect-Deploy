@@ -1,5 +1,5 @@
 # 1. Folosim imaginea oficială .NET SDK pentru a construi proiectul
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /source
 
 # 2. Copiem tot codul din repository în imaginea Docker
@@ -11,7 +11,7 @@ RUN dotnet restore "./src/CampusConnect/CampusConnect.Api/CampusConnect.Api.cspr
 RUN dotnet publish "./src/CampusConnect/CampusConnect.Api/CampusConnect.Api.csproj" -c Release -o /app/publish
 
 # 4. Pregătim imaginea finală pentru rulare (mai mică și mai rapidă)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
