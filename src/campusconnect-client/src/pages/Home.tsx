@@ -156,17 +156,8 @@ function Home() {
       badge: 'New',
     },
 
-    // Carduri pentru sistemul de note - diferite pentru profesori vs elevi
-    ...((user.role === 'Professor' || user.role === 'Admin') ? [
-      {
-        title: 'My Subjects',
-        description: 'Manage subjects and grades',
-        icon: GraduationCap,
-        link: '/subjects',
-        gradient: 'from-blue-600 via-indigo-600 to-purple-600',
-        badge: 'Profesor',
-      }
-    ] : [
+    // Carduri pentru sistemul de note - pentru studenți
+    ...((user.role !== 'Professor' && user.role !== 'Admin') ? [
       {
         title: 'My Grades',
         description: 'View your grades by subject',
@@ -183,7 +174,7 @@ function Home() {
         gradient: 'from-teal-500 via-cyan-500 to-blue-500',
         badge: 'PDF',
       }
-    ]),
+    ] : []),
 
     {
       title: 'My Tasks',
@@ -202,16 +193,6 @@ function Home() {
       link: '/subjects',
       gradient: 'from-indigo-500 via-indigo-600 to-purple-500',
       badge: 'Professor',
-    }] : []),
-
-    // Cardul pentru studenți - My Grades
-    ...(!isProfessor && !isAdmin ? [{
-      title: 'My Grades',
-      description: 'View your academic progress',
-      icon: GraduationCap,
-      link: '/my-grades',
-      gradient: 'from-teal-500 via-cyan-500 to-blue-500',
-      badge: 'Student',
     }] : []),
     
     ...(isAdmin ? [{

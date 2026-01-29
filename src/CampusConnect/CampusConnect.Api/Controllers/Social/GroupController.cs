@@ -7,7 +7,7 @@ using CampusConnect.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using CampusConnect.Domain.Entities;
 
-namespace CampusConnect.Api.Controllers;
+namespace CampusConnect.Api.Controllers.Social;
 
 [ApiController]
 [Route("api/[controller]")]

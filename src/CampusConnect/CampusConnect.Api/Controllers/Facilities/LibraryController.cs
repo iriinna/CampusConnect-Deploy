@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using CampusConnect.Infrastructure.Data;
 using CampusConnect.Domain.Entities;
 
-namespace CampusConnect.Api.Controllers;
+namespace CampusConnect.Api.Controllers.Facilities;
 
 [ApiController]
 [Route("api/library")]
