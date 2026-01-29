@@ -5,7 +5,7 @@ using System.Security.Claims;
 using CampusConnect.Application.Interfaces;
 using CampusConnect.Application.DTOs;
 
-namespace CampusConnect.API.Controllers
+namespace CampusConnect.Api.Controllers.Auth
 {
     [Authorize]
     [Route("api/[controller]")] 

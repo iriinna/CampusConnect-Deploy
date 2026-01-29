@@ -3,7 +3,7 @@ using CampusConnect.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CampusConnect.Api.Controllers;
+namespace CampusConnect.Api.Controllers.AI;
 
 [ApiController]
 [Route("api/[controller]")]

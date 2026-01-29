@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+
+namespace CampusConnect.Api.Controllers.Social;
+
 [ApiController]
 [Route("api/[controller]")]
 public class AnnouncementsController : ControllerBase

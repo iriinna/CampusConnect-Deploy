@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace CampusConnect.Api.Controllers;
+namespace CampusConnect.Api.Controllers.AI;
 
 [ApiController]
 [Route("api/[controller]")]
