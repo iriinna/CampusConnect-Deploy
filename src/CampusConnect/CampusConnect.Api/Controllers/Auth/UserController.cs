@@ -42,7 +42,7 @@ namespace CampusConnect.Api.Controllers.Auth
     [HttpGet("search")]
     public async Task<ActionResult<IEnumerable<UserSummaryDto>>> SearchUsers([FromQuery] string? search)
 {
-    // 1. Obținem lista de useri din baza de date
+    // 1. Obtinem lista de useri din baza de date
     var users = await _userService.SearchUsersAsync(search ?? "");
     
     var resultList = new List<UserSummaryDto>();
