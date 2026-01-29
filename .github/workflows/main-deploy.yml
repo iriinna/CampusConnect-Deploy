@@ -19,9 +19,11 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
+        working-directory: ./src/CampusConnect/CampusConnect.Api
         run: dotnet restore
 
       - name: Build Backend
+        working-directory: ./src/CampusConnect/CampusConnect.Api
         run: dotnet build --configuration Release --no-restore
 
   # frontend
@@ -36,11 +38,11 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        working-directory: ./campusconnect-client 
+        working-directory: ./src/campusconnect-client 
         run: npm install
 
       - name: Build Frontend
-        working-directory: ./campusconnect-client 
+        working-directory: ./src/campusconnect-client 
         run: npm run build 
 
   # deploy
