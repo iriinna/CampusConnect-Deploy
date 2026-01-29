@@ -66,23 +66,23 @@ export const BuildingSidePanel = ({ building, onClose }: Props) => {
               <div className="text-center p-4 bg-muted rounded-lg">
                 <DoorOpen className="h-6 w-6 mx-auto mb-2 text-primary" />
                 <div className="text-2xl font-bold">{rooms.length}</div>
-                <div className="text-xs text-muted-foreground">Total Săli</div>
+                <div className="text-xs text-muted-foreground">Total rooms</div>
               </div>
               <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">{freeRooms}</div>
-                <div className="text-xs text-muted-foreground">Libere Acum</div>
+                <div className="text-xs text-muted-foreground">Free Now</div>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-950/20 rounded-lg">
                 <div className="text-2xl font-bold text-red-600">{occupiedRooms}</div>
-                <div className="text-xs text-muted-foreground">Ocupate</div>
+                <div className="text-xs text-muted-foreground">Occupied</div>
               </div>
             </div>
 
             {/* Room List */}
             <div className="space-y-3">
-              <h3 className="font-semibold text-lg mb-3">Săli</h3>
+              <h3 className="font-semibold text-lg mb-3">Rooms</h3>
               {loading ? (
-                <div className="text-center py-8">Se încarcă sălile...</div>
+                <div className="text-center py-8">Loading rooms...</div>
               ) : (
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {rooms.map((room) => (

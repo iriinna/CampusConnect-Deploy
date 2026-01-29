@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, MapPin, Calendar, Trash2 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { roomBookingApi } from '../../services/roomBookingApi';
@@ -30,7 +30,7 @@ export const MyBookingRequests = () => {
   };
 
   const handleDelete = async (requestId: number) => {
-    if (!confirm('Ești sigur că vrei să ștergi această cerere?')) {
+    if (!confirm('Are you sure you want to delete this request?')) {
       return;
     }
 
@@ -53,9 +53,9 @@ export const MyBookingRequests = () => {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Pending': return 'În Așteptare';
-      case 'Approved': return 'Aprobată';
-      case 'Rejected': return 'Respinsă';
+      case 'Pending': return 'Pending';
+      case 'Approved': return 'Approved';
+      case 'Rejected': return 'Rejected';
       default: return status;
     }
   };
@@ -63,7 +63,7 @@ export const MyBookingRequests = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Se încarcă cererile...</div>
+        <div className="text-center">Loading requests...</div>
       </div>
     );
   }
@@ -76,9 +76,9 @@ export const MyBookingRequests = () => {
         className="space-y-6"
       >
         <div>
-          <h1 className="text-3xl font-bold">Cererile Mele de Rezervare</h1>
+          <h1 className="text-3xl font-bold">My Booking Requests</h1>
           <p className="text-muted-foreground mt-2">
-            Vezi statusul cererilor tale de rezervare a sălilor
+            View the status of your room booking requests
           </p>
         </div>
 
@@ -93,7 +93,7 @@ export const MyBookingRequests = () => {
             <CardContent className="py-12">
               <div className="text-center text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Nu ai nicio cerere de rezervare</p>
+                <p>You have no booking requests</p>
               </div>
             </CardContent>
           </Card>
@@ -127,7 +127,7 @@ export const MyBookingRequests = () => {
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Clock className="h-4 w-4" />
                           <span>
-                            {new Date(request.startTime).toLocaleString('ro-RO', {
+                            {new Date(request.startTime).toLocaleString('en-US', {
                               day: '2-digit',
                               month: 'short',
                               year: 'numeric',
@@ -140,7 +140,7 @@ export const MyBookingRequests = () => {
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Clock className="h-4 w-4" />
                           <span>
-                            {new Date(request.endTime).toLocaleString('ro-RO', {
+                            {new Date(request.endTime).toLocaleString('en-US', {
                               day: '2-digit',
                               month: 'short',
                               year: 'numeric',
@@ -153,31 +153,31 @@ export const MyBookingRequests = () => {
 
                       {request.recurrencePattern && (
                         <div className="text-sm text-muted-foreground">
-                          <strong>Recurență:</strong> {request.recurrencePattern}
+                          <strong>Recurrence:</strong> {request.recurrencePattern}
                           {request.recurrenceEndDate && (
-                            <> până la {new Date(request.recurrenceEndDate).toLocaleDateString('ro-RO')}</>
+                            <> until {new Date(request.recurrenceEndDate).toLocaleDateString('en-US')}</>
                           )}
                         </div>
                       )}
 
                       <div className="text-xs text-muted-foreground">
-                        Cerere trimisă la: {new Date(request.createdAt).toLocaleString('ro-RO')}
+                        Request sent at: {new Date(request.createdAt).toLocaleString('en-US')}
                       </div>
 
                       {request.status === 'Approved' && request.reviewedByAdminName && (
                         <div className="text-sm text-green-700 bg-green-50 p-3 rounded-md">
-                          ✓ Aprobată de {request.reviewedByAdminName} la{' '}
-                          {new Date(request.reviewedAt!).toLocaleString('ro-RO')}
+                          ✓ Approved by {request.reviewedByAdminName} at{' '}
+                          {new Date(request.reviewedAt!).toLocaleString('en-US')}
                         </div>
                       )}
 
                       {request.status === 'Rejected' && (
                         <div className="text-sm text-red-700 bg-red-50 p-3 rounded-md">
-                          ✗ Respinsă de {request.reviewedByAdminName} la{' '}
-                          {new Date(request.reviewedAt!).toLocaleString('ro-RO')}
+                          ✗ Rejected by {request.reviewedByAdminName} at{' '}
+                          {new Date(request.reviewedAt!).toLocaleString('en-US')}
                           {request.rejectionReason && (
                             <div className="mt-2">
-                              <strong>Motiv:</strong> {request.rejectionReason}
+                              <strong>Reason:</strong> {request.rejectionReason}
                             </div>
                           )}
                         </div>
@@ -192,7 +192,7 @@ export const MyBookingRequests = () => {
                         className="gap-2"
                       >
                         <Trash2 className="h-4 w-4" />
-                        Șterge
+                        Delete
                       </Button>
                     )}
                   </div>

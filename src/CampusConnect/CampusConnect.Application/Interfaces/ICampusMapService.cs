@@ -28,4 +28,15 @@ public interface ICampusMapService
     Task<ScheduleDto> CreateScheduleAsync(CreateScheduleRequest request);
     Task<ScheduleDto> UpdateScheduleAsync(int id, UpdateScheduleRequest request);
     Task<bool> DeleteScheduleAsync(int id);
+
+    // Room reservation operations
+    Task<RoomReservationDto> CreateReservationAsync(CreateReservationRequest request);
+    Task<IEnumerable<RoomReservationDto>> GetPendingReservationsAsync();
+    Task<IEnumerable<RoomReservationDto>> GetUserReservationsAsync();
+    Task<RoomReservationDto> ProcessReservationAsync(int reservationId, ProcessReservationRequest request);
+    Task<bool> CancelReservationAsync(int reservationId);
+
+    // Validation helpers
+    Task<bool> IsTimeSlotAvailableAsync(int roomId, DateTime startTime, DateTime endTime, int? excludeReservationId = null);
+    bool IsValidBookingTime(DateTime startTime, DateTime endTime);
 }

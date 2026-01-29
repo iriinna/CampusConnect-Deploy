@@ -4,7 +4,8 @@ public enum RoomStatus
 {
     Free,
     Occupied,
-    OccupiedSoon
+    OccupiedSoon,
+    Unknown
 }
 
 public class RoomDto

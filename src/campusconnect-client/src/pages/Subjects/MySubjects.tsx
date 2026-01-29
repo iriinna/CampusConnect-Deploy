@@ -15,7 +15,7 @@ const MySubjects = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newSubject, setNewSubject] = useState<CreateSubjectRequest>({ name: '', code: '', description: '' });
+  const [newSubject, setNewSubject] = useState<CreateSubjectRequest>({ name: '', code: '', description: '', year: 1 });
 
   useEffect(() => {
     loadSubjects();
@@ -37,7 +37,7 @@ const MySubjects = () => {
     e.preventDefault();
     try {
       await gradesApi.subjectApi.createSubject(newSubject);
-      setNewSubject({ name: '', code: '', description: '' });
+      setNewSubject({ name: '', code: '', description: '', year: 1 });
       setShowCreateForm(false);
       loadSubjects();
     } catch (error) {

@@ -11,8 +11,8 @@ import {
   ArrowRight,
   Clock,
   UserCog,
-  BookOpen,
   Trophy,
+  BookOpen,
   GraduationCap,
   FileText
 } from 'lucide-react';
@@ -50,6 +50,11 @@ function Home() {
     user.roles?.includes('Admin') || 
     user.userRoles?.includes('Admin') || 
     user.isAdmin === true;
+
+  const isProfessor = 
+    user.role === 'Professor' || 
+    user.roles?.includes('Professor') || 
+    user.userRoles?.includes('Professor');
 
   const navigate = useNavigate();
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
@@ -188,6 +193,26 @@ function Home() {
       gradient: 'from-orange-500 via-red-500 to-pink-500',
       badge: dashboardStats ? `${pendingTasks} pending` : '0 pending',
     },
+    
+    // Cardul pentru profesori - My Subjects
+    ...(isProfessor || isAdmin ? [{
+      title: 'My Subjects',
+      description: 'Manage your subjects and grades',
+      icon: BookOpen,
+      link: '/subjects',
+      gradient: 'from-indigo-500 via-indigo-600 to-purple-500',
+      badge: 'Professor',
+    }] : []),
+
+    // Cardul pentru studenți - My Grades
+    ...(!isProfessor && !isAdmin ? [{
+      title: 'My Grades',
+      description: 'View your academic progress',
+      icon: GraduationCap,
+      link: '/my-grades',
+      gradient: 'from-teal-500 via-cyan-500 to-blue-500',
+      badge: 'Student',
+    }] : []),
     
     ...(isAdmin ? [{
       title: 'Achievements',

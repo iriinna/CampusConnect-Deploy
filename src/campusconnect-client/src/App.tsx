@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -32,12 +32,22 @@ import GradesManagement from './pages/GradesManagement';
 import StudentGrades from './pages/StudentGrades';
 import SubjectDetails from './pages/Subjects/SubjectDetails';
 import Documents from './pages/Documents/Documents';
+import { AiChatWidget } from './components/AiAssistant/AiChatWidget';
 
+function AiChatWrapper() {
+  const location = useLocation();
+  const publicPaths = ['/', '/login', '/register', '/confirm-email'];
+  const isPublicPath = publicPaths.includes(location.pathname) || location.pathname.startsWith('/verify-student');
+
+  if (isPublicPath) return null;
+  return <AiChatWidget />;
+}
 
 function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
+        <AiChatWrapper />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
@@ -75,7 +85,6 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-
   );
 }
 export default App;

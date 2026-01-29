@@ -8,15 +8,14 @@ import {
   Clock, 
   ArrowLeft, 
   Inbox,
-  CheckCircle, // Iconita pentru Accept
-  XCircle      // Iconita pentru Decline
+  CheckCircle, 
+  XCircle      
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 
-// Importăm API-ul tău exact așa cum l-ai definit
 import { roomBookingApi } from '../services/roomBookingApi'; 
 
 const API_BASE_URL = 'http://localhost:5099/api';
@@ -160,7 +159,7 @@ const Notifications = () => {
               </button>
             </div>
 
-            {unreadCount > 0 && (
+            {unreadCount > 1 && (
               <Button onClick={handleMarkAllRead} variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50">
                 <CheckCheck className="mr-2 h-4 w-4" /> Mark all as read
               </Button>
@@ -176,7 +175,7 @@ const Notifications = () => {
           ) : displayedNotifications.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground bg-muted/30 rounded-2xl border-2 border-dashed">
               <Inbox className="h-12 w-12 mx-auto mb-3 opacity-20" />
-              <p>Nu există notificări aici.</p>
+              <p>There are no notifications here.</p>
             </div>
           ) : (
             <AnimatePresence>
@@ -211,7 +210,7 @@ const Notifications = () => {
                         </p>
                         <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                           <Clock className="h-3 w-3" />
-                          {new Date(notification.createdAt).toLocaleString('ro-RO')}
+                          {new Date(notification.createdAt).toLocaleString('en-US')}
                         </div>
 
                         {notification.relatedEntityType === 'RoomBookingRequest' && !notification.isRead && (

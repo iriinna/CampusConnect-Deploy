@@ -65,7 +65,7 @@ const GradesManagement: React.FC = () => {
       setGrades(data);
       setError('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Eroare la încărcarea notelor');
+      setError(err.response?.data?.message || 'Error loading grades');
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ const GradesManagement: React.FC = () => {
       );
       setSearchResults(response.data);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Eroare la căutarea utilizatorilor');
+      setError(err.response?.data?.message || 'Error searching users');
     }
   };
 
@@ -109,14 +109,14 @@ const GradesManagement: React.FC = () => {
   };
 
   const handleDeleteGrade = async (id: number, studentName: string) => {
-    if (!confirm(`Sigur vrei să ștergi nota pentru ${studentName}?`)) return;
+    if (!confirm(`Are you sure you want to delete the grade for ${studentName}?`)) return;
 
     try {
       await gradeApi.deleteGrade(id);
       await loadGrades();
       setError('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Eroare la ștergerea notei');
+      setError(err.response?.data?.message || 'Error deleting grade');
     }
   };
 
@@ -126,7 +126,7 @@ const GradesManagement: React.FC = () => {
 
     const value = parseFloat(gradeFormData.value);
     if (isNaN(value) || value < 1 || value > 10) {
-      setError('Nota trebuie să fie între 1 și 10');
+      setError('Grade must be between 1 and 10');
       return;
     }
 
@@ -142,7 +142,7 @@ const GradesManagement: React.FC = () => {
       await loadGrades();
       setError('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Eroare la adăugarea notei');
+      setError(err.response?.data?.message || 'Error adding grade');
     }
   };
 
@@ -152,7 +152,7 @@ const GradesManagement: React.FC = () => {
 
     const value = parseFloat(gradeFormData.value);
     if (isNaN(value) || value < 1 || value > 10) {
-      setError('Nota trebuie să fie între 1 și 10');
+      setError('Grade must be between 1 and 10');
       return;
     }
 
@@ -166,7 +166,7 @@ const GradesManagement: React.FC = () => {
       await loadGrades();
       setError('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Eroare la actualizarea notei');
+      setError(err.response?.data?.message || 'Error updating grade');
     }
   };
 
@@ -186,14 +186,14 @@ const GradesManagement: React.FC = () => {
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <p className="text-gray-500 text-lg">You haven't created any subjects yet.</p>
           <a href="/subjects" className="mt-4 text-blue-500 hover:text-blue-600 font-medium inline-block">
-            Creează prima materie
+            Create your first subject
           </a>
         </div>
       ) : (
         <>
           {/* Subject Selector */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <label className="block text-gray-700 font-medium mb-2">Selectează Materia</label>
+            <label className="block text-gray-700 font-medium mb-2">Select Subject</label>
             <select
               value={selectedSubject || ''}
               onChange={(e) => setSelectedSubject(Number(e.target.value))}
@@ -212,7 +212,7 @@ const GradesManagement: React.FC = () => {
               {/* Student Search */}
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                  Adaugă Notă pentru {currentSubject.name}
+                  Add Grade for {currentSubject.name}
                 </h2>
                 <div className="flex gap-2 mb-4">
                   <div className="flex-1 relative">
@@ -221,7 +221,7 @@ const GradesManagement: React.FC = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && searchUsers()}
-                      placeholder="Caută elev după nume sau email..."
+                      placeholder="Search student by name or email..."
                       className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <Search className="absolute right-3 top-2.5 text-gray-400" size={20} />
@@ -230,7 +230,7 @@ const GradesManagement: React.FC = () => {
                     onClick={searchUsers}
                     className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                   >
-                    Caută
+                    Search
                   </button>
                 </div>
 
@@ -252,7 +252,7 @@ const GradesManagement: React.FC = () => {
                           className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
                         >
                           <Plus size={16} />
-                          Adaugă Notă
+                          Add Grade
                         </button>
                       </div>
                     ))}
@@ -263,7 +263,7 @@ const GradesManagement: React.FC = () => {
               {/* Grades List */}
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                  Note Existente ({grades.length})
+                  Existing Grades ({grades.length})
                 </h2>
 
                 {loading ? (
@@ -271,7 +271,7 @@ const GradesManagement: React.FC = () => {
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                   </div>
                 ) : grades.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">Nu există note pentru această materie.</p>
+                  <p className="text-gray-500 text-center py-8">No grades for this subject.</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
@@ -279,10 +279,10 @@ const GradesManagement: React.FC = () => {
                         <tr>
                           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Student</th>
                           <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
-                          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Notă</th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Comentarii</th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Data</th>
-                          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Acțiuni</th>
+                          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Grade</th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Comments</th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
+                          <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y">
@@ -305,21 +305,21 @@ const GradesManagement: React.FC = () => {
                               {grade.comments || '-'}
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-500">
-                              {new Date(grade.createdAt).toLocaleDateString('ro-RO')}
+                              {new Date(grade.createdAt).toLocaleDateString('en-US')}
                             </td>
                             <td className="px-4 py-3">
                               <div className="flex justify-center gap-2">
                                 <button
                                   onClick={() => handleEditGrade(grade)}
                                   className="text-blue-500 hover:text-blue-700 p-2 rounded hover:bg-blue-50 transition"
-                                  title="Editează"
+                                  title="Edit"
                                 >
                                   <Pencil size={16} />
                                 </button>
                                 <button
                                   onClick={() => handleDeleteGrade(grade.id, grade.studentName)}
                                   className="text-red-500 hover:text-red-700 p-2 rounded hover:bg-red-50 transition"
-                                  title="Șterge"
+                                  title="Delete"
                                 >
                                   <Trash2 size={16} />
                                 </button>
@@ -342,7 +342,7 @@ const GradesManagement: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Adaugă Notă</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Add Grade</h2>
               <button
                 onClick={() => setShowAddModal(false)}
                 className="text-gray-400 hover:text-gray-600 transition"
@@ -361,7 +361,7 @@ const GradesManagement: React.FC = () => {
 
             <form onSubmit={handleSubmitAddGrade}>
               <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">Nota (1-10) *</label>
+                <label className="block text-gray-700 font-medium mb-2">Grade (1-10) *</label>
                 <input
                   type="number"
                   step="0.01"
@@ -375,13 +375,13 @@ const GradesManagement: React.FC = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Comentarii</label>
+                <label className="block text-gray-700 font-medium mb-2">Comments</label>
                 <textarea
                   value={gradeFormData.comments}
                   onChange={(e) => setGradeFormData({ ...gradeFormData, comments: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
-                  placeholder="Adaugă comentarii opționale..."
+                  placeholder="Add optional comments..."
                 />
               </div>
 
@@ -391,13 +391,13 @@ const GradesManagement: React.FC = () => {
                   onClick={() => setShowAddModal(false)}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
                 >
-                  Anulează
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                 >
-                  Adaugă Nota
+                  Add Grade
                 </button>
               </div>
             </form>
@@ -410,7 +410,7 @@ const GradesManagement: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Editează Nota</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Edit Grade</h2>
               <button
                 onClick={() => setShowEditModal(false)}
                 className="text-gray-400 hover:text-gray-600 transition"
@@ -427,7 +427,7 @@ const GradesManagement: React.FC = () => {
 
             <form onSubmit={handleSubmitEditGrade}>
               <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">Nota (1-10) *</label>
+                <label className="block text-gray-700 font-medium mb-2">Grade (1-10) *</label>
                 <input
                   type="number"
                   step="0.01"
@@ -441,13 +441,13 @@ const GradesManagement: React.FC = () => {
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">Comentarii</label>
+                <label className="block text-gray-700 font-medium mb-2">Comments</label>
                 <textarea
                   value={gradeFormData.comments}
                   onChange={(e) => setGradeFormData({ ...gradeFormData, comments: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
-                  placeholder="Adaugă comentarii opționale..."
+                  placeholder="Add optional comments..."
                 />
               </div>
 
@@ -457,13 +457,13 @@ const GradesManagement: React.FC = () => {
                   onClick={() => setShowEditModal(false)}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
                 >
-                  Anulează
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition"
                 >
-                  Salvează
+                  Save
                 </button>
               </div>
             </form>
