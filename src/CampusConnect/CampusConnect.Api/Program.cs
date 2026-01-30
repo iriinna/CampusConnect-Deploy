@@ -135,7 +135,13 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Swagger 
+// Seed demo data in development
+if (app.Environment.IsDevelopment())
+{
+    await DbSeeder.SeedAsync(app.Services);
+}
+
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

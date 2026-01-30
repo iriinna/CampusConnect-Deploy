@@ -145,12 +145,20 @@ const CourseMaterials = ({ groupId, isGroupOwner }: CourseMaterialsProps) => {
 
   const handleDownload = async (material: CourseMaterial) => {
     try {
+      // Check if it's an external URL (starts with http:// or https://)
+      if (material.fileUrl.startsWith('http://') || material.fileUrl.startsWith('https://')) {
+        // For external URLs, open in new tab
+        window.open(material.fileUrl, '_blank');
+        return;
+      }
+
+      // For internal files, use fetch with authorization
       const response = await fetch(material.fileUrl, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to download file');
       }
