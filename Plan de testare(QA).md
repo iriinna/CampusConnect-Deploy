@@ -87,22 +87,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Salvează modificările
 - **Rezultat așteptat:** Datele sunt actualizate și persistă la reautentificare
 
-#### TC-06 – Publicare și gestionare anunțuri
-- **Rol:** Profesor
-- **Pași:**
-  1. Creează un anunț nou
-  2. Selectează categoria și grupul țintă
-  3. Publică anunțul
-- **Rezultat așteptat:** Anunțul apare în lista utilizatorilor relevanți
-
-#### TC-07 – Filtrare și salvare anunțuri
-- **Rol:** User
-- **Pași:**
-  1. Filtrează anunțurile după categorie
-  2. Salvează un anunț
-- **Rezultat așteptat:** Sunt afișate doar anunțurile corespunzătoare, iar cel salvat apare în bookmark-uri
-
-#### TC-08 – Gestionare utilizatori
+#### TC-06 – Gestionare utilizatori
 - **Rol:** Administrator
 - **Pași:**
   1. Caută și selectează un utilizator
@@ -113,7 +98,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Evenimente**
 
-#### TC-15 – Creare eveniment (Professor/Admin)
+#### TC-07 – Creare eveniment (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul accesează secțiunea Evenimente
@@ -122,7 +107,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează evenimentul
 - **Rezultat așteptat:** Evenimentul este creat și apare în lista evenimentelor viitoare
 
-#### TC-16 – RSVP la eveniment
+#### TC-08 – RSVP la eveniment
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul vizualizează lista evenimentelor
@@ -130,21 +115,21 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă butonul "Participă/RSVP"
 - **Rezultat așteptat:** Utilizatorul este înregistrat ca participant, contorul de participanți crește
 
-#### TC-17 – Retragere participare eveniment
+#### TC-09 – Retragere participare eveniment
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează un eveniment la care participă
   2. Apasă butonul "Renunță la participare"
 - **Rezultat așteptat:** Utilizatorul este eliminat din lista participanților
 
-#### TC-18 – Salvare eveniment
+#### TC-10 – Salvare eveniment
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul vizualizează un eveniment
   2. Apasă iconița "Save/Bookmark"
 - **Rezultat așteptat:** Evenimentul apare în lista "Evenimente salvate"
 
-#### TC-19 – Editare eveniment (Creator/Admin)
+#### TC-11 – Editare eveniment (Creator/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul accesează un eveniment creat de el
@@ -153,7 +138,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează modificările
 - **Rezultat așteptat:** Evenimentul este actualizat cu noile informații
 
-#### TC-20 – Ștergere eveniment (Creator/Admin)
+#### TC-12 – Ștergere eveniment (Creator/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează un eveniment
@@ -161,14 +146,14 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Confirmă ștergerea
 - **Rezultat așteptat:** Evenimentul este eliminat permanent
 
-#### TC-21 – Filtrare evenimente după categorie
+#### TC-13 – Filtrare evenimente după categorie
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează secțiunea Evenimente
   2. Selectează o categorie (Academic, Social, Sports)
 - **Rezultat așteptat:** Sunt afișate doar evenimentele din categoria selectată
 
-#### TC-22 – Căutare evenimente
+#### TC-14 – Căutare evenimente
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează secțiunea Evenimente
@@ -179,7 +164,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Grupuri de Studiu**
 
-#### TC-23 – Creare grup (Professor)
+#### TC-15 – Creare grup (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul accesează secțiunea Grupuri
@@ -188,7 +173,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează grupul
 - **Rezultat așteptat:** Grupul este creat, profesorul devine proprietar
 
-#### TC-24 – Înscriere în grup
+#### TC-16 – Înscriere în grup
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul vizualizează grupurile disponibile
@@ -196,14 +181,14 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Join/Înscrie-te"
 - **Rezultat așteptat:** Utilizatorul devine membru al grupului
 
-#### TC-25 – Părăsire grup
+#### TC-17 – Părăsire grup
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează un grup din care face parte
   2. Apasă "Leave/Părăsește grupul"
 - **Rezultat așteptat:** Utilizatorul este eliminat din membrii grupului
 
-#### TC-26 – Creare task în grup (Professor)
+#### TC-18 – Creare task în grup (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul accesează un grup creat de el
@@ -213,7 +198,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   5. Salvează taskul
 - **Rezultat așteptat:** Taskul este vizibil tuturor membrilor grupului
 
-#### TC-27 – Salvare task personal
+#### TC-19 – Salvare task personal
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul vizualizează taskurile unui grup
@@ -221,7 +206,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Save to my tasks"
 - **Rezultat așteptat:** Taskul apare în lista personală de taskuri
 
-#### TC-28 – Marcare task ca finalizat
+#### TC-20 – Marcare task ca finalizat
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează taskurile sale salvate
@@ -229,7 +214,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Mark as complete"
 - **Rezultat așteptat:** Taskul este marcat ca finalizat, achievement poate fi deblocat
 
-#### TC-29 – Upload material de curs în grup (Professor)
+#### TC-21 – Upload material de curs în grup (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul accesează un grup
@@ -239,7 +224,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   5. Confirmă uploadul
 - **Rezultat așteptat:** Materialul este disponibil membrilor grupului pentru download
 
-#### TC-30 – Forward anunț către grup (Professor)
+#### TC-22 – Forward anunț către grup (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul vizualizează un anunț
@@ -248,7 +233,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Confirmă
 - **Rezultat așteptat:** Anunțul apare în feed-ul grupului selectat
 
-#### TC-31 – Ștergere grup (Professor/Admin)
+#### TC-23 – Ștergere grup (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează un grup
@@ -260,7 +245,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Subscription System**
 
-#### TC-32 – Abonare la categorie anunțuri
+#### TC-24 – Abonare la categorie anunțuri
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează setările de notificări
@@ -268,7 +253,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Subscribe"
 - **Rezultat așteptat:** Utilizatorul primește notificări pentru anunțurile din acea categorie
 
-#### TC-33 – Dezabonare de la categorie
+#### TC-25 – Dezabonare de la categorie
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează lista de subscripții
@@ -276,7 +261,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Unsubscribe"
 - **Rezultat așteptat:** Utilizatorul nu mai primește notificări pentru acea categorie
 
-#### TC-34 – Vizualizare categorii abonat
+#### TC-26 – Vizualizare categorii abonat
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează secțiunea Subscripții
@@ -286,13 +271,13 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Notificări**
 
-#### TC-35 – Vizualizare notificări
+#### TC-27 – Vizualizare notificări
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul apasă iconița de notificări
 - **Rezultat așteptat:** Sunt afișate toate notificările necitite și citite recent
 
-#### TC-36 – Marcare notificare ca citită
+#### TC-28 – Marcare notificare ca citită
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul vizualizează lista de notificări
@@ -300,7 +285,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă pe notificare sau butonul "Mark as read"
 - **Rezultat așteptat:** Notificarea este marcată ca citită, contorul de notificări scade
 
-#### TC-37 – Marcare toate notificările ca citite
+#### TC-29 – Marcare toate notificările ca citite
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează notificările
@@ -311,27 +296,27 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Achievements și Gamification**
 
-#### TC-38 – Vizualizare achievements proprii
+#### TC-30 – Vizualizare achievements proprii
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează profilul propriu
   2. Navighează la secțiunea Achievements
 - **Rezultat așteptat:** Sunt afișate toate achievements-urile deblocate și cele disponibile
 
-#### TC-39 – Deblocare achievement automat
+#### TC-31 – Deblocare achievement automat
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul participă la primul eveniment (sau îndeplinește altă condiție)
 - **Rezultat așteptat:** Achievement-ul corespunzător este deblocat automat, notificare primită
 
-#### TC-40 – Vizualizare achievements alți utilizatori
+#### TC-32 – Vizualizare achievements alți utilizatori
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează profilul altui utilizator
   2. Vizualizează secțiunea Achievements
 - **Rezultat așteptat:** Sunt afișate achievements-urile publice ale utilizatorului
 
-#### TC-41 – Creare achievement nou (Admin)
+#### TC-33 – Creare achievement nou (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul accesează panoul de achievements
@@ -344,13 +329,13 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Activity Logging**
 
-#### TC-42 – Vizualizare activități recente
+#### TC-34 – Vizualizare activități recente
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează dashboard-ul sau secțiunea Activity
 - **Rezultat așteptat:** Sunt afișate ultimele 3-5 activități ale utilizatorului
 
-#### TC-43 – Vizualizare istoric complet activități
+#### TC-35 – Vizualizare istoric complet activități
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează secțiunea "All activities"
@@ -360,7 +345,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Room Booking System**
 
-#### TC-44 – Creare cerere rezervare sală
+#### TC-36 – Creare cerere rezervare sală
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul selectează o sală disponibilă
@@ -369,7 +354,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Trimite cererea
 - **Rezultat așteptat:** Cererea este creată cu status "Pending", admin primește notificare
 
-#### TC-45 – Aprobare cerere rezervare (Admin)
+#### TC-37 – Aprobare cerere rezervare (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul accesează cererile pending
@@ -377,7 +362,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Apasă "Approve"
 - **Rezultat așteptat:** Cererea devine "Approved", sala este rezervată, utilizatorul primește notificare
 
-#### TC-46 – Respingere cerere rezervare (Admin)
+#### TC-38 – Respingere cerere rezervare (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul accesează cererile pending
@@ -386,13 +371,13 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Introduce motiv respingere
 - **Rezultat așteptat:** Cererea devine "Rejected", utilizatorul primește notificare cu motivul
 
-#### TC-47 – Vizualizare cereri proprii
+#### TC-39 – Vizualizare cereri proprii
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează "My booking requests"
 - **Rezultat așteptat:** Sunt afișate toate cererile cu statusurile lor (Pending, Approved, Rejected)
 
-#### TC-48 – Anulare cerere rezervare
+#### TC-40 – Anulare cerere rezervare
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează cererea sa
@@ -403,7 +388,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Schedule Management**
 
-#### TC-49 – Creare programare sală (Professor/Admin)
+#### TC-41 – Creare programare sală (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează o sală
@@ -412,7 +397,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Programarea apare în orarul sălii, sala devine ocupată în acel interval
 
-#### TC-50 – Editare programare (Professor/Admin)
+#### TC-42 – Editare programare (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează o programare existentă
@@ -420,7 +405,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Salvează
 - **Rezultat așteptat:** Programarea este actualizată
 
-#### TC-51 – Ștergere programare (Professor/Admin)
+#### TC-43 – Ștergere programare (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează o programare
@@ -428,7 +413,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Confirmă
 - **Rezultat așteptat:** Programarea este ștearsă, intervalul devine disponibil
 
-#### TC-52 – Vizualizare orar săptămânal sală
+#### TC-44 – Vizualizare orar săptămânal sală
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul selectează o sală
@@ -439,7 +424,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Bibliotecă Digitală - Funcții Avansate**
 
-#### TC-53 – Creare folder bibliotecă (Professor/Admin)
+#### TC-45 – Creare folder bibliotecă (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul accesează biblioteca
@@ -448,7 +433,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Folderul nou apare în listă
 
-#### TC-54 – Ștergere folder (Professor/Admin)
+#### TC-46 – Ștergere folder (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează un folder
@@ -456,7 +441,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Confirmă ștergerea
 - **Rezultat așteptat:** Folderul și toate fișierele din el sunt șterse
 
-#### TC-55 – Adăugare link extern bibliotecă (Professor/Admin)
+#### TC-47 – Adăugare link extern bibliotecă (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează un folder
@@ -465,7 +450,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Link-ul apare în folder și poate fi accesat
 
-#### TC-56 – Ștergere item bibliotecă (Professor/Admin)
+#### TC-48 – Ștergere item bibliotecă (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează un fișier sau link
@@ -477,7 +462,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Management Note - Funcții Complete**
 
-#### TC-57 – Creare notă (Professor)
+#### TC-49 – Creare notă (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul accesează secțiunea Grades
@@ -486,7 +471,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Nota apare în catalogul studentului
 
-#### TC-58 – Editare notă (Professor/Admin)
+#### TC-50 – Editare notă (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează o notă existentă
@@ -494,7 +479,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Salvează
 - **Rezultat așteptat:** Nota este actualizată, modificarea este logată
 
-#### TC-59 – Ștergere notă (Professor/Admin)
+#### TC-51 – Ștergere notă (Professor/Admin)
 - **Rol:** Professor / Administrator
 - **Pași:**
   1. Utilizatorul selectează o notă
@@ -502,14 +487,14 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Confirmă
 - **Rezultat așteptat:** Nota este ștearsă din catalog
 
-#### TC-60 – Vizualizare note per materie (Professor)
+#### TC-52 – Vizualizare note per materie (Professor)
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul selectează o materie pe care o predă
   2. Vizualizează toate notele studenților
 - **Rezultat așteptat:** Este afișată lista cu note pentru toți studenții înscriși la materie
 
-#### TC-61 – Validare permisiuni notare
+#### TC-53 – Validare permisiuni notare
 - **Rol:** Professor
 - **Pași:**
   1. Profesorul încearcă să noteze un student la o materie pe care NU o predă
@@ -519,14 +504,14 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Email Confirmation System**
 
-#### TC-62 – Retrimite email confirmare
+#### TC-54 – Retrimite email confirmare
 - **Rol:** User (unconfirmed)
 - **Pași:**
   1. Utilizatorul încearcă să se autentifice dar emailul nu este confirmat
   2. Apasă "Resend confirmation email"
 - **Rezultat așteptat:** Un nou email de confirmare este trimis
 
-#### TC-63 – Link confirmare expirat
+#### TC-55 – Link confirmare expirat
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul accesează un link de confirmare mai vechi de 24 ore
@@ -536,7 +521,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Management Facilități - Funcții Complete**
 
-#### TC-64 – Creare clădire nouă (Admin)
+#### TC-56 – Creare clădire nouă (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul accesează Campus Map
@@ -545,7 +530,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Clădirea apare pe hartă
 
-#### TC-65 – Editare detalii clădire (Admin)
+#### TC-57 – Editare detalii clădire (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul selectează o clădire
@@ -553,7 +538,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Salvează
 - **Rezultat așteptat:** Informațiile clădirii sunt actualizate
 
-#### TC-66 – Ștergere clădire (Admin)
+#### TC-58 – Ștergere clădire (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul selectează o clădire
@@ -561,7 +546,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Confirmă
 - **Rezultat așteptat:** Clădirea și toate sălile asociate sunt șterse
 
-#### TC-67 – Creare sală nouă (Admin)
+#### TC-59 – Creare sală nouă (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul selectează o clădire
@@ -570,7 +555,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   4. Salvează
 - **Rezultat așteptat:** Sala apare în lista sălilor clădirii
 
-#### TC-68 – Editare detalii sală (Admin)
+#### TC-60 – Editare detalii sală (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul selectează o sală
@@ -578,7 +563,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Salvează
 - **Rezultat așteptat:** Detaliile sălii sunt actualizate
 
-#### TC-69 – Ștergere sală (Admin)
+#### TC-61 – Ștergere sală (Admin)
 - **Rol:** Administrator
 - **Pași:**
   1. Administratorul selectează o sală
@@ -590,7 +575,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **AI Assistant**
 
-#### TC-70 – Inițiere conversație cu AI
+#### TC-62 – Inițiere conversație cu AI
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul apasă iconița chatbot
@@ -598,7 +583,7 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
   3. Trimite mesajul
 - **Rezultat așteptat:** AI-ul răspunde cu informații relevante despre platformă
 
-#### TC-71 – Context-aware assistance
+#### TC-63 – Context-aware assistance
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul este pe pagina de evenimente
@@ -609,38 +594,38 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ### **Securitate și Edge Cases**
 
-#### TC-72 – Tentativă acces neautorizat
+#### TC-64 – Tentativă acces neautorizat
 - **Rol:** User (Student)
 - **Pași:**
   1. Studentul încearcă să acceseze direct endpoint-ul de admin
 - **Rezultat așteptat:** 403 Forbidden, acces respins
 
-#### TC-73 – Sesiune expirată
+#### TC-65 – Sesiune expirată
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul rămâne inactiv peste 1 oră
   2. Încearcă să efectueze o acțiune
 - **Rezultat așteptat:** 401 Unauthorized, redirect la login
 
-#### TC-74 – Upload fișier tip invalid
+#### TC-66 – Upload fișier tip invalid
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul încearcă să uploadeze un fișier .exe
 - **Rezultat așteptat:** Eroare de validare, fișierul este respins
 
-#### TC-75 – Upload fișier prea mare
+#### TC-67 – Upload fișier prea mare
 - **Rol:** User
 - **Pași:**
   1. Utilizatorul încearcă să uploadeze un fișier de 100MB
 - **Rezultat așteptat:** Eroare că fișierul depășește limita de 50MB
 
-#### TC-76 – SQL Injection attempt
+#### TC-68 – SQL Injection attempt
 - **Rol:** Attacker
 - **Pași:**
   1. Input în search box: `' OR '1'='1`
 - **Rezultat așteptat:** Query-ul este sanitizat, nu produce rezultate neașteptate
 
-#### TC-77 – XSS attempt
+#### TC-69 – XSS attempt
 - **Rol:** Attacker
 - **Pași:**
   1. Input în anunț: `<script>alert('XSS')</script>`
@@ -650,10 +635,10 @@ Testarea a fost realizată **după finalizarea etapei de implementare**, înaint
 
 ## 6. Concluzii
 
-Planul de testare acoperă **77 de scenarii** care validează toate funcționalitățile critice ale platformei CampusConnect, incluzând:
+Planul de testare acoperă **69 de scenarii** care validează toate funcționalitățile critice ale platformei CampusConnect, incluzând:
 
-- **Autentificare și management utilizatori** (8 scenarii)
-- **Anunțuri și evenimente** (15 scenarii)
+- **Autentificare și management utilizatori** (6 scenarii)
+- **Evenimente** (8 scenarii)
 - **Grupuri de studiu** (9 scenarii)
 - **Subscription system** (3 scenarii)
 - **Notificări** (3 scenarii)
