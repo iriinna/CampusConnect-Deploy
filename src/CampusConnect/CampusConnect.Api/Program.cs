@@ -14,7 +14,13 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add environment variables to configuration
+builder.Configuration.AddEnvironmentVariables();
+
 const string CorsPolicy = "Frontends";
+
+// Get frontend URL from configuration for CORS
+var frontendUrl = builder.Configuration["AppSettings:FrontendUrl"] ?? "http://localhost:5173";
 
 builder.Services.AddCors(options =>
 {
@@ -23,6 +29,15 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
               .AllowAnyHeader();
+    });
+
+    // More restrictive policy for production if needed
+    options.AddPolicy(CorsPolicy, policy =>
+    {
+        policy.WithOrigins(frontendUrl)
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
@@ -137,18 +152,18 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Seed demo data in development
+// Seed demo data in development only
 if (app.Environment.IsDevelopment())
 {
     await DbSeeder.SeedAsync(app.Services);
 }
 
-// Swagger
-if (app.Environment.IsDevelopment())
+// Swagger - enabled in all environments for API documentation
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "CampusConnect API v1");
+});
 
 //wwwroot
 app.UseStaticFiles();
