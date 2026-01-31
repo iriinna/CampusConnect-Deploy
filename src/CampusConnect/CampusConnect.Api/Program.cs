@@ -92,6 +92,7 @@ builder.Services.AddAuthentication(options =>
 
 // Services
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -151,6 +152,26 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        Console.WriteLine(" Starting database migration...");
+        
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        
+        // Se creeaza tabelele in Azure
+        context.Database.Migrate();
+        
+        Console.WriteLine("Database migration completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+    }
+}
 
 // Seed demo data in development only
 if (app.Environment.IsDevelopment())

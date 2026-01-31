@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/Avatar'
 
 import '../../index.css';
 
-const API_BASE_URL = 'http://localhost:5099/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5099/api';
 
 interface UserSummary {
   id: number;
@@ -88,7 +88,7 @@ const Users: React.FC = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${API_BASE_URL}/user/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/user/delete/${userId}`, {
         method: 'DELETE',
         headers: { "Authorization": `Bearer ${token}` }
       });
