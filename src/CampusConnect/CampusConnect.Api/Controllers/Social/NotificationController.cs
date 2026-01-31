@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using CampusConnect.Infrastructure.Data;
 
-namespace CampusConnect.API.Controllers
+namespace CampusConnect.Api.Controllers.Social
 {
     [Authorize]
     [Route("api/[controller]")]

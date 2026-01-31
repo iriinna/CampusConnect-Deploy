@@ -673,7 +673,104 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
                 RecurrencePattern = "Weekly",
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
-            }
+            },
+
+            // ========== CURSURI 30-31 IANUARIE 2026 ==========
+            // FAA (Building 1) - Rooms 1, 2
+            new Schedule { Id = 5, Title = "Curs Administrație Publică", Description = "Principii de administrație publică", RoomId = 1, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 6, Title = "Seminar Politici Publice", Description = "Analiza politicilor publice", RoomId = 2, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 7, Title = "Curs Management Public", Description = "Fundamente de management public", RoomId = 1, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 8, Title = "Seminar Drept Administrativ", Description = "Aspecte practice", RoomId = 2, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Biologie (Building 2) - Rooms 11, 12
+            new Schedule { Id = 9, Title = "Curs Biologie Celulară", Description = "Structura celulei eucariote", RoomId = 11, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 10, Title = "Laborator Microbiologie", Description = "Tehnici de cultivare", RoomId = 12, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 11, Title = "Curs Genetică", Description = "Genetica moleculară", RoomId = 11, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 12, Title = "Seminar Ecologie", Description = "Ecosisteme terestre", RoomId = 12, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Chimie (Building 3) - Rooms 21, 22
+            new Schedule { Id = 13, Title = "Curs Chimie Organică", Description = "Reacții de sinteză", RoomId = 21, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 14, Title = "Laborator Chimie Analitică", Description = "Metode spectroscopice", RoomId = 22, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 15, Title = "Curs Biochimie", Description = "Metabolismul celular", RoomId = 21, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 16, Title = "Seminar Chimie Fizică", Description = "Termodinamică", RoomId = 22, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Drept (Building 4) - Rooms 31, 32
+            new Schedule { Id = 17, Title = "Curs Drept Penal", Description = "Infracțiuni și pedepse", RoomId = 31, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 18, Title = "Seminar Drept Constituțional", Description = "Constituția României", RoomId = 32, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 19, Title = "Curs Drept European", Description = "Instituții UE", RoomId = 31, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 20, Title = "Seminar Drept Comercial", Description = "Societăți comerciale", RoomId = 32, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Filosofie (Building 5) - Rooms 41, 42
+            new Schedule { Id = 21, Title = "Curs Istoria Filosofiei", Description = "Filosofia antică greacă", RoomId = 41, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 22, Title = "Seminar Etică", Description = "Teorii etice contemporane", RoomId = 42, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 23, Title = "Curs Logică", Description = "Logica formală", RoomId = 41, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 24, Title = "Seminar Epistemologie", Description = "Teoria cunoașterii", RoomId = 42, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Fizică (Building 6) - Rooms 51, 52
+            new Schedule { Id = 25, Title = "Curs Mecanică Cuantică", Description = "Principii fundamentale", RoomId = 51, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 26, Title = "Laborator Optică", Description = "Experimente de optică", RoomId = 52, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 27, Title = "Curs Termodinamică", Description = "Legile termodinamicii", RoomId = 51, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 28, Title = "Seminar Electrodinamică", Description = "Câmpuri electromagnetice", RoomId = 52, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Geografie (Building 7) - Rooms 61, 62
+            new Schedule { Id = 29, Title = "Curs Geografie Fizică", Description = "Relieful terestru", RoomId = 61, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 30, Title = "Laborator Cartografie", Description = "Tehnici cartografice", RoomId = 62, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 31, Title = "Curs Climatologie", Description = "Sistemul climatic global", RoomId = 61, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 32, Title = "Seminar GIS", Description = "Sisteme informaționale geografice", RoomId = 62, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Geologie (Building 8) - Rooms 71, 72
+            new Schedule { Id = 33, Title = "Curs Mineralogie", Description = "Clasificarea mineralelor", RoomId = 71, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 34, Title = "Laborator Petrografie", Description = "Analiza rocilor", RoomId = 72, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 35, Title = "Curs Geofizică", Description = "Metode geofizice", RoomId = 71, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 36, Title = "Seminar Paleontologie", Description = "Fosile și evoluție", RoomId = 72, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Istorie (Building 9) - Rooms 81, 82
+            new Schedule { Id = 37, Title = "Curs Istorie Antică", Description = "Civilizații antice", RoomId = 81, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 38, Title = "Seminar Istorie Medievală", Description = "Europa medievală", RoomId = 82, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 39, Title = "Curs Istorie Modernă", Description = "Revoluții și națiuni", RoomId = 81, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 40, Title = "Seminar Istorie Contemporană", Description = "Secolul XX", RoomId = 82, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FJSC (Building 10) - Rooms 91, 92
+            new Schedule { Id = 41, Title = "Curs Teoria Comunicării", Description = "Modele de comunicare", RoomId = 91, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 42, Title = "Laborator Jurnalism Digital", Description = "Tehnici multimedia", RoomId = 92, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 43, Title = "Curs Relații Publice", Description = "Strategii de PR", RoomId = 91, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 44, Title = "Seminar Publicitate", Description = "Campanii publicitare", RoomId = 92, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FLLS (Building 11) - Rooms 101, 102
+            new Schedule { Id = 45, Title = "Curs Limba Engleză", Description = "Gramatică avansată", RoomId = 101, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 46, Title = "Seminar Limba Franceză", Description = "Conversație", RoomId = 102, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 47, Title = "Curs Limba Germană", Description = "Literatură germană", RoomId = 101, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 48, Title = "Seminar Limba Spaniolă", Description = "Cultură hispanică", RoomId = 102, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // Litere (Building 12) - Rooms 111, 112
+            new Schedule { Id = 49, Title = "Curs Literatură Română", Description = "Clasici români", RoomId = 111, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 50, Title = "Seminar Lingvistică", Description = "Analiză lingvistică", RoomId = 112, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 51, Title = "Curs Literatură Universală", Description = "Curente literare", RoomId = 111, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 52, Title = "Seminar Teoria Literaturii", Description = "Analiză text", RoomId = 112, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FMI (Building 13) - Rooms 121, 122
+            new Schedule { Id = 53, Title = "Curs Programare Orientată Obiect", Description = "Design patterns", RoomId = 121, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 54, Title = "Laborator Rețele de Calculatoare", Description = "Protocoale de rețea", RoomId = 122, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 55, Title = "Curs Inteligență Artificială", Description = "Machine Learning", RoomId = 121, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 56, Title = "Seminar Baze de Date Avansate", Description = "SQL și NoSQL", RoomId = 122, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FPSE (Building 14) - Rooms 131, 132
+            new Schedule { Id = 57, Title = "Curs Psihologie Generală", Description = "Procese cognitive", RoomId = 131, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 58, Title = "Seminar Psihologie Socială", Description = "Dinamica grupurilor", RoomId = 132, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 59, Title = "Curs Pedagogie", Description = "Teorii educaționale", RoomId = 131, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 60, Title = "Seminar Psihologia Dezvoltării", Description = "Etape de dezvoltare", RoomId = 132, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // SAS (Building 15) - Rooms 141, 142
+            new Schedule { Id = 61, Title = "Curs Sociologie Generală", Description = "Teorii sociologice", RoomId = 141, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 62, Title = "Seminar Asistență Socială", Description = "Intervenție socială", RoomId = 142, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 63, Title = "Curs Metodologia Cercetării", Description = "Metode de cercetare", RoomId = 141, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 64, Title = "Seminar Politici Sociale", Description = "Sistemul de protecție", RoomId = 142, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+
+            // FSP (Building 16) - Rooms 151, 152
+            new Schedule { Id = 65, Title = "Curs Științe Politice", Description = "Teorii politice", RoomId = 151, StartTime = new DateTime(2026, 1, 30, 8, 0, 0), EndTime = new DateTime(2026, 1, 30, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 66, Title = "Seminar Relații Internaționale", Description = "Diplomație", RoomId = 152, StartTime = new DateTime(2026, 1, 30, 10, 0, 0), EndTime = new DateTime(2026, 1, 30, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 67, Title = "Curs Studii Europene", Description = "Integrare europeană", RoomId = 151, StartTime = new DateTime(2026, 1, 31, 8, 0, 0), EndTime = new DateTime(2026, 1, 31, 10, 0, 0), CreatedByProfessorId = 14, IsActive = true, CreatedAt = DateTime.UtcNow },
+            new Schedule { Id = 68, Title = "Seminar Politici Comparate", Description = "Sisteme politice", RoomId = 152, StartTime = new DateTime(2026, 1, 31, 10, 0, 0), EndTime = new DateTime(2026, 1, 31, 12, 0, 0), CreatedByProfessorId = 15, IsActive = true, CreatedAt = DateTime.UtcNow }
         };
         builder.Entity<Schedule>().HasData(schedules);
         // 17. Configurare Achievement
