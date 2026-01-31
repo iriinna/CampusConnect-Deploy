@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 using CampusConnect.Application.Interfaces;
 using CampusConnect.Application.Services;
@@ -18,10 +18,12 @@ const string CorsPolicy = "Frontends";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(CorsPolicy, policy =>
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 // ✅ DB (o singură dată) + migrations assembly
@@ -145,7 +147,7 @@ if (app.Environment.IsDevelopment())
 //wwwroot
 app.UseStaticFiles();
 
-app.UseCors(CorsPolicy);
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
